@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>宝贝投-P2P平台</title>
+		<!-- links begin -->
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="css/core.css" type="text/css" />
+		<script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+		<script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+		<!-- links end -->
+		<link type="text/css" rel="stylesheet" href="css/account.css" />
+		<script type="text/javascript" src="js/plugins/jquery.twbsPagination.min.js"></script>
+		<script type="text/javascript" src="js/plugins-override.js"></script>
+		<script type="text/javascript" src="js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+	</head>
+	<body>
+		<!-- 网页顶部 begin -->
+		<div class="el-header"></div>
+		<!-- 网页顶部 end -->
+
+		<!-- 网页导航 begin -->
+		<div class="el-navbar navbar navbar-default"></div>
+		<!-- 网页导航 end -->
+		
+		<div class="container">
+			<div class="row">
+				<!--左侧菜单栏 begin -->
+				<div class="el-leftmenu col-sm-3"></div>
+				<!--左侧菜单栏 end -->
+				<hr />
+				<!-- 功能页面 -->
+				<div class="col-sm-9">
+					<form action="http://localhost:8080/finance/repayment/query" name="searchForm" id="searchForm" class="form-inline">
+						<div class="form-group">
+							<label>还款期限:</label>
+							<input type="text" id="beginDate" name="beginDate" class="form-control" style="cursor: pointer; background:#fff;" readonly="true" autocomplete="off" value='' />
+						</div>
+						<div class="form-group">
+							<label>&emsp;至&emsp;</label>
+							<input type="text" id="endDate" name="endDate" class="form-control" style="cursor: pointer; background:#fff;" readonly="true" autocomplete="off" value='' />
+						</div>
+						<div class="form-group">
+							<label>&emsp;状态:</label>
+						    <select class="form-control" id="state" name="state">
+						    	<option value="-1">全部</option>
+								<option value="1">逾期</option>
+								<option value="2">待还</option>
+								<option value="3">已还</option>
+								<option value="4">逾期已还</option>
+						    </select>
+						</div>
+						<div class="form-group">
+							&emsp;&emsp;
+							<button type="button" id="query" class="btn btn-success">
+								<i class="icon-search"></i>
+								查询
+							</button>
+						</div>
+					</form>
+					<div class="panel panel-default" style="margin-top: 20px;">
+						<div class="panel-heading">
+							<span class="pull-left" style="line-height: 35px;">还款明细</span>
+							<a class="pull-right btn btn-danger btn-sm" href="recharge.html">
+								账户充值
+							</a>
+							<div class="clearfix"></div>
+						</div>
+						<table id="tblRepayment" class="table table-striped">
+							<thead>
+								<tr>
+									<th>借款</th>
+									<th>还款金额</th>
+									<th>本金</th>
+									<th>利息</th>
+									<th>期数</th>
+									<th>还款期限</th>
+									<th>状态</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+						<div id="divPagination" style="text-align: center;">
+							<ul id="pagination" class="pagination"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 页脚 begin -->
+		<div class="container-foot-2"></div>
+		<!-- 页脚 end -->
+	</body>
+<script type="text/javascript">
+
+// 判断用户是否已经登录
+let jsonUser = sessionStorage.getItem("user");
+if(!jsonUser) window.location.href = 'index.html';
+
+// 如果用户已经登录，则解析出user对象
+let user = JSON.parse(jsonUser);
+
+// 查询条件对象
+let queryObject = new Object();
+queryObject.userId = user.id;
+
+$(function(){
+
+    // 加载公共顶部模板
+    $('.el-header').load('tpl-head.html');
+
+    // 加载网站导航栏模板
+    $('.el-navbar').load('tpl-navbar.html');
+
+    // 加载左侧菜单栏模板
+    $('.el-leftmenu').load('tpl-leftmenu.html');
+
+    // 加载页脚模板
+    $('.container-foot-2').load('tpl-footer.html');
+
+
+    // 时间日期组件
+    $("#beginDate").click(function(){
+        WdatePicker();
+    });
+
+    $("#endDate").click(function(){
+        WdatePicker();
+    });
+
+    // 初始化查询时间
+
+    // 开始时间(最近30天)
+    let beginDate = new Date();
+    beginDate.setDate(beginDate.getDate() - 30);
+
+    // 结束时间(未来30天)
+    let endDate = new Date();
+    endDate.setDate(endDate.getDate() + 30);
+
+    $("#beginDate").val(beginDate.Format('yyyy-MM-dd'));
+    $("#endDate").val(endDate.Format('yyyy-MM-dd'));
+
+
+    // 注册查询按钮事件
+    $("#query").click(function(){
+
+        // 获取查询数据
+        let beginDate = $("#beginDate").val();
+        let endDate = $("#endDate").val();
+        let state = $("#state").val();
+
+        // 封装查询请求数据
+        queryObject.beginDate = beginDate + ' 00:00:00';
+        queryObject.endDate = endDate + ' 23:59:59';
+        queryObject.state = state;
+        queryObject.currentPage  = 1;
+
+        // 加载'还款列表'
+        loadRepayment();
+
+    });// $("#query").click(function());
+
+
+    // 加载'还款列表'
+    loadRepayment();
+
+});// $(function());
+
+/** 加载'还款'数据 **/
+function loadRepayment(){
+
+    // 加载'还款记录'数据
+    $.post('http://localhost:8080/finance/repayment/query', queryObject, function (result) {
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+        // 如果返回的数据响应码为200
+        // 就进行表格数据填充
+        let pageResult = result.data;
+
+        // 填充表格数据
+        fillRepaymentTable( pageResult.listData );
+
+        // 初始化分页插件
+        $("#pagination").remove();
+        $("#divPagination").append('<ul id="pagination" class="pagination"></ul>');
+
+        $("#pagination").twbsPagination({
+            totalPages: pageResult.totalPage,
+            visiblePages: 10,
+            startPage: pageResult.currentPage,
+            first: '首页',
+            last: '最后一页',
+            prev: '上一页',
+            next: '下一页',
+            onPageClick:function( event, page ){
+                // 加载指定页码数据
+                queryObject.currentPage = page;
+                loadRepayment();
+
+            }// onPageClick();
+
+        });// $("#pagination").twbsPagination();
+
+    });// $.post();
+
+}// loadRepayment();
+
+/** 填充表格数据 **/
+function fillRepaymentTable( listData ) {
+
+    // 清空表格数据
+    $('#tblRepayment tbody').empty();
+
+    // 如果没有集合数据，就直接返回
+    if( !listData || listData.length == 0 ){
+        // 设置没有数据提示
+        $('#tblRepayment tbody').html('<tr><td colspan="7" align="center"><p class="text-danger">暂时没有还款明细信息</p></td></tr>');
+        return;
+    }// if();
+
+    // 循环构造单元格数据，并进行填充
+    for( let i = 0; i < listData.length; i++ ) {
+
+        let repayment = listData[i];
+
+        // 借款标题
+        let tdTitle = '<td><a target="_blank" href="borrow-info.html?id=' + repayment.borrowId + '">' + repayment.borrowTitle + '</a>&nbsp;<span class="label label-primary">信</span></td>';
+
+        // 还款金额
+        let totalAmount = repayment.totalAmount / MONEY_UNIT;
+        let tdTotalAmount = '<td class="text-primary">' + totalAmount + '元</td>';
+
+        // 还款本金
+        let principal = repayment.principal / MONEY_UNIT;
+        let tdPrincipal = '<td>' + principal + '元</td>';
+
+        // 还款利息
+        let interest = repayment.interest / MONEY_UNIT;
+        let tdInterest = '<td>' + interest + '元</td>';
+
+        // 还款期数
+        let tdPeriod = '<td>' + repayment.period + '期</td>';
+
+        // 还款期限
+		let tdDeadline = '<td>' + repayment.deadline + '</td>';
+		// 如果已经超过'还款期限'，就红色显示还款期限
+		if(repayment.state == REPAYMENT_STATE_CONST.OVERDUE )
+            tdDeadline = '<td style="color:red; font-weight: bold;">' + repayment.deadline + '</td>';
+
+        // '还款'按钮
+        let tdRepayment = '<td>' + REPAYMENT_STATE[repayment.state] + '</td>';
+
+			// 如果还款状态是'待还'、'逾期'，就构建1个可以点击的'立刻还款'按钮
+        if( repayment.state == REPAYMENT_STATE_CONST.WAIT
+			|| repayment.state == REPAYMENT_STATE_CONST.OVERDUE )
+            tdRepayment = '<td><a href="javascript:repaymentById(\'' + repayment.id + '\');">立即还款</td></td>';
+
+        // 将构造好的单元格数据，填充到表格中
+        $('#tblRepayment tbody').append('<tr>' + tdTitle + tdTotalAmount + tdPrincipal + tdInterest + tdPeriod + tdDeadline + tdRepayment + '</tr>');
+
+    }// for();
+
+}// fillRepaymentTable( listData );
+
+/** 根据还款id，进行还款操作 **/
+function repaymentById( id ) {
+
+    // 加载'还款记录'数据
+    $.post('http://localhost:8080/finance/repayment/repay', {
+
+        id: id,
+		userId: user.id
+
+	}, function (result) {
+
+		// 如果返回的数据的响应码不是'成功(200)'
+		if(result.code != 200) {
+			$.messager.alert(result.msg);
+			return;
+		}
+
+		// 如果返回的数据响应码为200
+		$.messager.alert('还款成功！');
+
+		 // 加载'还款列表'数据
+		 loadRepayment();
+
+    });// $.post();
+
+
+}// repaymentById( id );
+</script>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>宝贝投-P2P平台</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="css/core.css" type="text/css" />
+<script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+<script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-validation/jquery.validate.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+
+<style type="text/css">
+	.el-register-form{
+		width:600px; 
+		margin-left:auto;
+		margin-right:auto;
+		margin-top: 20px;
+	}
+	.el-register-form .form-control{
+		width: 220px;
+		display: inline;
+	}
+</style>
+</head>
+<body>
+	<!-- 网页头信息 -->
+	<div class="el-header" >
+		<div class="container" style="position: relative;">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="index.html">首页</a></li>
+				<li><a href="login.html">登录</a></li>
+				<li><a href="#">帮助</a></li>
+			</ul>
+		</div>
+	</div>
+	
+	<!-- 网页导航 --> 
+	<div class="navbar navbar-default el-navbar">
+		<div class="container">
+			<div class="navbar-header">
+				<span class="el-page-title">用户注册</span>
+				<label style="color: #ff8c4b;">(注册即送10000万元体验金，先到先得！)</label>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 网页内容 -->
+	<div class="container">  
+		<form id="registerForm" class="form-horizontal el-register-form"  action="http://localhost:8080/user/register" method="post" >
+			<p class="h4" style="margin: 10px 10px 20px;color:#999;">请填写注册信息</p>
+			<div class="form-group">
+				<label class="control-label col-sm-2">用户名</label>
+				<div class="col-sm-10">
+					<input type="text" autocomplete="off" name="username" class="form-control" id="username"/>
+					<p class="help-block">用户名为4~16位字母，数字，符号或中文</p>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2">密&emsp;码</label>
+				<div class="col-sm-10">
+					<input type="password" autocomplete="off" name="password" id="password" class="form-control" />
+					<p class="help-block">密码为4~16位字符组成,采用数字、字母、符号安全性更高</p>
+				</div> 
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2">确认密码</label>
+				<div class="col-sm-10">
+					<input type="password" autocomplete="off" name="confirmPwd" class="form-control" />
+					<p class="help-block">请再次填写密码</p>	 
+				</div>
+			</div> 
+			<div class="form-gorup">   
+				<div class="col-sm-offset-2">  
+					<button type="submit" class="btn btn-success">
+						同意协议并注册
+					</button>
+					&emsp;&emsp;
+					<a href="login.html" class="text-primary">已有账号，马上登录</a>
+					
+					<p style="padding-left: 50px; margin: 31px;">
+						<a href="#">《使用协议说明书》</a>
+					</p>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 页脚 begin -->
+	<div class="container-foot-2">
+		<div class="context">
+			<p>版权所有：2019长沙科泰信息技限公司&emsp;&emsp;&emsp;
+				地址：长沙市开福区青竹湖街湘江北路一段369号1栋&emsp;&emsp;&emsp;
+				ICP备案：湘ICP备10009111号
+			</p>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<!-- 页脚 end -->
+</body>
+<script type="text/javascript">
+    $(function(){
+
+        // jQuery validate 验证插件
+        $("#registerForm").validate({
+            rules:{
+                username:{
+                    required:true,
+                    rangelength:[4,16],
+                    remote:{  // 执行远程post请求
+                        url:"http://localhost:8080/user/checkUsername",
+                        type:"post"
+                    }
+                },
+                password:{
+                    required:true,
+                    rangelength:[4,16]
+                },
+                confirmPwd:{
+                    equalTo:"#password"
+                }
+            },
+            messages:{
+                username:{
+                    required:"&emsp;请输入用户名",
+                    rangelength:"&emsp;用户名的长度在{0}~{1}之间",
+                    remote:"&emsp;用户名已经存在，请换个用户名再次尝试!"
+                },
+                password:{
+                    required:"&emsp;请输入密码",
+                    rangelength:"&emsp;密码的长度在{0}~{1}之间"
+                },
+                confirmPwd:{
+                    equalTo:"&emsp;两次输入密码不同"
+                }
+            },
+            submitHandler:function(form){ // 接管原生form的'提交' 处理器
+
+                //使用ajax提交表单
+                $("#registerForm").ajaxSubmit({
+
+                    dataType:"json",
+
+                    success:function(result){ // ajax提交，成功回调
+
+                        // 如果返回的数据的响应码不是'成功(200)'
+                        if(result.code != 200) {
+                            $.messager.alert(result.msg);
+                            return;
+                        }
+
+
+                        // 如果返回的数据响应码为200
+						$.messager.confirm("提示",'注册成功!&emsp;点击"确定"按钮，跳转到登录页面...',function(){
+							window.location.href="login.html";
+						});
+
+                    }// success:function(result);
+
+                });// $("#registerForm").ajaxSubmit();
+
+            }, // submitHandler:function(form);
+
+            errorClass:"text-danger",  // Bootstrap自带的(情景文字)错误样式
+
+            highlight: function(element,errorClass) {
+                // 找到最近的class为'form-group'的div标签，
+                // 给div标签添加bootstrap预定义class样式"has-error"(红色外框)
+                $(element).closest("div.form-group").addClass("has-error");
+            },
+            unhighlight:function(element,errorClass){
+                $(element).closest("div.form-group").removeClass("has-error");
+            }
+
+        });// $("#registerForm").validate();
+
+    }); //$(function());
+</script>
+</html>

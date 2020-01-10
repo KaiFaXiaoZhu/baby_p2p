@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>宝贝投-P2P平台</title>
+		<!-- links begin -->
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="css/core.css" type="text/css" />
+		<script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+		<script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+		<script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+		<!-- links end -->
+		<link type="text/css" rel="stylesheet" href="css/account.css" />
+		<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+		<script type="text/javascript" src="js/plugins/jquery-validation/jquery.validate.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+		<style type="text/css">
+			body {
+				font: 14px/1.5 "Verdana", "微软雅黑", YaHei, tahoma, arial, Hiragino Sans GB, "宋体";
+			}
+			.el-borrow-form{
+				position: relative;	
+			}
+			.el-borrow-form-tip{
+				width: 300px;
+				border-radius: 3px;
+				border:1px solid #ddd;
+				box-shadow: 1px 1px 20px #ddd;
+				padding:20px 30px;
+				position: absolute;
+				top:10px;
+				right: 100px;
+			}
+			.text-danger{text-align: center;}
+		</style>
+	</head>
+	<body>
+		<!-- 网页顶部 begin -->
+		<div class="el-header"></div>
+		<!-- 网页顶部 end -->
+
+		<!-- 网页导航 begin -->
+		<div class="el-navbar navbar navbar-default"></div>
+		<!-- 网页导航 end -->
+		
+		<div class="container">
+			<div class="el-tip-info">
+				<h3>信用借款</h3>
+				<p>
+					<span class="text-info">可借金额：</span>
+					<span id="residualCreditLine" class="text-danger"></span>
+				</p>
+			</div>
+
+			<div class="page-header lead">
+				借款信息
+				<label class="label label-primary">信用标</label>
+			</div>
+			<form class="form-horizontal el-borrow-form" id="editForm" novalidate="novalidate" method="post" action="http://localhost:8080//finance/borrow/add">
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						借款金额
+					</label>
+					<div class="col-sm-3  input-group">
+						<input class="form-control" name="showBorrowAmount" id="showBorrowAmount"/>
+						<input type="hidden" id="borrowAmount" name="borrowAmount" value="" />
+						<span class="input-group-addon">元</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						借款利息
+					</label>
+					<div class="col-sm-3  input-group">
+						<input class="form-control" name="yearRate" placeholder="借款年利息范围为：5%~20%" />
+						<span class="input-group-addon">%</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						借款期限
+					</label>
+					<div class="col-sm-3 input-group">
+						<select class="form-control" name="repaymentMonth">
+							<option value="1">1</option>
+							<option value="3">3</option>
+							<option value="6">6</option>
+							<option value="9">9</option>
+							<option value="12">12</option>
+						</select>
+						<span class="input-group-addon">月</span>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						还款方式
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="1" checked="checked" name="repaymentType" />
+						等额本息
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="2" name="repaymentType" />
+						先息后本
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						招标天数
+					</label>
+					<div class="col-sm-3 input-group">
+						<select class="form-control" name="bidDays">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+						</select>
+						<span class="input-group-addon">天</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						借款标题
+					</label>
+					<div class="col-sm-6 input-group">
+						<input name="title" class="form-control" placeholder="请输入借款标题" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">
+						借款描述
+					</label>
+					<div class="col-sm-6  input-group">
+						<textarea name="description" rows="4" class="form-control" style="resize: none;"  placeholder="请输入借款描述"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<input type="hidden" id="borrowUserId" name="borrowUserId" value="" />
+					<input type="hidden" id="borrowUsername" name="borrowUsername" value="" />
+					<button class="btn btn-primary col-lg-offset-3" type="submit" data-loading-text="提交">
+						提交申请
+					</button>
+				</div>
+				
+				<div class="el-borrow-form-tip">
+					<h4>温馨提示</h4>
+					<p>
+						<span class="text-info">选择正规机构、提高风险防范意识、切实保护好个人财产及信息安全、珍视个人信用！</span>
+					</p>
+				</div>
+			</form>
+		</div>
+
+		<!-- 页脚 begin -->
+		<div class="container-foot-2"></div>
+		<!-- 页脚 end -->
+	</body>
+<script type="text/javascript">
+
+// 判断用户是否已经登录
+let jsonUser = sessionStorage.getItem("user");
+if(!jsonUser) window.location.href = 'index.html';
+
+// 如果用户已经登录，则解析出user对象
+let user = JSON.parse(jsonUser);
+
+$(function(){
+
+    // 加载公共顶部模板
+    $('.el-header').load('tpl-head.html');
+
+    // 加载网站导航栏模板
+    $('.el-navbar').load('tpl-navbar.html');
+
+    // 加载页脚模板
+    $('.container-foot-2').load('tpl-footer.html');
+
+
+    // 加载账户钱包
+    $.post('http://localhost:8080/user/wallet/get/' + user.id, function (result) {
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+
+        // 如果返回的响应码正确，就进行数据填充
+        let userWallet = result.data;
+
+        // 剩余可借金额
+        let residualCreditLine = userWallet.residualCreditLine / MONEY_UNIT;
+        $('#residualCreditLine').text(residualCreditLine + '元');
+        // 借款金额
+		$('#showBorrowAmount').attr('placeholder', '最大可借金额为：' + residualCreditLine + '元');
+		// 借款用户id
+        $('#borrowUserId').val(user.id);
+        // 借款人用户名
+		$('#borrowUsername').val(user.username);
+
+        // '借款'表单验证
+        $("#editForm").validate({
+            rules : {
+                showBorrowAmount:{
+                    required:true,
+                    number:true,
+                    min:500,
+					max: residualCreditLine,
+					integerMutiple: 100	// 100的整数倍
+                },
+                yearRate:{
+                    required:true,
+                    number:true,
+                    min:5,
+                    max:20
+                },
+                title:"required"
+            },
+            messages: {
+                showBorrowAmount:{
+                    required:"请填写借款金额",
+                    number:"借款金额为数字",
+                    min:"借款金额最小为{0}元",
+                    max:"借款金额最大为{0}元",
+                    integerMutiple: "借款金额必须是{0}的整数倍"
+                },
+                yearRate:{
+                    required:"请填写借款利息",
+                    number:"借款利息为数字",
+                    min:"最低借款利息为{0}%",
+                    max:"最大借款利息不能超过{0}%"
+                },
+                title:"必须填写借款标题"
+            },
+            // 自定义错误样式
+            errorClass:"text-danger col-sm-6",
+            // 未通过验证,进行高亮处理或其他处理；
+            highlight:function(input){
+                $(input).closest(".form-group").addClass("has-error");
+            },
+            // 通过验证,清除高亮效果或其他处理；
+            unhighlight:function(input){
+                $(input).closest(".form-group").removeClass("has-error");
+            },
+            // 错误提示信息加载的位置
+            errorPlacement:function(label, element){
+                label.appendTo(element.closest(".form-group"));
+            },
+            submitHandler:function(form){
+
+                // 格式化货币单位为：分
+                // 借款金额
+                let borrowAmount = $('#showBorrowAmount').val();
+                $('#borrowAmount').val(borrowAmount * MONEY_UNIT);
+
+                $(form).ajaxSubmit(function(result){
+
+                    // 如果返回的数据的响应码不是'成功(200)'
+                    if(result.code != 200) {
+                        $.messager.alert(result.msg);
+                        return;
+                    }
+
+
+                    // 如果返回的响应码为'成功(200)'
+                    $.messager.confirm("提示","借款申请提交成功，请等待审核结果!",function(){
+                        // 设置左侧菜单栏激活效果
+                        sessionStorage.setItem('leftMenuName', 'borrow-list');
+
+                        window.location.href="borrow-list.html";
+                    })
+
+
+                });// $(form).ajaxSubmit(function(result));
+
+            }// submitHandler:function(form);
+
+        });// $("#editForm").validate();
+
+    });// $.post();
+
+
+});// $(function());
+
+</script>
+</html>

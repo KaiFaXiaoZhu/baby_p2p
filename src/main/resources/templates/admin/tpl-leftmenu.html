@@ -1,0 +1,46 @@
+<!-- 左侧菜单栏模板 -->
+<ul id="menu" class="list-group">
+    <li class="list-group-item">
+        <a href="#" data-toggle="collapse" data-target="#permissionmanage_detail"><span>系统管理</span></a>
+        <ul class="in" id="permissionmanage_detail">
+            <li name="systemDictionary"><a href="system-dictionary.html"><span>数据字典</span></a></li>
+            <li name="systemDictionaryItem"><a href="system-dictionary-item.html"><span>字典明细</span></a></li>
+            <li name="ipLog"><a href="loginlog.html"><span>登录历史</span></a></li>
+        </ul>
+    </li>
+    <li class="list-group-item">
+        <a href="#" data-toggle="collapse" data-target="#auditmanage_detail">
+            <span>审核管理</span>
+        </a>
+        <ul class="in" id="auditmanage_detail">
+            <li name="recharge-audit"><a href="recharge-audit.html">充值审核</a></li>
+            <li name="borrow-audit"><a href="borrow-audit.html">借款审核</a></li>
+            <li name="bidrequest_audit1_list"><a href="loan-audit.html">满标审核</a></li>
+        </ul>
+    </li>
+</ul>
+<script type="text/javascript">
+
+    $(function(){
+
+        // 为'左侧菜单列表'的<a>标签
+        $('#menu a').click(function () {
+
+            // 获取父级的<li>元素
+            let pLi = $(this).parent();
+
+            // 将li元素的name存入客户端session
+            sessionStorage.setItem('leftMenuName', pLi.attr('name'));
+
+        });// $('#menu a').click();
+
+        // 判断当前是否存在已经点击的'左侧菜单<li>的name'
+        let leftMenuName = sessionStorage.getItem("leftMenuName");
+        if( leftMenuName ) {
+
+            $('#menu li[name="' + leftMenuName + '"]').addClass('active');
+
+        }// if();
+
+    });// $(function());
+</script>

@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>宝贝投-P2P平台</title>
+		<!-- links begin -->
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="css/core.css" type="text/css" />
+        <script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+		<script type="text/javascript" src="js/plugins/jquery-validation/jquery.validate.js"></script>
+		<script type="text/javascript" src="js/plugins/jquery-validation/localization/messages_zh.js"></script>
+		<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+        <!-- links end -->
+		<link type="text/css" rel="stylesheet" href="css/account.css" />
+		<script type="text/javascript" src="js/common.js"></script>
+ 	</head>
+	<body>
+        <!-- 网页顶部 begin -->
+        <div class="el-header" ></div>
+        <!-- 网页顶部 end -->
+
+        <!-- 网页导航 begin -->
+        <div class="el-navbar navbar navbar-default"></div>
+        <!-- 网页导航 end -->
+
+		<div class="container">
+			<div class="row">
+                <!--左侧菜单栏 begin -->
+                <div class="el-leftmenu col-sm-3"></div>
+                <!--左侧菜单栏 end -->
+
+				<!-- 功能页面 -->
+				<div class="col-sm-9">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							绑定银行卡
+						</div>
+						<!-- 银行卡详情面板 Begin -->
+						<div id="pnlBankCardDetail" class="panel-body" style="display: none;">
+							<h4 class="text-success">您已经绑定了银行卡</h4>
+							<hr />
+							<table style="width: 100%;height: 100px;">
+								<tr>
+                                    <td>开户名：<span class="realname"></span></td>
+									<td>开户行：<span class="bankName"></span></td>
+								</tr>
+								<tr>
+									<td><span>银行卡号：<span class="cardNumber"></span></td>
+									<td>支行名称：<span class="branchName"></span></td>
+								</tr>
+								<tr>
+									<td><span>余额：<span class="balance" style="color:red; font-size: 22px; font-weight: bold;"></span></td>
+									<td></td>
+								</tr>
+							</table>
+						</div>
+						<!-- 添加银行卡面板 End -->
+						<!-- 银行卡信息添加面板 Begin -->
+						<div id="pnlBankCardAdd" style="display: none;">
+							<form class="form-horizontal" id="bankForm" method="post" action="http://localhost:8080/user/bankcard/add" novalidate="novalidate">
+								<fieldset>
+									<div class="form-group">
+										<p class="text-center text-danger">为保护您账户安全，绑定银行卡之后，不能自己修改，请认真填写！</p>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4 control-label ">开户名</label>
+										<div class="col-sm-8">
+											<input id="userId" class="form-control" name="userId"  type="hidden" value="">
+											<input id="realname" class="form-control" name="realname"  type="text" value="">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4  control-label">银行卡号</label>
+										<div class="col-sm-8">
+											<input id="cardNumber" class="form-control" name="cardNumber"  type="text" value="">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4  control-label">开户行</label>
+										<div class="col-sm-8">
+											<select class="form-control" name="bankName" size="1">
+												<option value="中国银行">中国银行</option>
+												<option value="中国工商银行">中国工商银行</option>
+												<option value="中国农业银行">中国农业银行</option>
+												<option value="中国建设银行">中国建设银行</option>
+												<option value="中国招商银行">中国招商银行</option>
+												<option value="中国交通银行">中国交通银行</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-4  control-label">支行名称</label>
+										<div class="col-sm-8">
+											<input id="branchName" class="form-control" name="branchName"  type="text" value="">
+										</div>
+									</div>
+									<div class="form-group">
+										<button type="submit" id="asubmit" class="btn btn-primary col-sm-offset-4" data-loading-text="正在提交"><i class="icon-ok"></i> 绑定银行卡</button>
+									</div>
+								</fieldset>
+							</form>
+						</div>
+						<!-- 银行卡信息添加面板 End -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <!-- 页脚 begin -->
+        <div class="container-foot-2"></div>
+        <!-- 页脚 end -->
+	</body>
+<script type="text/javascript">
+
+    // 判断用户是否已经登录
+    let jsonUser = sessionStorage.getItem("user");
+    if(!jsonUser) window.location.href = 'index.html';
+
+    $(function(){
+
+        // 加载公共顶部模板
+        $('.el-header').load('tpl-head.html');
+
+        // 加载网站导航栏模板
+        $('.el-navbar').load('tpl-navbar.html');
+
+        // 加载左侧菜单栏模板
+        $('.el-leftmenu').load('tpl-leftmenu.html');
+
+        // 加载页脚模板
+        $('.container-foot-2').load('tpl-footer.html');
+
+
+        // 初始化页面数据
+        initPage();
+
+    });
+
+/** 初始化页面 **/
+function initPage() {
+
+    // 获取本地session中的用户数据
+    let jsonUser = sessionStorage.getItem("user");
+    let user = JSON.parse(jsonUser);
+
+    // 加载账户钱包
+    $.post('http://localhost:8080/user/bankcard/get/' + user.id, function (result) {
+
+        // 如果返回的数据不是200和404
+		if( result.code != 200 && result.code != 404 ) {
+            $.messager.alert(result.msg);
+            return;
+		}// if( result.code != 200 || result.code != 404 );
+
+
+        // 如果返回的数据的是'成功(200)'
+        // 就填充银行卡信息面板
+        if(result.code == 200)
+            fillBankCardPanel();
+
+
+        // 如果返回的数据是'找不到数据(404)'
+		// 就显示银行卡添加面板
+        if(result.code == 404)
+            showBankCardAddPanel()
+
+    });// $.post();
+
+} // initPage();
+
+/** 填充'银行卡'面板 */
+function fillBankCardPanel(){
+
+    // 显示'银行卡信息'面板
+	$('#pnlBankCardDetail').show();
+
+    // 获取本地session中的用户数据
+    let jsonUser = sessionStorage.getItem("user");
+    let user = JSON.parse(jsonUser);
+
+    // 加载账户钱包
+    $.post('http://localhost:8080/user/bankcard/get/' + user.id, function (result) {
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+        // 如果返回的数据响应码为200
+		// 就进行表单数据填充
+        var bankCard = result.data;
+
+        $('.realname').text(bankCard.realname);
+        $('.bankName').text(bankCard.bankName);
+        $('.cardNumber').text(bankCard.cardNumber);
+        $('.branchName').text(bankCard.branchName);
+        $('.balance').text(bankCard.balance / MONEY_UNIT + '元');
+
+    });// $.post();
+
+}// fillBankCardPanel();
+	
+
+/** 显示'添加银行卡'面板 **/
+function showBankCardAddPanel(){
+
+    // 显示'银行卡信息'面板
+    $('#pnlBankCardAdd').show();
+
+	// 获取用户信息
+	let jsonUser = sessionStorage.getItem("user");
+	let user = JSON.parse(jsonUser);
+
+	// 绑定隐藏表单域
+	$('#userId').val(user.id);
+
+	// '登录表单'验证
+	$("#bankForm").validate({
+		rules:{
+			realname: { required: true },
+			cardNumber: { required: true },
+			branchName: { required: true }
+		},
+		messages: {
+			realname: { required:"&emsp;请输入开户名" },
+			cardNumber: { required:"&emsp;请输入银行卡号" },
+			branchName: { required:"&emsp;请输入支行名称" }
+		},
+		errorClass:"text-danger",
+		highlight:function(input){
+			$(input).closest(".form-group").addClass("has-error");
+		},
+		unhighlight:function(input){
+			$(input).closest(".form-group").removeClass("has-error");
+		},
+		submitHandler:function(form){
+
+			$(form).ajaxSubmit(function(result){
+
+				// 如果返回的数据的响应码不是'成功(200)'
+				if(result.code != 200) {
+					$.messager.alert(result.msg);
+					return;
+				}
+
+				// 如果返回的数据响应码为200
+				$.messager.confirm("提示",'银行卡绑定成功!',function(){
+					window.location.href="bankcard.html";
+				});
+
+			});// $(form).ajaxSubmit(function(data));
+
+		}// submitHandler:function(form);
+	});
+
+}// function initForm();	
+</script>
+</html>

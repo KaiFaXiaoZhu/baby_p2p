@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>宝贝投-P2P平台</title>
+<!-- links begin -->
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="css/core.css" type="text/css" />
+<script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+<script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+<!-- links end -->
+<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-validation/jquery.validate.js"></script>
+<link type="text/css" rel="stylesheet" href="css/account.css" />
+<script type="text/javascript" src="js/common.js"></script>
+<style type="text/css">
+.el-form input,.el-form select{
+	width: 280px;
+}
+</style>
+</head>
+<body>
+    <!-- 网页顶部 begin -->
+    <div class="el-header"></div>
+    <!-- 网页顶部 end -->
+
+    <!-- 网页导航 begin -->
+    <div class="el-navbar navbar navbar-default"></div>
+    <!-- 网页导航 end -->
+	
+	<div class="container">
+		<div class="row">
+            <!--左侧菜单栏 begin -->
+            <div class="el-leftmenu col-sm-3"></div>
+            <!--左侧菜单栏 end -->
+			<!-- 功能页面 -->
+			<div class="col-sm-9">
+				<div class="el-tip-info">
+					<h3>账户提现</h3>
+					<p>1. 为了确保银行转账成功，请您确认银行账号信息的 正确性</p>
+					<p>2. 单笔提现范围：500元 ~ 5000元</p>
+					<p>3. 目前每笔提现服务费：(提现金额 × 1%)</p>
+				</div>
+                <hr />
+				<div style="margin: 10px 2px;" class="row h4">
+					<div class="col-sm-4">
+						可提现金额：<span id="availableAmount" class="text-primary">加载中...</span>
+					</div>
+					<div class="col-sm-4">
+						冻结金额：<span id="freezeAmount" class="text-primary">加载中...</span>
+					</div>
+				</div>
+                <hr />
+                <form id="editForm" class="form-horizontal el-form" action="http://localhost:8080/user/withdraw/add" method="post">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">开户行</label>
+                        <div class="col-sm-10">
+                            <p id="lblBankName" class="form-control-static">加载中...</p>
+                            <input type="hidden" id="bankName" name="bankName" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">开户支行</label>
+                        <div class="col-sm-10">
+                            <p id="lblBranchName" class="form-control-static">加载中...</p>
+                            <input type="hidden" id="branchName" name="branchName" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">银行卡号</label>
+                        <div class="col-sm-10">
+                            <p id="lblCardNumber" class="form-control-static">加载中...</p>
+                            <input type="hidden" id="cardNumber" name="cardNumber" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">开户名</label>
+                        <div class="col-sm-10">
+                            <p id="lblRealname" class="form-control-static">加载中...</p>
+                            <input type="hidden" id="realname" name="realname" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">提现金额</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="showAmount" name="showAmount" placeholder="请输入提现金额" />
+                            <input type="hidden" id="amount" name="amount" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">手续费</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static" style="color:red;"><span id="lblFee">0</span>元</p>
+                            <input type="hidden" id="fee" name="fee" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="userId" name="userId" value="" />
+                        <button type="submit" class="col-sm-offset-2 btn btn-primary">确认提现</button>
+                    </div>
+                </form>
+			</div>
+		</div>
+	</div>
+    <!-- 页脚 begin -->
+    <div class="container-foot-2"></div>
+    <!-- 页脚 end -->
+</body>
+<script type="text/javascript">
+
+    // 判断用户是否已经登录
+    let jsonUser = sessionStorage.getItem("user");
+    if(!jsonUser) window.location.href = 'index.html';
+
+    // 如果用户已经登录，则解析出user对象
+    let user = JSON.parse(jsonUser);
+
+$(function() {
+
+    // 加载公共顶部模板
+    $('.el-header').load('tpl-head.html');
+
+    // 加载网站导航栏模板
+    $('.el-navbar').load('tpl-navbar.html');
+
+    // 加载左侧菜单栏模板
+    $('.el-leftmenu').load('tpl-leftmenu.html');
+
+    // 加载页脚模板
+    $('.container-foot-2').load('tpl-footer.html');
+
+
+    // '提现金额'输入事件
+    $('#showAmount').on('input', function (e) {
+
+        // 提现金额
+        let amount = parseInt( $('#showAmount').val() );
+
+        // 如果输入的金额不是数字，就不进行手续费计算
+        if( isNaN(amount) ){
+            $('#lblFee').text('0');
+            return;
+        }
+
+
+        // 如果输入的金额正确有效，就进行手续费的计算
+        // 手续费
+        let fee = amount / 100;
+
+        // 设置'手续费'label
+        $('#lblFee').text(fee);
+
+    });// $('#showAmount').change();
+
+
+    // '提现'表单验证
+    $("#editForm").validate({
+        rules:{
+            showAmount:{
+                required:true,
+                number:true,
+                max:5000,
+                min:500
+            }
+        },
+        messages:{
+            showAmount:{
+                required:"请输入提现金额",
+                number:"请输入正确的提现金额",
+                max:"提现金额不能超过{0}元",
+                min:"提现金额必须大于{0}元"
+            }
+        },
+        //自定义错误样式
+        errorClass:"text-danger",
+        // 未通过验证,进行高亮处理或其他处理；
+        highlight:function(input){
+            $(input).closest(".form-group").addClass("has-error");
+        },
+        // 通过验证,清除高亮效果或其他处理；
+        unhighlight:function(input){
+            $(input).closest(".form-group").removeClass("has-error");
+        },
+        // 验证成功后，提交操作；
+        submitHandler:function(form){
+
+            // 格式化货币单位为：分
+            // 提现金额
+            let showAmount = $('#showAmount').val();
+            let amount = Number(showAmount);
+
+            // 转换为(分)，先上取整
+            amount = Math.ceil(amount * MONEY_UNIT);
+            $('#amount').val(amount);
+
+            // 手续费
+            let fee = $('#lblFee').text();
+            $('#fee').val(fee * MONEY_UNIT);
+
+
+            // '提现表单', 进行Ajax异步提交
+            $("#editForm").ajaxSubmit(function(result){
+
+                // 如果返回的数据的响应码不是'成功(200)'
+                if (result.code != 200) {
+                    $.messager.alert(result.msg);
+                    return;
+                }
+
+                // 如果返回的响应码为'成功(200)'
+                $.messager.confirm("提示","提现成功！",function(){
+                    window.location.reload();
+                });
+
+            });// $("#editForm").ajaxSubmit(function(data));
+
+        }// submitHandler:function(form);
+    });//  $("#editForm").validate();
+
+
+    // 加载账户银行卡信息
+    $.post('http://localhost:8080/user/bankcard/get/' + user.id, function (result) {
+
+        // 如果返回的响应码为404，则说明用户没有绑定银行卡
+        if( result.code == 404 ) {
+            $.messager.confirm('提示', '请先绑定银行卡信息，再进行提现操作！点击 "确定" 跳转到银行卡绑定页面...', function(){
+                // 设置左侧菜单栏激活效果
+                sessionStorage.setItem('leftMenuName', 'bankcard');
+
+                window.location.href="bankcard.html";
+            });
+
+            return;
+        }
+
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+        // 如果返回的响应码正确，就进行数据填充
+        let bankCard = result.data;
+
+        // 填充展示元素
+        $('#userId').val(user.id);
+        $('#lblBankName').text(bankCard.bankName);
+        $('#lblBranchName').text(bankCard.branchName);
+        $('#lblCardNumber').text(bankCard.cardNumber);
+        $('#lblRealname').text(bankCard.realname);
+
+        // 填充隐藏表单域
+        $('#bankName').val(bankCard.bankName);
+        $('#branchName').val(bankCard.branchName);
+        $('#cardNumber').val(bankCard.cardNumber);
+        $('#realname').val(bankCard.realname);
+
+    });// $.post();
+
+
+    // 加载账户钱包
+    $.post('http://localhost:8080/user/wallet/get/' + user.id, function (result) {
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+
+        // 如果返回的响应码正确，就进行数据填充
+        var userWallet = result.data;
+
+        // 可提金额
+        $('#availableAmount').text(userWallet.availableAmount / MONEY_UNIT + '元');
+        $('#freezeAmount').text(userWallet.freezeAmount / MONEY_UNIT + '元');
+
+    });// $.post();
+
+
+});// $(function());
+</script>
+</html>

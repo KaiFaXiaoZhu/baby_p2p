@@ -1,0 +1,59 @@
+<!-- 网站顶部模板 -->
+<div class="container" style="position: relative;">
+    <!-- 未登录导航 begin -->
+    <ul id="navIndex" class="nav navbar-nav navbar-right">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="login.html">登录</a></li>
+        <li><a href="register.html">快速注册</a></li>
+        <li><a href="#">帮助</a></li>
+    </ul>
+    <!--  未登录导航 end -->
+    <!-- 已登录导航 begin -->
+    <ul id="navLogin" class="nav navbar-nav navbar-right" style="display:none;">
+        <li><a href="index.html">首页</a></li>
+        <li>
+            <a class="el-current-user" href="personal.html"></a>
+        </li>
+        <li><a  href="recharge.html">账户充值  </a></li>
+        <li><a  href="javascript:logout();">注销 </a></li>
+    </ul>
+    <!-- 已登录导航 end -->
+</div>
+
+<script type="text/javascript">
+
+$(function(){
+
+    //----->>>初始化网站顶部 Begin
+
+    // 判断用户是否已经登录
+    let jsonUser = sessionStorage.getItem("user");
+
+    // 如果用户没有登录过，就直接返回
+    if( !jsonUser ) return;
+
+
+    // 如果用户已经登录，则执行下面代码
+    let user = JSON.parse(jsonUser);
+
+    // 隐藏默认网站顶部
+    $('#navIndex').hide();
+
+    // 显示'已登录'网站顶部
+    $('#navLogin').show();
+
+    // 显示用户名
+    $('.el-current-user').text(user.username);
+
+    //----->>>初始化网站顶部 End
+
+});// $(function());
+
+/** 退出系统 **/
+function logout(){
+
+    sessionStorage.clear();
+    window.location.href = "index.html";
+}// logout();
+
+</script>

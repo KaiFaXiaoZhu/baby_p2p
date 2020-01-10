@@ -1,0 +1,81 @@
+<!-- 网站导航栏模板 -->
+<div class="container">
+    <div class="navbar-header">
+        <a href="/">
+            <img alt="Brand" src="images/logo.png">
+        </a>
+    </div>
+    <ul id="ulNavbar" class="nav navbar-nav">
+        <li id="index"><a href="index.html">首页</a></li>
+        <li id="invest"><a href="invest.html">我要投资</a></li>
+        <li id="borrow"><a href="javascript:void(0)">我要借款</a></li>
+        <li id="personal"><a href="javascript:void(0)">个人中心</a></li>
+    </ul>
+</div>
+<script type="text/javascript">
+
+    $(function(){
+
+        //----->>>初始化导航菜单 Begin
+
+        // '个人中心'按钮事件
+        $('#personal').click(function(){
+
+            // 清除左侧菜单栏选择状态
+            sessionStorage.removeItem('leftMenuName');
+
+            // 判断用户是否已经登录
+            let jsonUser = sessionStorage.getItem("user");
+
+            // 如果用户已经登录过，就跳转到'个人中心'页面
+            if( jsonUser ){
+                window.location.href = 'personal.html';
+                return;
+            };
+
+
+            // 如果用户没有登录过，则引导用户跳转到登录页面
+            $.messager.confirm("提示",'您暂未登录，点击"确定"，跳转到登录页...',function(){
+                window.location.href = 'login.html?redirectUrl=personal.html';
+            });
+
+        });// $('#personal').click();
+
+
+        // '我要借款'按钮事件
+        $('#borrow').click(function(){
+
+            // 判断用户是否已经登录
+            let jsonUser = sessionStorage.getItem("user");
+            let user = JSON.parse(jsonUser);
+
+            // 如果用户没有登录过，则引导用户跳转到登录页面
+            if( !user ) {
+                $.messager.confirm("提示",'您暂未登录，点击"确定"，跳转到登录页...',function(){
+                    window.location.href = 'login.html?redirectUrl=borrow.html';
+                });
+
+                return;
+            }// if();
+
+            // 如果用户没有完善个人信息，就引导用户跳转到'个人信息'页面
+            if( user.fillUserinfo == INFO_COMPLETE_STATE.NONE ) {
+
+                $.messager.confirm("提示",'您还未完善个人信息，请先完善个人信息！',function(){
+                    window.location.href = 'userinfo.html';
+                });
+
+                return;
+            }// if();
+
+            // 如果用户已经登录过，并且已经完善了'个人信息',
+            // 就跳转到'我要借款'页面
+            window.location.href = 'borrow.html';
+
+        });// $('#borrow').click();
+
+        //----->>>初始化导航菜单 End
+
+    });// $(function());
+
+</script>

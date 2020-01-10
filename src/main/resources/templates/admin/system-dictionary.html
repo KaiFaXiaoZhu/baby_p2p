@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>宝贝投-P2P平台->运营后台</title>
+	<!-- links begin -->
+	<link rel="shortcut icon" href="../favicon.ico" />
+	<link rel="stylesheet" href="../js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+	<link rel="stylesheet" href="../css/core.css" type="text/css" />
+	<link type="text/css" rel="stylesheet" href="../css/account.css" />
+	<script type="text/javascript" src="../js/jquery/jquery-2.1.3.js"></script>
+	<script type="text/javascript" src="../js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="../js/jquery.bootstrap.js"></script>
+	<!-- links end -->
+	<script type="text/javascript" src="../js/plugins/jquery.form.js"></script>
+	<script type="text/javascript" src="../js/plugins/jquery-validation/jquery.validate.js"></script>
+	<script type="text/javascript" src="../js/plugins/jquery.twbsPagination.min.js"></script>
+
+</head>
+
+<body>
+	<div class="container">
+		<!-- 网页顶部 begin -->
+		<div class="mgr-header"></div>
+		<!-- 网页顶部 end -->
+		<div class="row">
+			<!--左侧菜单栏 begin -->
+			<div class="mgr-leftmenu col-sm-3"></div>
+			<!--左侧菜单栏 end -->
+			<div class="col-sm-9">
+				<div class="page-header">
+					<h3>数据字典</h3>
+				</div>
+				<div class="row">
+					<!-- 提交分页的表单 -->
+					<form id="searchForm" class="form-inline" method="post" action="http://localhost:8080/system/dictionary/query">
+						<div class="form-group">
+						</div>
+						<div class="form-group">
+						    <label>关键字：</label>
+						    <input class="form-control" type="text" id="keyword" name="keyword" value="">
+						</div>
+						<div class="form-group">
+							<button id="query" type="button" class="btn btn-success"><i class="icon-search"></i> 查询</button>
+							&emsp;
+							<a href="javascript:void(-1);" class="btn btn-success" id="addSystemDictionaryBtn">添加数据字典</a>
+						</div>
+					</form>
+				</div>
+				<div class="row">
+					<table id="tblSystemDictionary" class="table table-striped" style="margin-top:20px;">
+						<thead>
+							<tr>
+								<th>名称</th>
+								<th>编码</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+
+					<div id="divPagination" style="text-align: center;">
+						<ul id="pagination" class="pagination"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- '数据字典'编辑面板 Begin -->
+	<div id="systemDictionaryModal" class="modal" tabindex="-1" role="dialog">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">编辑</h4>
+	      </div>
+	      <div class="modal-body">
+	      		<form id="editForm" class="form-horizontal" method="post" action="http://localhost:8080/system/dictionary/add" style="margin: -3px 118px">
+			    <input id="id" type="hidden" name="id" value="" />
+			   	<div class="form-group">
+				    <label class="col-sm-2 control-label">名称</label>
+				    <div class="col-sm-8">
+				    	<input type="text" class="form-control" id="name" name="name" placeholder="字典分类名称">
+				    </div>
+				</div>
+				<div class="form-group">
+				    <label class="col-sm-2 control-label">编码</label>
+				    <div class="col-sm-8">
+				    	<input type="text" class="form-control" id="code" name="code" placeholder="字典分类编码">
+				    </div>
+				</div>
+		   </form>
+		  </div>
+	      <div class="modal-footer">
+			<span style="color: #FF0000; font-weight: bold;">字典编码一经设置，无法修改！</span>
+	      	<a href="javascript:void(0);" class="btn btn-success" id="saveBtn" aria-hidden="true">保存</a>
+		    <a href="javascript:void(0);" class="btn" data-dismiss="modal" aria-hidden="true">关闭</a>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</body>
+<script type="text/javascript">
+
+	// '数据字典'集合
+	let systemDictionaryList = new Array();
+
+    // 查询条件对象
+    let queryObject = new Object();
+
+    // 判断用户是否已经登录
+    let jsonUser = sessionStorage.getItem("admin");
+    if(!jsonUser) window.location.href = 'login.html';
+
+    // 如果用户已经登录，则解析出user对象
+    let user = JSON.parse(jsonUser);
+
+	$(function() {
+
+        // 加载公共顶部模板
+        $('.mgr-header').load('tpl-head.html');
+
+        // 加载左侧菜单栏模板
+        $('.mgr-leftmenu').load('tpl-leftmenu.html');
+
+
+        // '查询'按钮事件
+		$("#query").click(function(){
+
+		    // 获取查询数据
+            queryObject.keyword = $('#keyword').val();
+            queryObject.currentPage  = 1;
+
+            // 加载'数据字典'数据
+			loadSystemDictionary();
+
+		});// $("#query").click(function());
+
+
+		// 点击添加数据字典按钮
+		$("#addSystemDictionaryBtn").click(function(){
+            // 修改表单action地址
+            $("#editForm").attr("action","http://localhost:8080/system/dictionary/add");
+
+            // 清空表单内容
+			$("#editForm").resetForm();
+
+			// 移除只读属性
+            $('#code').removeAttr('readonly');
+
+            // 弹出'新增-数据字典'窗口
+			$("#systemDictionaryModal").modal("show");
+
+		});// $("#addSystemDictionaryBtn").click(function());
+
+
+		// 点击保存
+		$("#editForm").ajaxForm(function(result){
+
+            // 隐藏'编辑表单弹窗'
+            $("#systemDictionaryModal").modal("hide");
+
+            // 如果返回的数据的响应码不是'成功(200)'
+            if(result.code != 200) {
+                $.messager.alert(result.msg);
+                return;
+            }
+
+            // 如果返回的响应码为'成功(200)'
+			$.messager.alert('添加成功！');
+
+            // 加载'数据字典'数据
+            loadSystemDictionary();
+
+
+		});// $("#editForm").ajaxForm(function(data));
+
+		$("#saveBtn").click(function(){
+			$("#editForm").submit();
+		});
+
+		// 加载'数据字典'数据
+		loadSystemDictionary();
+
+	});// $(function(){});
+
+/**	加载'数据字典'数据 **/
+function loadSystemDictionary() {
+
+    // 加载'数据字典'数据
+    $.post('http://localhost:8080/system/dictionary/query', queryObject, function (result) {
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+        // 如果返回的数据响应码为200
+        // 就进行表格数据填充
+        let pageResult = result.data;
+
+        // 将分页集合赋值给全局变量
+        systemDictionaryList = pageResult.listData;
+
+        // 填充表格数据
+        fillSystemDictionaryTable();
+
+        // 初始化分页插件
+        $("#pagination").remove();
+        $("#divPagination").append('<ul id="pagination" class="pagination"></ul>');
+
+        $("#pagination").twbsPagination({
+            totalPages: pageResult.totalPage,
+            visiblePages: 10,
+            startPage: pageResult.currentPage,
+			first: '首页',
+			last: '最后一页',
+			prev: '上一页',
+			next: '下一页',
+            onPageClick:function( event, page ){
+                // 加载指定页码数据
+                queryObject.currentPage = page;
+                loadSystemDictionary();
+
+            }// onPageClick();
+
+        });// $("#pagination").twbsPagination();
+
+    });// $.post();
+
+}// loadSystemDictionary( queryObject );
+
+/** 填充表格数据 **/
+function fillSystemDictionaryTable( ) {
+
+    // 清空表格数据
+    $('#tblSystemDictionary tbody').empty();
+
+    // 如果没有集合数据，就直接返回
+    if( !systemDictionaryList || systemDictionaryList.length == 0 ){
+        // 设置没有数据提示
+        $('#tblSystemDictionary tbody').html('<tr><td colspan="3" align="center"><p class="text-danger">暂时没有数据字典信息</p></td></tr>');
+        return;
+    }// if();
+
+    // 循环构造单元格数据，并进行填充
+    for( let i = 0; i < systemDictionaryList.length; i++ ) {
+
+        let systemDictionary = systemDictionaryList[i];
+
+        let tdName = '<td>' + systemDictionary.name + '</td>';
+        let tdCode = '<td>' + systemDictionary.code + '</td>';
+        let tdEdit = '<td><a href="javascript:showSystemDictionaryEditPanel(' + systemDictionary.id + ');" class="edit_Btn">修改</a></td>';
+
+        // 将构造好的单元格数据，填充到表格中
+        $('#tblSystemDictionary tbody').append('<tr>' + tdName + tdCode + tdEdit + '</tr>');
+
+    }// for();
+
+}// fillSystemDictionaryTable();
+
+/** 弹出'数据字典'修改窗口 **/
+function showSystemDictionaryEditPanel( id ){
+
+    // 修改表单action地址
+    $("#editForm").attr("action","http://localhost:8080/system/dictionary/update");
+
+    let systemDictionary;
+
+    // 遍历'数据字典'集合，找到匹配的id
+    for( let i = 0; i < systemDictionaryList.length; i++ ){
+
+        let tmpObj = systemDictionaryList[i];
+
+        if( tmpObj.id == id ){
+            systemDictionary = tmpObj;
+            break;
+		}
+
+	}// for( let tmpObj in systemDictionaryList );
+
+
+	// 将找到的匹配数据填充到'编辑'表单上
+	$('#id').val(systemDictionary.id);
+    $('#name').val(systemDictionary.name);
+
+    // '编码'框不可编辑
+    $('#code').val(systemDictionary.code);
+    $('#code').attr("readonly", "true");
+
+    // 显示'数据字典'编辑窗口
+    $("#systemDictionaryModal").modal("show");
+
+    return false;
+
+}// showSystemDictionaryEditPanel();
+</script>
+</html>

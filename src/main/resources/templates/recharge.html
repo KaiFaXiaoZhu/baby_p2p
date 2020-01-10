@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>宝贝投-P2P平台</title>
+		<!-- links begin -->
+		<link rel="shortcut icon" href="favicon.ico" />
+        <link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="css/core.css" type="text/css" />
+        <script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+        <!-- links end -->
+		<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+		<script type="text/javascript" src="js/My97DatePicker/WdatePicker.js" ></script>
+		
+		<link type="text/css" rel="stylesheet" href="css/account.css" />
+		<script type="text/javascript" src="js/common.js"></script>
+
+		<style type="text/css">
+			.el-recharge-table > tbody > tr > td{
+				vertical-align: middle;
+			}
+			.el-recharge-form input{
+				width: 280px;
+			}
+			.tab-content{
+				border:1px solid #ddd;
+				border-top:none;
+				padding:0px 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 网页顶部 begin -->
+		<div class="el-header"></div>
+		<!-- 网页顶部 end -->
+
+		<!-- 网页导航 begin -->
+		<div class="el-navbar navbar navbar-default"></div>
+		<!-- 网页导航 end -->
+		
+		<div class="container">
+			<div class="row">
+				<!--左侧菜单栏 begin -->
+				<div class="el-leftmenu col-sm-3"></div>
+				<!--左侧菜单栏 end -->
+
+				<!-- 功能页面 -->
+				<div class="col-sm-9">
+					<div class="el-tip-info">
+						<h3>账户充值</h3>
+						<p>1. 由于银行系统的限制，充值功能建议使用 IE 内核（IE8及以上）的浏览器。</p>
+						<p>2. 请注意：为打击信用卡套现行为，充值资金必须经过投资回款后方能允许提现。</p>
+					</div>
+					<hr />
+					<form id="rechargeForm" class="form-horizontal el-recharge-form" action="http://localhost:8080/system/recharge/add" method="post">
+						<div class="form-group">
+							<label class="control-label col-lg-2">银行</label>
+							<div class="col-sm-10">
+								<p id="bankName" class="form-control-static">加载中...</p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2">充值金额</label>
+							<div class="col-sm-10">
+								<input class="form-control" id="showAmount" name="showAmount" />
+								<input type="hidden" id="amount" name="amount" value="" />
+
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2">说明</label>
+							<div class="col-sm-5">
+								<textarea style="resize: none;" class="form-control" name="remark" placeholder="请输入充值说明..."></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<input type="hidden" id="userId" name="userId" value="" />
+							<input type="hidden" id="username" name="username" value="" />
+							<input type="hidden" id="bankCardId" name="bankCardId" value="" />
+							<button type="submit" class="col-sm-offset-2 btn btn-primary">确认充值</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- 页脚 begin -->
+		<div class="container-foot-2"></div>
+		<!-- 页脚 end -->
+	</body>
+<script type="text/javascript">
+
+// 判断用户是否已经登录
+let jsonUser = sessionStorage.getItem("user");
+if(!jsonUser) window.location.href = 'index.html';
+
+// 如果用户已经登录，则解析出user对象
+let user = JSON.parse(jsonUser);
+
+$(function(){
+
+    // 加载公共顶部模板
+    $('.el-header').load('tpl-head.html');
+
+    // 加载网站导航栏模板
+    $('.el-navbar').load('tpl-navbar.html');
+
+    // 加载左侧菜单栏模板
+    $('.el-leftmenu').load('tpl-leftmenu.html');
+
+    // 加载页脚模板
+    $('.container-foot-2').load('tpl-footer.html');
+
+
+    // '充值表单'Ajax提交
+	$("#rechargeForm").ajaxForm({
+        // 序列化之前回调
+        beforeSerialize: function () {
+
+            // 格式化货币单位为：分
+            let amount = $('#showAmount').val();
+            $('#amount').val(amount * MONEY_UNIT);
+
+        },
+        success: function (result) {
+
+            // 如果返回的数据的响应码不是'成功(200)'
+            if (result.code != 200) {
+                $.messager.alert(result.msg);
+                return;
+            }
+
+            // 如果返回的响应码为'成功(200)'
+            $.messager.confirm("提示", "充值成功，请等待运营人员进行审核!", function () {
+                window.location.href = 'recharge-list.html';
+            });
+
+        }
+    });// $("#rechargeForm").ajaxForm();
+
+
+    // 加载账户银行卡信息
+    $.post('http://localhost:8080/user/bankcard/get/' + user.id, function (result) {
+
+        // 如果返回的响应码为404，则说明用户没有绑定银行卡
+		if( result.code == 404 ) {
+            $.messager.confirm('提示', '请先绑定银行卡信息，再进行充值操作！点击 "确定" 跳转到银行卡绑定页面...', function(){
+                // 设置左侧菜单栏激活效果
+                sessionStorage.setItem('leftMenuName', 'bankcard');
+
+                window.location.href="bankcard.html";
+            });
+
+            return;
+		}
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+
+        // 如果返回的响应码正确，就进行数据填充
+        let bankCard = result.data;
+
+        $('#userId').val(user.id);
+        $('#username').val(user.username);
+        $('#bankCardId').val(bankCard.id);
+        $('#bankName').text(bankCard.bankName);
+
+        // 银行卡余额
+        let balance = bankCard.balance / MONEY_UNIT;
+        $('#showAmount').attr('placeholder', '银行卡余额为：' + balance + '元');
+
+    });// $.post();
+
+});// $(function());
+</script>
+</html>

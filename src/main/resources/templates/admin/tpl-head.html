@@ -1,0 +1,49 @@
+<!-- 网站顶部模板 -->
+<div id="cm-header" class="navbar">
+    <img class="logo" alt="Brand" src="../images/logo.png">
+    <span class="pageTitle">&nbsp;</span>
+    <ul class="nav navbar-nav navbar-right cm-navbar-nav">
+        <li>
+            <p id="curUsername" class="navbar-text text-info"></p>
+        </li>
+        <li><a href="javascript:logout();">安全退出</a></li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+$(function(){
+
+    //----->>>初始化网站顶部 Begin
+
+    // 判断用户是否已经登录
+    let jsonUser = sessionStorage.getItem("admin");
+
+    // 如果用户没有登录过，就直接返回
+    if( !jsonUser ) return;
+
+
+    // 如果用户已经登录，则执行下面代码
+    let user = JSON.parse(jsonUser);
+
+    // 隐藏默认网站顶部
+    $('#navIndex').hide();
+
+    // 显示'已登录'网站顶部
+    $('#navLogin').show();
+
+    // 显示用户名
+    $('#curUsername').text(user.username);
+
+    //----->>>初始化网站顶部 End
+
+});// $(function());
+
+/** 退出系统 **/
+function logout(){
+
+    sessionStorage.clear();
+    window.location.href = "login.html";
+}// logout();
+
+</script>

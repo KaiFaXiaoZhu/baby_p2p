@@ -1,0 +1,492 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>宝贝投-P2P平台</title>
+		<!-- links begin -->
+		<link rel="shortcut icon" href="favicon.ico" />
+        <link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="css/core.css" type="text/css" />
+        <script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+        <!-- links end -->
+		<link type="text/css" rel="stylesheet" href="css/account.css" />
+		<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+		<!-- webuploader -->
+		<link rel="stylesheet" href="js/webuploader-0.1.5/webuploader.css" />
+		<script type="text/javascript" src="js/webuploader-0.1.5/webuploader.js"></script>
+		
+		<script type="text/javascript" src="js/common.js"></script>
+	</head>
+	<body>
+		<!-- 网页顶部 begin -->
+		<div class="el-header"></div>
+		<!-- 网页顶部 end -->
+
+		<!-- 网页导航 begin -->
+		<div class="el-navbar navbar navbar-default"></div>
+		<!-- 网页导航 end -->
+		
+		<div class="container">
+			<div class="row">
+				<!--左侧菜单栏 begin -->
+				<div class="el-leftmenu col-sm-3"></div>
+				<!--左侧菜单栏 end -->
+
+				<!-- 功能页面 -->
+				<div class="col-sm-9">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							个人资料
+						</div>
+						<!-- '个人信息'展示表单 Begin -->
+						<form id="userInfoDetailForm" class="form-horizontal" action="javascript:void(0);" method="post" style="padding-top:20px; width: 700px;">
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									头像
+								</label>
+								<div class="col-sm-8">
+									<div class="pull-left el-head-img">
+										<img id="imgAvatar" width="180" height="180" class="icon" src="images/nobody.jpg" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									用户名
+								</label>
+								<div class="col-sm-8">
+									<p id="lblUsername" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									真实姓名
+								</label>
+								<div class="col-sm-8">
+									<p id="lblRealname" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									身份证号码
+								</label>
+								<div class="col-sm-8">
+									<p id="lblIdCardNumber" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									手机号码
+								</label>
+								<div class="col-sm-8">
+									<p id="lblPhoneNumber" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									个人学历
+								</label>
+								<div class="col-sm-8">
+									<p id="lblEduBackground" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									年收入
+								</label>
+								<div class="col-sm-8">
+									<p id="lblIncomingLevel" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									婚姻情况
+								</label>
+								<div class="col-sm-8">
+									<p id="lblMarriage" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									住房条件
+								</label>
+								<div class="col-sm-8">
+									<p id="lblHouseCondition" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<button id="editBtn" type="submit" class="btn btn-primary col-sm-offset-5"  autocomplate="off">
+									修改资料
+								</button>
+							</div>
+						</form>
+						<!-- '个人信息'展示表单 End -->
+
+						<!-- '个人信息'编辑表单 Begin -->
+						<form id="userInfoForm" class="form-horizontal" action="http://localhost:8080//user/userinfo/update" method="post" style="display:none; padding-top:20px; width: 700px;">
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									头像
+								</label>
+								<div class="col-sm-8">
+									<div class="pull-left el-head-img">
+										<img id="imgEditAvatar" width="180" height="180" class="icon" src="images/nobody.jpg" />
+										<a href="javascript:;" id="uploadAvatar" >上传头像</a>
+										<input type="hidden" name="avatar" id="avatar" value="nobody.jpg" />
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									用户名
+								</label>
+								<div class="col-sm-8">
+									<p id="username" class="form-control-static">加载中...</p>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									真实姓名
+								</label>
+								<div class="col-sm-8">
+									<input id="accountId" name="accountId" type="hidden" value="" />
+									<input id="realname" name="realname" class="form-control" type="text" placeholder="请输入真实姓名" value="" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									身份证号码
+								</label>
+								<div class="col-sm-8">
+									<input id="idCardNumber" name="idCardNumber" class="form-control" placeholder="请输入身份证号" type="text" value="" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									手机号码
+								</label>
+								<div class="col-sm-8">
+									<input id="phoneNumber" name="phoneNumber" class="form-control" type="text" placeholder="请输入手机号码" value="" />
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									个人学历
+								</label>
+								<div class="col-sm-8">
+									<select class="form-control" id="eduBackgroundId" name="eduBackgroundId" style="width: 180px" autocomplate="off">
+											<option value="0">-请选择-</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									年收入
+								</label>
+								<div class="col-sm-8">
+									<select class="form-control" id="incomeLevelId" name="incomeLevelId" style="width: 180px" autocomplate="off" >
+										<option value="0">-请选择-</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									婚姻情况
+								</label>
+								<div class="col-sm-8">
+									<select class="form-control" id="marriageId" name="marriageId" style="width: 180px" autocomplate="off">
+										<option value="0">-请选择-</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label">
+									住房条件
+								</label>
+								<div class="col-sm-8">
+									<select class="form-control" id="houseConditionId" name="houseConditionId" style="width: 180px" autocomplate="off">
+										<option value="0">-请选择-</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<button id="submitBtn" type="submit" class="btn btn-primary col-sm-offset-5" data-loading-text="数据保存中" autocomplate="off">
+									确认修改
+								</button>
+							</div>
+						</form>
+						<!-- '个人信息'编辑表单 End -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 页脚 begin -->
+		<div class="container-foot-2"></div>
+		<!-- 页脚 end -->
+	</body>
+
+<script>
+
+// 图片上传组件
+let uploader;
+
+// '数据字典项'集合
+let systemDictionaryItemList = new Array();
+
+// 判断用户是否已经登录
+let jsonUser = sessionStorage.getItem("user");
+if(!jsonUser) window.location.href = 'index.html';
+
+// 如果用户已经登录，则解析出user对象
+let user = JSON.parse(jsonUser);
+
+$(function(){
+
+	// 加载公共顶部模板
+	$('.el-header').load('tpl-head.html');
+
+	// 加载网站导航栏模板
+	$('.el-navbar').load('tpl-navbar.html');
+
+	// 加载左侧菜单栏模板
+	$('.el-leftmenu').load('tpl-leftmenu.html');
+
+	// 加载页脚模板
+	$('.container-foot-2').load('tpl-footer.html');
+
+	// AJAX提交表单
+	$("#userInfoForm").ajaxForm(function(result){
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+        // 如果返回的响应码为'成功(200)'
+		$.messager.confirm("提示","修改成功!",function(){
+
+            // 将账户信息更新到客户端session中
+			user.fillUserinfo = INFO_COMPLETE_STATE.COMPLETE;
+            sessionStorage.setItem( "user", JSON.stringify(user) );
+
+			window.location.reload();
+		})
+
+	});// $("#userInfoForm").ajaxForm();
+
+
+	// '修改资料'按钮事件
+	$('#editBtn').click(function () {
+
+	    // 隐藏'个人信息'表单
+		$('#userInfoDetailForm').hide();
+
+	    // 显示'修改资料'表单
+		$('#userInfoForm').show();
+
+		// 刷新'图片上传'组件
+        uploader.refresh();
+
+    });// $('#editBtn').click(function ());
+
+
+	// '上传头像'组件
+	uploader = WebUploader.create({
+		auto: true, // 自动进行上传
+		swf: 'js/webuploader-0.1.5/Uploader.swf',
+		server: 'http://localhost:8080/user/userinfo/uploadAvatar',
+		pick: '#uploadAvatar', // 按钮元素id
+		resize: false,   // 不压缩图片大小
+        duplicate: true, // 可重复上传
+        accept: {
+		    title: '头像图片',
+			extensions: 'gif,jpg,jpeg,bmp,png',
+			mimeTypes: 'image/*'
+		}
+	});// WebUploader.create();
+
+	// '头像上传成功'回调事件
+    uploader.on( 'uploadSuccess', function( file, result ) {
+
+
+        // 刷新'图片上传'组件
+        uploader.refresh();
+
+        // 如果返回的数据的响应码不是'成功(200)'
+        if(result.code != 200) {
+            $.messager.alert(result.msg);
+            return;
+        }
+
+        // 如果返回响应码为'成功(200)'
+        // 头像图片上传成功之后，回显到<image>标签中
+        $('#imgEditAvatar').attr('src', IMAGE_AVATAR_URL + result.data);
+        $('#avatar').val(result.data);
+
+    });// uploader.on('uploadSuccess');
+
+
+	// 加载'数据字典项列表'
+	loadingSystemDictionaryItemList();
+
+	// 加载'个人信息'数据
+	loadingUserInfo();
+
+});// $(function(){});
+
+/** 加载'数据字典项列表' **/
+function loadingSystemDictionaryItemList(){
+
+    // 加载'数据字典'数据
+    $.ajax({
+		type: 'GET',
+		url: 'http://localhost:8080/system/dictionaryItem/getAll',
+		async: false,
+		success: function (result) {
+
+            // 如果返回的数据的响应码不是'成功(200)'
+            if (result.code != 200) {
+                $.messager.alert(result.msg);
+                return;
+            }
+
+            // 如果返回的数据响应码为200
+            // 将'数据字典项'集合放入全局变量中
+            systemDictionaryItemList = result.data;
+
+            // 填充'个人学历'下拉框
+            fillSelect('#eduBackgroundId', SYS_DICTIONARY_CODE.sys_edu_background);
+
+            // 填充'年收入'下拉框
+            fillSelect('#incomeLevelId', SYS_DICTIONARY_CODE.sys_income_level);
+
+            // 填充'婚姻状况'下拉框
+            fillSelect('#marriageId', SYS_DICTIONARY_CODE.sys_marriage);
+
+            // 填充'住房条件'下拉框
+            fillSelect('#houseConditionId', SYS_DICTIONARY_CODE.sys_house_condition);
+        }// success(result);
+
+    });// $.ajax();
+
+}// loadingSystemDictionaryItemList();
+
+
+/** 根据元素id和数据字典id，填充<select>下拉框 **/
+function fillSelect( dom, systemDictionaryId ) {
+
+    // 循环遍历'数据字典项列表'
+    for( let i = 0; i < systemDictionaryItemList.length; i++ ) {
+
+        let tmpItem = systemDictionaryItemList[i];
+
+        // 如果找到匹配的数据字典项的parentId
+        if( tmpItem.parentId == systemDictionaryId ) {
+
+            // 就将数据字典项添加到<select>下拉框中
+            let optItem = '<option value="' + tmpItem.id + '">'+ tmpItem.value +'</option>';
+            $(dom).append(optItem);
+
+		}//if( tmpItem.parentId == systemDictionaryId );
+
+	}// for( let i = 0; i < systemDictionaryItemList.length; i++ );
+
+}// fillSelect();
+
+
+
+/** 加载'个人信息'数据 **/
+function loadingUserInfo() {
+
+    // 加载个人信息
+    $.ajax({
+		type: 'GET',
+		url: 'http://localhost:8080/user/userinfo/get/' + user.id,
+		async: false,
+		success: function (result) {
+
+            // 如果返回的数据的响应码不是'成功(200)'
+            if (result.code != 200) {
+                $.messager.alert(result.msg);
+                return;
+            }
+
+
+            // 如果返回的响应码正确，就进行数据填充
+            let userInfo = result.data;
+
+            // 填充'个人信息-展示'表单
+            $('#imgAvatar').attr('src', IMAGE_AVATAR_URL + userInfo.avatar);
+            $('#lblUsername').text(user.username);
+
+            $('#lblRealname').text(userInfo.realname == '' ? '暂无' : userInfo.realname);
+            $('#lblIdCardNumber').text(userInfo.idCardNumber == '' ? '暂无' : userInfo.idCardNumber);
+            $('#lblPhoneNumber').text(userInfo.phoneNumber == '' ? '暂无' : userInfo.phoneNumber);
+
+            $('#lblIncomingLevel').text(getDictionaryValue(userInfo.incomeLevelId));
+            $('#lblMarriage').text(getDictionaryValue(userInfo.marriageId));
+            $('#lblEduBackground').text(getDictionaryValue(userInfo.eduBackgroundId));
+            $('#lblHouseCondition').text(getDictionaryValue(userInfo.houseConditionId));
+
+
+            // 填充'个人信息-编辑'表单
+            $('#accountId').val(user.id);
+            $('#imgEditAvatar').attr('src', IMAGE_AVATAR_URL + userInfo.avatar);
+            $('#avatar').val(userInfo.avatar);
+
+            $('#username').text(user.username);
+            $('#realname').val(userInfo.realname);
+            $('#idCardNumber').val(userInfo.idCardNumber);
+            $('#phoneNumber').val(userInfo.phoneNumber);
+
+            // 下拉框
+            $('#incomeLevelId').val(userInfo.incomeLevelId);
+            $('#marriageId').val(userInfo.marriageId);
+            $('#eduBackgroundId').val(userInfo.eduBackgroundId);
+            $('#houseConditionId').val(userInfo.houseConditionId);
+        }// success(result);
+
+    });// $.ajax();
+
+}// loadingUserInfo();
+
+/** 根据数据字典项id，获取数据字典值 **/
+function getDictionaryValue( id ) {
+
+   // console.log('itemId:' + id);
+
+   // console.log('systemDictionaryItemList.length:' + systemDictionaryItemList.length);
+
+    for( let i = 0; i < systemDictionaryItemList.length; i++ ) {
+
+        let tmpSystemDictionaryItem = systemDictionaryItemList[i];
+
+        if( tmpSystemDictionaryItem.id == id )
+            return tmpSystemDictionaryItem.value;
+
+	}// for( let i = 0; i < systemDictionaryItemList.length; i++ );
+
+	return '暂无';
+
+}// getDictionaryValue( id );
+
+</script>
+</html>

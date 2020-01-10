@@ -1,0 +1,53 @@
+<!-- 左侧菜单栏模板 -->
+<ul id="menu" class="list-group">
+    <li class="list-group-item">
+        <a href="javascript:void(0);"><span>借贷项目</span></a>
+        <ul>
+            <li name="bid"><a href="bid-list.html"><span>投标明细</span></a></li>
+            <li name="receive"><a href="return-list.html"><span>收款明细</span></a></li>
+            <li name="borrow-list"><a href="borrow-list.html"><span>借款项目</span></a></li>
+            <li name="borrowBidReturn"><a href="repayment-list.html"><span>我的还款</span></a></li>
+        </ul>
+    </li>
+    <li class="list-group-item">
+        <a href="javascript:void(0);"><span class="text-title">我的账户</span></a>
+        <ul class="in">
+            <li name="userInfo"><a href="userinfo.html"><span>个人资料</span></a></li>
+            <li name="bankcard"><a href="bankcard.html">绑定银行卡</a></li>
+            <li name="ipLog"><a href="loginlog.html">登录记录</a></li>
+        </ul>
+    </li>
+    <li class="list-group-item">
+        <a href="javascript:void(0);"><span>资产详情</span></a>
+        <ul class="in">
+            <li name="accountFlow_list"><a href="accountflow.html">账户流水</a></li>
+            <li name="recharge-list"><a href="recharge-list.html">我要充值</a></li>
+            <li name="withdraw"><a href="withdraw.html">余额提现</a></li>
+        </ul>
+    </li>
+</ul>
+<script type="text/javascript">
+
+    $(function(){
+
+        // 为'左侧菜单列表'的<a>标签
+        $('#menu a').click(function () {
+
+            // 获取父级的<li>元素
+            let pLi = $(this).parent();
+
+            // 将li元素的name存入客户端session
+            sessionStorage.setItem('leftMenuName', pLi.attr('name'));
+
+        });// $('#menu a').click();
+
+        // 判断当前是否存在已经点击的'左侧菜单<li>的name'
+        let leftMenuName = sessionStorage.getItem("leftMenuName");
+        if( leftMenuName ) {
+
+            $('#menu li[name="' + leftMenuName + '"]').addClass('active');
+
+        }// if();
+
+    });// $(function());
+ </script>

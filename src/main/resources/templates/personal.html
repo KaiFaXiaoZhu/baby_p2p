@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>宝贝投-P2P平台</title>
+		
+		<!-- links begin -->
+		<link rel="shortcut icon" href="favicon.ico" />
+		<link rel="stylesheet" href="js/bootstrap-3.3.2-dist/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="css/core.css" type="text/css" />
+        <script type="text/javascript" src="js/jquery/jquery-2.1.3.js"></script>
+        <script type="text/javascript" src="js/bootstrap-3.3.2-dist/js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/jquery.bootstrap.js"></script>
+        <!-- links end -->
+		<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+		<link type="text/css" rel="stylesheet" href="css/account.css" />
+
+		<script type="text/javascript" src="js/common.js"></script>
+		
+	</head>
+	<body>
+	<!-- 网页顶部 begin -->
+	<div class="el-header" ></div>
+	<!-- 网页顶部 end -->
+		
+	<!-- 网页导航 begin -->
+	<div class="el-navbar navbar navbar-default"></div>
+	<!-- 网页导航 end -->
+		
+		<div class="container">
+			<div class="row">
+				<!--左侧菜单栏 begin -->
+				<div class="el-leftmenu col-sm-3"></div>
+				<!--左侧菜单栏 end -->
+
+				<!-- 功能页面 -->
+				<div class="col-sm-9">
+					<div class="panel panel-default">
+						<div class="panel-body el-account">
+							<div class="el-account-info">
+								<div class="pull-left el-head-img">
+									<img class="icon" id="imgAvatar" width="180" height="180" src="images/nobody.jpg" />
+								</div>
+								<div class="pull-left el-head">
+									<p>用户名：<span class="username"></span></p>
+									<p>最后登录时间：<span class="lastLoginTime"></span></p>
+								</div>
+								<div class="pull-left" style="padding-left: 20px; width: 400px;margin:30px auto 0px auto;">
+									<a class="btn btn-primary btn-lg" href="recharge.html">账户充值</a>
+									&emsp;
+									<a class="btn btn-danger btn-lg" href="withdraw.html">账户提现</a>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							
+							<div class="row h4 account-info">
+								<div class="col-sm-4">
+									账户总额：<span id="totalAmount" class="text-primary"></span>
+								</div>
+								<div class="col-sm-4">
+									可用金额：<span id="availableAmount" class="text-primary"></span>
+								</div>
+								<div class="col-sm-4">
+									冻结金额：<span id="freezeAmount" class="text-primary"></span>
+								</div>
+							</div>
+							
+							<div class="row h4 account-info">
+								<div class="col-sm-4">
+									待收利息：<span id="interestPending" class="text-primary"></span>
+								</div>
+								<div class="col-sm-4">
+									待收本金：<span id="principalPending" class="text-primary"></span>
+								</div>
+								<div class="col-sm-4">
+									待还本息：<span id="repaidAmount" class="text-primary"></span>
+								</div>
+							</div>
+
+							<div class="row h4 account-info">
+								<div class="col-sm-4">
+									授信额度：<span id="creditLine" class="text-primary"></span>
+								</div>
+								<div class="col-sm-4">
+									剩余授信额度：<span id="residualCreditLine" class="text-primary"></span>
+								</div>
+								<div class="col-sm-4">
+									信用得分：<span id="creditScore" class="text-primary"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>		
+		
+		<!-- 页脚 begin -->
+		<div class="container-foot-2"></div>
+		<!-- 页脚 end -->
+	</body>
+
+<script type="text/javascript">
+
+    // 判断用户是否已经登录
+    let jsonUser = sessionStorage.getItem("user");
+    if(!jsonUser) window.location.href = 'index.html';
+
+    $(function(){
+
+        // 加载公共顶部模板
+        $('.el-header').load('tpl-head.html');
+
+        // 加载网站导航栏模板
+        $('.el-navbar').load('tpl-navbar.html');
+
+        // 加载左侧菜单栏模板
+		$('.el-leftmenu').load('tpl-leftmenu.html');
+
+		// 加载页脚模板
+		$('.container-foot-2').load('tpl-footer.html');
+
+
+		//--->>>加载账户基本信息 Begin
+
+		// 获取本地session中的用户数据
+        let jsonUser = sessionStorage.getItem("user");
+        let user = JSON.parse(jsonUser);
+
+        // 填充页面
+		$('.username').text(user.username);
+		$('.lastLoginTime').text(user.lastLoginTime);
+
+
+        // 加载用户基本信息
+        $.post('http://localhost:8080/user/userinfo/get/' + user.id, function (result) {
+
+            // 如果返回的数据的响应码不是'成功(200)'
+            if(result.code != 200) {
+                $.messager.alert(result.msg);
+                return;
+            }
+
+
+            // 如果返回的响应码正确，就进行数据填充
+            var userInfo = result.data;
+
+            // 设置头像地址
+            $('#imgAvatar').attr('src', IMAGE_AVATAR_URL + userInfo.avatar);
+
+        });// $.post();
+
+
+		// 加载账户钱包
+		$.post('http://localhost:8080/user/wallet/get/' + user.id, function (result) {
+
+            // 如果返回的数据的响应码不是'成功(200)'
+            if(result.code != 200) {
+                $.messager.alert(result.msg);
+                return;
+            }
+
+
+            // 如果返回的响应码正确，就进行数据填充
+		    let userWallet = result.data;
+
+            // 可用金额
+		    $('#availableAmount').text(userWallet.availableAmount / MONEY_UNIT + '元');
+		    // 冻结金额
+            $('#freezeAmount').text(userWallet.freezeAmount / MONEY_UNIT + '元');
+            // 待收利息
+            $('#interestPending').text(userWallet.interestPending / MONEY_UNIT + '元');
+            // 待收本金
+            $('#principalPending').text(userWallet.principalPending / MONEY_UNIT + '元');
+            // 待还本息
+            $('#repaidAmount').text(userWallet.repaidAmount / MONEY_UNIT + '元');
+
+            // 账户总额
+            let totalAmount = (userWallet.availableAmount + userWallet.freezeAmount + userWallet.interestPending) / MONEY_UNIT;
+            $('#totalAmount').text(totalAmount + '元');
+
+            // 授信额度
+			$('#creditLine').text(userWallet.creditLine / MONEY_UNIT + '元');
+			// 剩余授信额度
+			$('#residualCreditLine').text(userWallet.residualCreditLine / MONEY_UNIT + '元');
+			// 信用得分
+			$('#creditScore').text(userWallet.creditScore + '分');
+
+
+
+        });// $.post();
+
+
+        //--->>>加载账户基本信息 End
+    });
+</script>
+
+</html>
