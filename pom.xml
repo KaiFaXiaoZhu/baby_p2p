@@ -68,6 +68,18 @@
             <optional>true</optional>
         </dependency>
         <!--=============END==============-->
+        <!--START ==== Jedis所需要的依赖 ==== START-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.7.2</version>
+        </dependency>
+        <!--END ==== Jedis所需要的依赖 ==== END-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
