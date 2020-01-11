@@ -48,7 +48,7 @@ public class StringUtil {
 
     private boolean validPropertyEmpty(Object ...args) {
         for (int i = 0; i < args.length; i++) {
-            if(EmptyUtils.isEmpty(args[i])){
+            if(StringUtil.isEmpty(args[i])){
                 return true;
             }
         }
