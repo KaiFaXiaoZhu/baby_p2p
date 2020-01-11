@@ -4,6 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+/**
+ * 加密工具类
+ */
 public class MD5 {
 
 	public static String getMd5(String plainText,int length) {
