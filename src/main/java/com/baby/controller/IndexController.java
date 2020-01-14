@@ -1,13 +1,12 @@
 package com.baby.controller;
 
-import com.baby.pojo.AccountFlow;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexController {
 
-    @RequestMapping("index")
+    @RequestMapping("/index")
     public String index(){ return "index"; }
 
 }
