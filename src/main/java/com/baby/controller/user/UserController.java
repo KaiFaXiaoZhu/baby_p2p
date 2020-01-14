@@ -5,9 +5,11 @@ import com.baby.common.MD5Utils;
 import com.baby.common.StringUtil;
 import com.baby.pojo.UserAccount;
 import com.baby.service.user.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.DateUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -53,9 +55,9 @@ public class UserController {
                 //信息封装
                 userAccount.setPassword(password);
                 userAccount.setId(IdUtils.getUUID());
-                userAccount.setAccount_status(1);
-                userAccount.setAccount_type(1);
-                userAccount.setCreate_time(new Date());
+                userAccount.setAccountStatus(1);
+                userAccount.setAccountType(1);
+                userAccount.setCreateTime(new Date());
                 //添加判断
                 if(userService.insertbabyUser(userAccount)){
                     result.put("code",200);
