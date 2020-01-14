@@ -11,12 +11,12 @@ import java.util.Date;
 @NoArgsConstructor
 public class BankCard {
     private String id;           //id
-    private String user_id;      //用户id
+    private String userId;      //用户id
     private String realname;    //开户人姓名
-    private String bank_name;    //银行名称
-    private String card_number;  //银行卡号
-    private String branch_name;  //支行名称
+    private String bankName;    //银行名称
+    private String cardNumber;  //银行卡号
+    private String branchName;  //支行名称
     private Integer balance;     //可用余额
-    private Date create_time;    //创建日期
+    private Date createTime;    //创建日期
 }
 

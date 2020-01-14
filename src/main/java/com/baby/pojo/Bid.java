@@ -11,14 +11,14 @@ import java.util.Date;
 @NoArgsConstructor
 public class Bid {
     private String id;               //id
-    private String borrow_id;      //借款id
-    private String borrow_title;   //借款标题
-    private Integer bid_amount;    //投标金额
-    private Integer bid_interest;  //投标利息
-    private int year_rate;         //年化率
-    private int borrow_state;     //借款状态
-    private String bid_user_id;    //投标人id
-    private String bid_username;   //投标人用户名
-    private Date bid_time;         //投标时间
-    private Date create_time;      //创建日期
+    private String borrowId;      //借款id
+    private String borrowTitle;   //借款标题
+    private Integer bidAmount;    //投标金额
+    private Integer bidInterest;  //投标利息
+    private int yearRate;         //年化率
+    private int borrowState;     //借款状态
+    private String bidUserId;    //投标人id
+    private String bidUsername;   //投标人用户名
+    private Date bidTime;         //投标时间
+    private Date createTime;      //创建日期
 }
