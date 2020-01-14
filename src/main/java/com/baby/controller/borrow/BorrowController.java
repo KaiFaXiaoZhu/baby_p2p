@@ -29,23 +29,20 @@ public class BorrowController {
     //查询标的信息
     @RequestMapping(value = "/query")
     @ResponseBody
-    public Object getBorrowList(Borrow borrow){
+    public Object getBorrowList(String borrowStates,@RequestParam(required = false) Integer currentPage){
         Map<String,Object> result = new HashMap<>();
         try{
-            System.err.println("BorrowState=="+borrow.getBorrowState());
-
+            Borrow borrow=new Borrow();
+            borrow.setBorrowStates(borrowStates);
+            //borrow.setBorrowState(Integer.parseInt(borrowStates));
             List<Borrow> listData =borrowService.getBorrowList(borrow);
-            if (!StringUtil.isEmpty(listData)) {
                 BorrowPage<Borrow> borrowPage=new BorrowPage<Borrow>();
                 borrowPage.setTotalPage(1);
-                borrowPage.setCurrentPage(1);
+                borrowPage.setCurrentPage(currentPage);
                 borrowPage.setPageSize(5);
                 borrowPage.setListData(listData);
                 result.put("data",borrowPage);
                 result.put("code",200);
-            }else{
-                result.put("msg",300);
-            }
         }catch (Exception e){
             e.printStackTrace();
             result.put("msg",e.getMessage());

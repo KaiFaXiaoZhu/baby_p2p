@@ -27,9 +27,23 @@
               create_time as createTime
               FROM t_borrow
             <trim prefix="where" prefixOverrides="and | or">
-                  <if test="borrowState!=null and borrowState!=''">
-                        and borrow_state IN (#{borrowState})
-                  </if>
+                <if test="borrowStates!=null and borrowStates!=''">
+                    <if test="borrowStates=='20,30,40,50'">
+                        borrow_state IN (20,30,40,50)
+                    </if>
+                    <if test="borrowStates=='20,30,40'">
+                        borrow_state IN (20,30,40)
+                    </if>
+                    <if test="borrowStates=='20,30'">
+                        borrow_state IN (20,30)
+                    </if>
+                    <if test="borrowStates=='40'">
+                        borrow_state IN (40)
+                    </if>
+                    <if test="borrowStates=='50'">
+                        borrow_state IN (50)
+                    </if>
+                </if>
             </trim>
         </select>
 </mapper>

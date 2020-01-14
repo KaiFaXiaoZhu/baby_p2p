@@ -18,6 +18,7 @@ public class Borrow {
     private int repaymentType;       //还款类型( 1.等额本息  2.先息后本 )
     private int borrowType;          //借款类型( 1.信用贷 2.车贷 3.房贷 )
     private int borrowState;         //借款状态
+    private String borrowStates;
     private Integer borrowAmount;    //借款总金额(单位：分)
     private int yearRate;            //年化率
     private int repaymentMonth;     //还款期数
