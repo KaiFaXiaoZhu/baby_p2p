@@ -35,7 +35,7 @@ public class BorrowController {
         int num=borrowService.getCountBorrow();//信息数量
         try{
             BorrowPage<Borrow> borrowPage=new BorrowPage<Borrow>();
-            borrowPage.setPageSize(1);
+            borrowPage.setPageSize(10);
             borrowPage.setCurrentPage(currentPage==null?1:currentPage);
             map.put("borrowStates",borrowStates);
             map.put("From",(borrowPage.getCurrentPage()-1)*borrowPage.getPageSize());
