@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.baby.dao.user.UserMapper">
-    <select id="getbabyUserMap" parameterType="java.util.Map" resultType="com.baby.pojo.UserAccount">
+    <!--UserAccount映射-->
+    <resultMap id="UserAccountMap" type="com.baby.pojo.UserAccount">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="accountStatus" column="account_status"/>
+        <result property="accountType" column="account_type"/>
+        <result property="fillUserinfo" column="fill_userinfo"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    <!--UserWallet映射-->
+    <resultMap id="userwalletMap" type="com.baby.pojo.UserWallet">
+        <result property="availableAmount" column="available_amount"/>
+        <result property="freezeAmount" column="freeze_amount"/>
+        <result property="interestPending" column="interest_pending"/>
+        <result property="principalPending" column="principal_pending"/>
+        <result property="repaidAmount" column="repaid_amount"/>
+        <result property="creditScore" column="credit_score"/>
+        <result property="creditLine" column="credit_line"/>
+        <result property="residualCreditLine" column="residual_credit_line"/>
+        <result property="createTime" column="credit_line"/>
+    </resultMap>
+    <!--UserInfo映射-->
+    <resultMap id="UserInfoMap" type="com.baby.pojo.UserInfo">
+        <result property="avatar" column="avatar"/>
+        <result property="realname" column="realname"/>
+        <result property="idCardNumber" column="id_card_number"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="incomeLevelId" column="income_level_id"/>
+        <result property="marriageId" column="marriage_id"/>
+        <result property="eduBackgroundId" column="edu_background_id"/>
+        <result property="houseConditionId" column="house_condition_id"/>
+
+    </resultMap>
+    <!--用户信息获取-->
+    <select id="getbabyUserMap" parameterType="java.util.Map" resultMap="UserAccountMap">
         SELECT id,username,password,account_status,account_type,fill_userinfo,last_login_time,create_time
         FROM t_user_account
         <trim prefix="WHERE">
@@ -13,10 +49,55 @@
            </if>
         </trim>
     </select>
-    <!--新增用户-->
+    <!--用户注册-->
     <insert id="insertbabyUser" parameterType="com.baby.pojo.UserAccount">
-          INSERT INTO t_user_account(id,username,password,account_status,account_type,fill_userinfo,last_login_time,create_time)
-          VALUES(#{id},#{username},#{password},#{account_status},#{account_type},#{fill_userinfo},#{last_login_time},#{create_time})
+        INSERT INTO t_user_account(id,username,password,account_status,account_type,fill_userinfo,last_login_time,create_time)
+        VALUES(#{id},#{username},#{password},#{accountStatus},#{accountType},#{fillUserinfo},#{lastLoginTime},#{createTime})
     </insert>
+    <!--用户登录记录-->
+    <insert id="insertbabyUserlog"  parameterType="com.baby.pojo.LoginLog">
+        INSERT INTO t_login_log(ip,login_time,username,account_type,login_result,create_time)
+        VALUES(#{ip},#{loginTime},#{username},#{accountType},#{loginResult},#{createTime})
+    </insert>
+    <!--用户信息修改-->
+    <update id="updatebabyUser" parameterType="com.baby.pojo.UserAccount">
+        UPDATE t_user_account
+        <trim prefix="SET" suffixOverrides="," suffix=" WHERE id = #{id}">
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="accountStatus != null and accountStatus != ''">
+                account_status = #{accountStatus},
+            </if>
+            <if test="fillUserinfo != null and fillUserinfo != ''">
+                fill_userinfo = #{fillUserinfo},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time = #{lastLoginTime},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </trim>
+    </update>
+    <!--新增账户钱包记录-->
+    <insert id="insertBabyUserwallet" parameterType="com.baby.pojo.UserWallet">
+        INSERT INTO t_user_wallet(account_id,available_amount,freeze_amount,interest_pending,principal_pending,repaid_amount,credit_score,credit_line,residual_credit_line,create_time)
+        VALUES(#{accountId},#{availableAmount},#{freezeAmount},#{interestPending},#{principalPending},#{repaidAmount},#{creditScore},#{creditLine},#{residualCreditLine},#{createTime})
+    </insert>
+    <!--账户钱包获取-->
+    <select id="selectBabyUserwallet" parameterType="String" resultMap="userwalletMap">
+        SELECT available_amount,freeze_amount,interest_pending,principal_pending,repaid_amount,credit_score,credit_line,residual_credit_line,create_time
+        FROM t_user_wallet WHERE account_id = #{accountId}
+    </select>
+    <!--用户基本信息获取-->
+    <select id="selectBabyUserInfo" parameterType="String" resultMap="UserInfoMap">
+        SELECT avatar,realname,id_card_number,phone_number,income_level_id,marriage_id,edu_background_id,house_condition_id
+        FROM t_user_info f WHERE account_id = #{accountId}
+    </select>
+
 
 </mapper>

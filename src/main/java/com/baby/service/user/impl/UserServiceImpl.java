@@ -1,10 +1,17 @@
 package com.baby.service.user.impl;
 
+import com.baby.common.IPUtil;
 import com.baby.dao.user.UserMapper;
+import com.baby.pojo.LoginLog;
 import com.baby.pojo.UserAccount;
+import com.baby.pojo.UserInfo;
+import com.baby.pojo.UserWallet;
 import com.baby.service.user.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,8 +48,92 @@ public class UserServiceImpl implements UserService {
         if(userMapper.insertbabyUser(userAccount) != 1){
              throw new Exception("注册失败");
         } else {
-            flag = true;
+            //封装账号信息,赠送10000元体验金报存在可用金额中
+            UserWallet userWallet = new UserWallet(userAccount.getId(),10000,0,0,0,0,0,0,0,new Date());
+            if(userMapper.insertBabyUserwallet(userWallet) == 1){   //插入一条新用户的账号信息
+                flag = true;
+            }
         }
         return flag;
     }
+
+    /**
+     * 新增用户登录记录
+     * @param username
+     * @return
+     */
+    @Override
+    public UserAccount loginUser(String username,String password, HttpServletRequest request) throws Exception {
+        UserAccount userAccount = null;
+        if(username != null){
+            Map<String,Object> map = new HashMap<>();
+            map.put("username",username);
+            try {
+                //根据用户名获取用户信息
+                userAccount = userMapper.getbabyUserMap(map);
+                //封装登录记录信息
+                LoginLog log =  new LoginLog();
+                log.setIp(IPUtil.getIp(request));
+                log.setLoginTime(new Date());
+                log.setUsername(userAccount.getUsername());
+                log.setAccountType(userAccount.getAccountType());
+                log.setCreateTime(new Date());
+                if(userAccount.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
+                    //登录成功，记录结果为1
+                    log.setLoginResult(1);
+                    //修改用户信息的最后登录时间
+                    userAccount.setLastLoginTime(new Date());
+                    if(userMapper.updatebabyUser(userAccount) != 1){
+                        userAccount = null;
+                    }
+                } else {
+                    //失败为0
+                    userAccount = null;  //把userAccount对象赋为空方便controller判断
+                    log.setLoginResult(0);
+                }
+               if(userMapper.insertbabyUserlog(log) != 1){
+                   userAccount = null;
+               }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return userAccount;
+    }
+
+    /**
+     * 账户钱包获取
+     * @param account_id
+     * @return
+     */
+    @Override
+    public UserWallet selectBabyUserwallet(String account_id) throws Exception {
+        UserWallet userWallet = null;
+        if(account_id != null){
+            try {
+                userWallet = userMapper.selectBabyUserwallet(account_id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return userWallet;
+    }
+
+    /**
+     * 用户基本信息获取
+     * @param account_id
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public UserInfo selectBabyUserInfo(String account_id) throws Exception {
+        UserInfo userInfo = null;
+        if(account_id != null){
+            userInfo = userMapper.selectBabyUserInfo(account_id);
+        }
+        return userInfo;
+    }
+
+
 }
