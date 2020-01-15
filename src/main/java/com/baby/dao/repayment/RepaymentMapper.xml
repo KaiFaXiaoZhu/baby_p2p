@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baby.dao.repayment.RepaymentMapper">
+
+    <select id="getRepaymentList" resultType="com.baby.pojo.Repayment">
+          SELECT
+          borrow_id as borrowId,
+          borrow_user_id as borrowUserId,
+          borrow_title as borrowTitle,
+          deadline as deadline,
+          repayment_time as repaymentTime,
+          total_amount as totalAmount,
+          principal as principal,
+          interest as interest,
+          period as period,
+          state as state,
+          borrow_type as borrowType,
+          repayment_type as repaymentType,
+          create_time as createTime FROM t_repayment WHERE borrow_user_id = #{borrowUserId}
+    </select>
+</mapper>
