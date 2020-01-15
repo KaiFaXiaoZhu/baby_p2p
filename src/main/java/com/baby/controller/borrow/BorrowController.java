@@ -31,18 +31,21 @@ public class BorrowController {
     @ResponseBody
     public Object getBorrowList(String borrowStates,@RequestParam(required = false) Integer currentPage){
         Map<String,Object> result = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();//查询条件
+        int num=borrowService.getCountBorrow();//信息数量
         try{
-            Borrow borrow=new Borrow();
-            borrow.setBorrowStates(borrowStates);
-            //borrow.setBorrowState(Integer.parseInt(borrowStates));
-            List<Borrow> listData =borrowService.getBorrowList(borrow);
-                BorrowPage<Borrow> borrowPage=new BorrowPage<Borrow>();
-                borrowPage.setTotalPage(1);
-                borrowPage.setCurrentPage(currentPage);
-                borrowPage.setPageSize(5);
-                borrowPage.setListData(listData);
-                result.put("data",borrowPage);
-                result.put("code",200);
+            BorrowPage<Borrow> borrowPage=new BorrowPage<Borrow>();
+            borrowPage.setPageSize(1);
+            borrowPage.setCurrentPage(currentPage==null?1:currentPage);
+            map.put("borrowStates",borrowStates);
+            map.put("From",(borrowPage.getCurrentPage()-1)*borrowPage.getPageSize());
+            map.put("pageSize",borrowPage.getPageSize());
+            List<Borrow> listData = borrowService.getBorrowList(map);
+            borrowPage.setTotalPage((num +borrowPage.getPageSize() - 1) / borrowPage.getPageSize());
+            borrowPage.setListData(listData);
+
+            result.put("data",borrowPage);
+            result.put("code",200);
         }catch (Exception e){
             e.printStackTrace();
             result.put("msg",e.getMessage());

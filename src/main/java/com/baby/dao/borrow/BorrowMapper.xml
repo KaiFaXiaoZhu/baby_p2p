@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baby.dao.borrow.BorrowMapper">
-        <select id="getBorrowList" resultType="com.baby.pojo.Borrow" parameterType="com.baby.pojo.Borrow">
+        <select id="getBorrowList" resultType="com.baby.pojo.Borrow" parameterType="java.util.Map">
               SELECT
               id as id,
               borrow_user_id as borrowUserId,
@@ -45,5 +45,13 @@
                     </if>
                 </if>
             </trim>
+            order by create_time DESC
+            LIMIT  #{From},#{pageSize}
         </select>
+
+    <!--查询标的数量-->
+    <select id="getCountBorrow" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_borrow
+    </select>
+
 </mapper>
