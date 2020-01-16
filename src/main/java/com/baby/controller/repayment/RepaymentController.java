@@ -38,14 +38,15 @@ public class RepaymentController {
             if(repaymentService.getRepaymentList(borrowUserId)!=null){
                 List<Repayment> listData = repaymentService.getRepaymentList(borrowUserId);
                 BorrowPage<Repayment> borrowPage=new BorrowPage<Repayment>();
-                borrowPage.setTotalPage(0);
+                borrowPage.setTotalPage(1);
                 borrowPage.setCurrentPage(currentPage);
                 borrowPage.setPageSize(5);
                 borrowPage.setListData(listData);
                 result.put("data",borrowPage);
-                result.put("code","200");
+                result.put("code",200);
             }else{
                 result.put("code","500");
+                System.out.println("1111");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -54,4 +55,12 @@ public class RepaymentController {
         return result;
     }
 
+    /**
+     * 点击立即还款
+     */
+    @RequestMapping("repay")
+    public Object Repayment(@RequestParam(value = "id") String id,@RequestParam(value = "userId") String userId){
+        System.out.println(id+"*************"+userId);
+        return "";
+    }
 }

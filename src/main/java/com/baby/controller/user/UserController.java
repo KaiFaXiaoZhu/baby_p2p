@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class UserController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public Map<String,Object> Userlogin(String username, String password, HttpServletRequest request){
+    public Map<String,Object> Userlogin(String username, String password, HttpServletRequest request, HttpSession session){
         Map<String,Object> result = new HashMap<>();
         UserAccount userAccount = null;
         try {
@@ -97,6 +98,7 @@ public class UserController {
         if(userAccount != null){
             result.put("code",200);
             result.put("data",userAccount);
+            session.setAttribute("user",userAccount);
         } else {
             result.put("code",500);
         }

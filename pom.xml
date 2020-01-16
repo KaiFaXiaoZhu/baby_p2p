@@ -85,6 +85,7 @@
             <artifactId>jedis</artifactId>
             <version>2.7.2</version>
         </dependency>
+
         <!--END ==== Jedis所需要的依赖 ==== END-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
