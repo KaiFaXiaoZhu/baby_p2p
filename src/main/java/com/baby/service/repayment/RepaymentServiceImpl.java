@@ -19,6 +19,7 @@ public class RepaymentServiceImpl implements RepaymentService {
         return repaymentMapper.getRepaymentList(borrowUserId);
     }
 
+    //根据borrowId查询还款信息
     @Override
     public List<Repayment> getByBorrowId(String borrowId) {
         return repaymentMapper.getByBorrowId(borrowId);

@@ -55,6 +55,7 @@ public class RepaymentController {
         return result;
     }
 
+    //根据borrowId查询还款信息
     @PostMapping(value = "/getByBorrowId")
     @ResponseBody
     public Object findByBorrowId(String borrowId){
