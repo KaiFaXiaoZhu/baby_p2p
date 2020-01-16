@@ -13,8 +13,10 @@ import java.util.Map;
  */
 public interface BorrowMapper {
 
-    //查询标的基本信息
+    //查询借款信息
     public List<Borrow> getBorrowList(Map<String,Object> map);
     //查询标的数量
     public Integer getCountBorrow();
+    //根据Id查询借款信息
+    public Borrow getBorrowId(Borrow borrow);
 }

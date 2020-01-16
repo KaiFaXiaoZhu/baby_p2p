@@ -26,8 +26,8 @@ public class BorrowController {
     @Resource
     private BorrowService borrowService;
 
-    //查询标的信息
-    @RequestMapping(value = "/query")
+    //查询借款信息
+    @PostMapping(value = "/query")
     @ResponseBody
     public Object getBorrowList(String borrowStates,@RequestParam(required = false) Integer currentPage){
         Map<String,Object> result = new HashMap<>();
@@ -48,6 +48,24 @@ public class BorrowController {
             result.put("code",200);
         }catch (Exception e){
             e.printStackTrace();
+            result.put("msg",e.getMessage());
+        }
+        return result;
+    }
+
+
+    //根据Id查询借款信息
+    @GetMapping(value = "/get/{borrowId}")
+    @ResponseBody
+    public Object BorrowId(@PathVariable String borrowId){
+        Map<String,Object> result = new HashMap<>();
+        try{
+            Borrow borrow=new Borrow();
+            borrow.setId(borrowId);
+            Borrow borrow1=borrowService.getBorrowId(borrow);
+            result.put("data",borrow1);
+            result.put("code",200);
+        }catch (Exception e){
             result.put("msg",e.getMessage());
         }
         return result;

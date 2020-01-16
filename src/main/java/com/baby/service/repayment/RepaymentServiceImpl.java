@@ -18,4 +18,9 @@ public class RepaymentServiceImpl implements RepaymentService {
     public List<Repayment> getRepaymentList(String borrowUserId) {
         return repaymentMapper.getRepaymentList(borrowUserId);
     }
+
+    @Override
+    public List<Repayment> getByBorrowId(String borrowId) {
+        return repaymentMapper.getByBorrowId(borrowId);
+    }
 }

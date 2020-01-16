@@ -7,6 +7,7 @@ import com.baby.pojo.UserAccount;
 import com.baby.service.repayment.RepaymentService;
 import org.apache.catalina.Session;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +50,20 @@ public class RepaymentController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            result.put("msg",e.getMessage());
+        }
+        return result;
+    }
+
+    @PostMapping(value = "/getByBorrowId")
+    @ResponseBody
+    public Object findByBorrowId(String borrowId){
+        Map<String,Object> result = new HashMap<>();
+        try{
+            List<Repayment> repayments=repaymentService.getByBorrowId(borrowId);
+            result.put("data",repayments);
+            result.put("code",200);
+        }catch (Exception e){
             result.put("msg",e.getMessage());
         }
         return result;
