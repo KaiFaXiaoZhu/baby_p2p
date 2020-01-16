@@ -12,4 +12,6 @@ public interface RepaymentMapper {
 
     public List<Repayment> getRepaymentList(@Param("borrowUserId") String borrowUserId);
 
+    //根据borrowId查询还款信息
+    public List<Repayment> getByBorrowId(@Param("borrowId") String borrowId);
 }

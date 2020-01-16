@@ -54,4 +54,34 @@
         SELECT COUNT(1) FROM t_borrow
     </select>
 
+    <!--根据Id查询借款信息-->
+    <select id="getBorrowId" resultType="com.baby.pojo.Borrow" parameterType="com.baby.pojo.Borrow">
+              SELECT
+              id as id,
+              borrow_user_id as borrowUserId,
+              borrow_username as borrowUsername,
+              title as title,
+              description as description,
+              repayment_type as repaymentType,
+              borrow_type as borrowType,
+              borrow_state as borrowState,
+              borrow_amount as borrowAmount,
+              year_rate as yearRate,
+              repayment_month as repaymentMonth,
+              bid_num as bid_num,
+              total_interest as totalInterest,
+              current_bid_amount as currentBidAmount,
+              current_bid_interest as currentBidInterest,
+              bid_deadline as bidDeadline,
+              bid_days as bidDays,
+              apply_time as applyTime,
+              publish_time as publishTime,
+              create_time as createTime
+              FROM t_borrow
+              <trim prefix="where" prefixOverrides="and | or">
+                <if test="id!=null and id!=''">
+                    id=#{id}
+                </if>
+              </trim>
+    </select>
 </mapper>

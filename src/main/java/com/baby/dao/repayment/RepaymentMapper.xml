@@ -22,4 +22,27 @@
           repayment_type as repaymentType,
           create_time as createTime FROM t_repayment WHERE borrow_user_id = #{borrowUserId}
     </select>
+
+      <select id="getByBorrowId" resultType="com.baby.pojo.Repayment">
+            SELECT
+          borrow_id as borrowId,
+          borrow_user_id as borrowUserId,
+          borrow_title as borrowTitle,
+          deadline as deadline,
+          repayment_time as repaymentTime,
+          total_amount as totalAmount,
+          principal as principal,
+          interest as interest,
+          period as period,
+          state as state,
+          borrow_type as borrowType,
+          repayment_type as repaymentType,
+          create_time as createTime
+          FROM t_repayment
+          <trim prefix="where" prefixOverrides="and | or">
+                <if test="borrowId !=null and borrowId!=''">
+                      borrow_id=#{borrowId}
+                </if>
+          </trim>
+      </select>
 </mapper>

@@ -21,16 +21,21 @@ public class BorrowServiceImpl implements BorrowService{
     private BorrowMapper borrowMapper;
 
 
-    //查询标的基本信息
+    //查询借款信息
     @Override
     public List<Borrow> getBorrowList(Map<String,Object> map) {
         List<Borrow> borrowList=borrowMapper.getBorrowList(map);
         return borrowList;
     }
 
-
+    //查询信息数量
     @Override
     public Integer getCountBorrow() {
         return borrowMapper.getCountBorrow();
+    }
+
+    @Override
+    public Borrow getBorrowId(Borrow borrow) {
+        return borrowMapper.getBorrowId(borrow);
     }
 }

@@ -34,7 +34,7 @@
         <result property="marriageId" column="marriage_id"/>
         <result property="eduBackgroundId" column="edu_background_id"/>
         <result property="houseConditionId" column="house_condition_id"/>
-
+        <result property="createTime" column="create_time"/>
     </resultMap>
     <!--用户信息获取-->
     <select id="getbabyUserMap" parameterType="java.util.Map" resultMap="UserAccountMap">
@@ -95,7 +95,7 @@
     </select>
     <!--用户基本信息获取-->
     <select id="selectBabyUserInfo" parameterType="String" resultMap="UserInfoMap">
-        SELECT avatar,realname,id_card_number,phone_number,income_level_id,marriage_id,edu_background_id,house_condition_id
+        SELECT avatar,realname,id_card_number,phone_number,income_level_id,marriage_id,edu_background_id,house_condition_id,create_time
         FROM t_user_info f WHERE account_id = #{accountId}
     </select>
 

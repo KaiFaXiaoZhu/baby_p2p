@@ -7,6 +7,7 @@ import com.baby.pojo.UserAccount;
 import com.baby.service.repayment.RepaymentService;
 import org.apache.catalina.Session;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,15 +39,14 @@ public class RepaymentController {
             if(repaymentService.getRepaymentList(borrowUserId)!=null){
                 List<Repayment> listData = repaymentService.getRepaymentList(borrowUserId);
                 BorrowPage<Repayment> borrowPage=new BorrowPage<Repayment>();
-                borrowPage.setTotalPage(1);
+                borrowPage.setTotalPage(0);
                 borrowPage.setCurrentPage(currentPage);
                 borrowPage.setPageSize(5);
                 borrowPage.setListData(listData);
                 result.put("data",borrowPage);
-                result.put("code",200);
+                result.put("code","200");
             }else{
                 result.put("code","500");
-                System.out.println("1111");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -55,12 +55,19 @@ public class RepaymentController {
         return result;
     }
 
-    /**
-     * 点击立即还款
-     */
-    @RequestMapping("repay")
-    public Object Repayment(@RequestParam(value = "id") String id,@RequestParam(value = "userId") String userId){
-        System.out.println(id+"*************"+userId);
-        return "";
+    //根据borrowId查询还款信息
+    @PostMapping(value = "/getByBorrowId")
+    @ResponseBody
+    public Object findByBorrowId(String borrowId){
+        Map<String,Object> result = new HashMap<>();
+        try{
+            List<Repayment> repayments=repaymentService.getByBorrowId(borrowId);
+            result.put("data",repayments);
+            result.put("code",200);
+        }catch (Exception e){
+            result.put("msg",e.getMessage());
+        }
+        return result;
     }
+
 }
