@@ -70,4 +70,13 @@ public class RepaymentController {
         return result;
     }
 
+    /**
+     * 点击立即还款
+     */
+    @RequestMapping("repay")
+    public Object Repayment(@RequestParam(value = "id") String id,@RequestParam(value = "userId") String userId){
+        System.out.println(id+"*************"+userId);
+        return "";
+    }
+
 }
