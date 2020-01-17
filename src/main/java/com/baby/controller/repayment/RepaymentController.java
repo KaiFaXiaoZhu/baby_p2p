@@ -74,9 +74,19 @@ public class RepaymentController {
      * 点击立即还款
      */
     @RequestMapping("repay")
+    @ResponseBody
     public Object Repayment(@RequestParam(value = "id") String id,@RequestParam(value = "userId") String userId){
-        System.out.println(id+"*************"+userId);
-        return "";
+        Map<String,Object> result = new HashMap<>();
+        try {
+            if (repaymentService.updateRepayment(id,userId)){
+                result.put("code",200);
+            }else {
+                result.put("msg","账户余额不足");
+            }
+        }catch (Exception e){
+            result.put("msg",e.getMessage());
+        }
+        return result;
     }
 
 }

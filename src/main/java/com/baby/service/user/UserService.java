@@ -3,6 +3,8 @@ package com.baby.service.user;
 import com.baby.pojo.UserAccount;
 import com.baby.pojo.UserInfo;
 import com.baby.pojo.UserWallet;
+import org.apache.ibatis.annotations.Param;
+
 import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
@@ -42,6 +44,14 @@ public interface UserService {
      */
     public UserInfo selectBabyUserInfo(String account_id) throws Exception;
 
+    /**
+     * 查询钱包内是否有足够的还款金额
+     * @param id
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public Integer getavailableAmount(String id,String userId);
 
 
 

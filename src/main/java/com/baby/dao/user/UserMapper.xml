@@ -98,6 +98,11 @@
         SELECT avatar,realname,id_card_number,phone_number,income_level_id,marriage_id,edu_background_id,house_condition_id,create_time
         FROM t_user_info f WHERE account_id = #{accountId}
     </select>
+    <!-- 查询钱包内是否有足够的还款金额 -->
+    <select id="getavailableAmount" parameterType="String" resultType="Integer">
+        SELECT available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})/100)
+        FROM t_user_wallet WHERE account_id = #{userId}
+    </select>
 
 
 </mapper>
