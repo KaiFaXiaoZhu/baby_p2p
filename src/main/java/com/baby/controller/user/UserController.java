@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baby.common.IdUtils;
 import com.baby.common.StringUtil;
+import com.baby.pojo.BankCard;
 import com.baby.pojo.UserAccount;
 import com.baby.pojo.UserInfo;
 import com.baby.pojo.UserWallet;
@@ -197,6 +198,12 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 用户信息的修改
+     * @param userInfo
+     * @param request
+     * @return
+     */
     @PostMapping("/userinfo/update")
     @ResponseBody
     public Map<String,Object> modifUserBabyUserInfo(UserInfo userInfo,HttpServletRequest request){
@@ -215,6 +222,56 @@ public class UserController {
                 result.put("msg","修改失败!");
                 e.printStackTrace();
             }
+        }
+        return result;
+    }
+
+    /**
+     * 银行卡信息的获取
+     * @param id
+     * @return
+     */
+    @PostMapping("/bankcard/get/{id}")
+    @ResponseBody
+    public Map<String,Object> getBankCard(@PathVariable String id){
+        Map<String,Object> result = new HashMap<>();
+        BankCard bankCard = null;
+        try {
+            bankCard = userService.selectBabyBankCard(id);
+            if(bankCard != null){
+                result.put("code","200");
+                result.put("data",bankCard);
+            } else {
+                result.put("code","404");
+            }
+        } catch (Exception e) {
+            result.put("code","500");
+            result.put("msg","系统异常！");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 银行卡绑定
+     * @param bankCard
+     * @return
+     */
+    @PostMapping("/bankcard/add")
+    @ResponseBody
+    public Map<String,Object> addbankcard(BankCard bankCard){
+        Map<String,Object> result = new HashMap<>();
+        try {
+            if(userService.insertBabyBankCard(bankCard)){
+                result.put("code",200);
+            } else {
+                result.put("code",500);
+                result.put("msg","资料错误！");
+            }
+        } catch (Exception e) {
+            result.put("code",500);
+            result.put("msg","系统异常！");
+            e.printStackTrace();
         }
         return result;
     }

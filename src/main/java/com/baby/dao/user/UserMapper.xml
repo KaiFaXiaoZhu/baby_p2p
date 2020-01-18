@@ -36,6 +36,16 @@
         <result property="houseConditionId" column="house_condition_id"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
+    <!--BankCard映射-->
+    <resultMap id="BankCardMap" type="com.baby.pojo.BankCard">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="realname" column="realname"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="cardNumber" column="card_number"/>
+        <result property="branchName" column="branch_name"/>
+        <result property="balance" column="balance"/>
+    </resultMap>
     <!--用户信息获取-->
     <select id="getbabyUserMap" parameterType="java.util.Map" resultMap="UserAccountMap">
         SELECT id,username,password,account_status,account_type,fill_userinfo,last_login_time,create_time
@@ -143,6 +153,23 @@
         SELECT available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})/100)
         FROM t_user_wallet WHERE account_id = #{userId}
     </select>
+    <!--银行卡信息的获取-->
+    <select id="selectBabyBankCard" parameterType="java.util.Map" resultMap="BankCardMap">
+        SELECT id,user_id,realname,bank_name,card_number,branch_name,balance FROM t_bank_card
+        <trim prefix="WHERE">
+            <if test="userId != null and userId != ''">
+                user_id = #{userId}
+            </if>
+            <if test="id != null and id != ''">
+                id = #{id}
+            </if>
+        </trim>
+    </select>
+    <!--银行卡绑定-->
+    <insert id="insertBabyBankCard" parameterType="com.baby.pojo.BankCard">
+        INSERT INTO t_bank_card(id,user_id,realname,bank_name,card_number,branch_name,balance,create_time)
+        VALUES(#{id},#{userId},#{realname},#{bankName},#{cardNumber},#{branchName},#{balance},#{createTime})
+    </insert>
 
 
 </mapper>

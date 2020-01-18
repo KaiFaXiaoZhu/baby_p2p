@@ -1,9 +1,6 @@
 package com.baby.dao.user;
 
-import com.baby.pojo.LoginLog;
-import com.baby.pojo.UserAccount;
-import com.baby.pojo.UserInfo;
-import com.baby.pojo.UserWallet;
+import com.baby.pojo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -81,7 +78,7 @@ public interface UserMapper {
      * @param userWallet
      * @return
      */
-    public Integer updateBabyUserwallt(UserWallet userWallet);
+    public Integer updateBabyUserwallt(UserWallet userWallet) throws Exception;
     /**
      * 查询钱包内是否有足够的还款金额
      * @param id
@@ -91,8 +88,20 @@ public interface UserMapper {
      */
     public Integer getavailableAmount(@Param("id") String id,@Param("userId") String userId);
 
+    /**
+     * 银行卡信息的获取
+     * @param map
+     * @return
+     */
+    public BankCard selectBabyBankCard(Map<String,Object> map) throws Exception;
 
-
+    /**
+     * 银行卡绑定
+     * @param bankCard
+     * @return
+     * @throws Exception
+     */
+    public Integer insertBabyBankCard(BankCard bankCard) throws Exception;
 
 
 }
