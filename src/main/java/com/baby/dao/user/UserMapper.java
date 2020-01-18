@@ -35,18 +35,11 @@ public interface UserMapper {
     public Integer insertbabyUserlog(LoginLog loginLog) throws Exception;
 
     /**
-     * 用户账号更改
+     * 用户信息更改
      * @param userAccount
      * @return
      */
     public Integer updatebabyUser(UserAccount userAccount) throws Exception;
-
-    /**
-     * 新增用户身份信息记录
-     * @param userInfo
-     * @return
-     */
-    public Integer insertBabyUserInfo(UserInfo userInfo) throws Exception;
 
     /**
      * 新增账户钱包记录
@@ -68,15 +61,6 @@ public interface UserMapper {
      * @return
      */
     public UserInfo selectBabyUserInfo(@Param("accountId")String account_id) throws Exception;
-
-    /**
-     * 用户信息修改
-     * @param userInfo
-     * @return
-     */
-    public Integer updateBabyUserInfo(UserInfo userInfo) throws Exception;
-
-
 
 
 }

@@ -45,4 +45,8 @@
                 </if>
           </trim>
       </select>
+
+      <update id="updateRepayment" parameterType="String">
+            UPDATE t_user_wallet SET available_amount=available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})/100) WHERE account_id=#{userId}
+      </update>
 </mapper>

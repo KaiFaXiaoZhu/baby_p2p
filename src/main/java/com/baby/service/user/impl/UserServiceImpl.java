@@ -138,6 +138,7 @@ public class UserServiceImpl implements UserService {
         return userInfo;
     }
 
+<<<<<<< HEAD
     /**
      * 用户信息修改
      * @param userInfo
@@ -150,6 +151,15 @@ public class UserServiceImpl implements UserService {
             flag = true;
         }
         return flag;
+=======
+    @Override
+    public Integer getavailableAmount(String id, String userId) {
+        Integer availableAmount = null;
+        if(id!=null&&userId!=null){
+            availableAmount =  userMapper.getavailableAmount(id,userId);
+        }
+            return availableAmount;
+>>>>>>> origin/master
     }
 
 
