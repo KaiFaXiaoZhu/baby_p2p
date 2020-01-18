@@ -1,11 +1,13 @@
 package com.baby.service.user;
 
+import com.baby.pojo.BankCard;
 import com.baby.pojo.UserAccount;
 import com.baby.pojo.UserInfo;
 import com.baby.pojo.UserWallet;
 import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public interface UserService {
     /**
@@ -59,6 +61,19 @@ public interface UserService {
      * @throws Exception
      */
     public Integer getavailableAmount(String id,String userId);
+    /**
+     * 银行卡信息的获取
+     * @param userid
+     * @return
+     */
+    public BankCard selectBabyBankCard(String userid) throws Exception;
+    /**
+     * 银行卡绑定
+     * @param bankCard
+     * @return
+     * @throws Exception
+     */
+    public boolean insertBabyBankCard(BankCard bankCard) throws Exception;
 
 
 

@@ -1,12 +1,10 @@
 package com.baby.service.user.impl;
 
 import com.baby.common.IPUtil;
+import com.baby.common.IdUtils;
 import com.baby.common.StringUtil;
 import com.baby.dao.user.UserMapper;
-import com.baby.pojo.LoginLog;
-import com.baby.pojo.UserAccount;
-import com.baby.pojo.UserInfo;
-import com.baby.pojo.UserWallet;
+import com.baby.pojo.*;
 import com.baby.service.user.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -168,14 +166,58 @@ public class UserServiceImpl implements UserService {
         }
         return flag;
     }
-
+    /**
+     * 查询钱包内是否有足够的还款金额
+     * @param id
+     * @param userId
+     * @return
+     * @throws Exception
+     */
     @Override
     public Integer getavailableAmount(String id, String userId) {
         Integer availableAmount = null;
-//        if(id!=null&&userId!=null){
-//            availableAmount =  userMapper.getavailableAmount(id,userId);
-//        }
+        if(id!=null&&userId!=null){
+            availableAmount =  userMapper.getavailableAmount(id,userId);
+        }
         return availableAmount;
+    }
+    /**
+     * 银行卡信息的获取
+     * @param userid
+     * @return
+     */
+    @Override
+    public BankCard selectBabyBankCard(String userid) {
+        Map<String,Object> result = new HashMap<>();
+        BankCard bankCard = null;
+        if(!StringUtil.isEmpty(userid)){
+            result.put("userId",userid);
+            try {
+                bankCard = userMapper.selectBabyBankCard(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return bankCard;
+    }
+    /**
+     * 银行卡绑定
+     * @param bankCard
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean insertBabyBankCard(BankCard bankCard) throws Exception {
+        boolean flag = false;
+        if(!StringUtil.isEmpty(bankCard)){
+            bankCard.setId(IdUtils.getUUID());
+            bankCard.setBalance(10000);
+            bankCard.setCreateTime(new Date());
+            if(userMapper.insertBabyBankCard(bankCard) == 1){
+                flag = true;
+            }
+        }
+        return flag;
     }
 
 }
