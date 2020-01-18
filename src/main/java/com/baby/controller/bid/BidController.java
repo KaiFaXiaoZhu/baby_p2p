@@ -1,5 +1,7 @@
 package com.baby.controller.bid;
 
+import com.alibaba.fastjson.JSON;
+import com.baby.common.AverageCapitalPlusInterestUtils;
 import com.baby.common.IdUtils;
 import com.baby.pojo.Bid;
 import com.baby.pojo.Borrow;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,16 +45,19 @@ public class BidController {
 
     //投标
     @PostMapping(value = "/add")
+    //@ResponseBody
     public Object addBid(Bid bid,String showBidAmount){
+        Borrow borrow=borrowService.getBorrowId(bid.getBorrowId());
+        double yearRate=borrow.getYearRate()*0.01;
+        double num=AverageCapitalPlusInterestUtils.getInterestCount(Double.parseDouble(showBidAmount),yearRate,borrow.getRepaymentMonth());
         try{
-            Borrow borrow=borrowService.getBorrowId(bid.getBorrowId());
             bid.setId(IdUtils.getUUID());
             bid.setBorrowTitle(borrow.getTitle());
-
         }catch (Exception e){
-
+            e.printStackTrace();
         }
-        return null;
+        System.err.println("num=="+num);
+        return null;//JSON.toJSONString(num);
     }
 
 }
