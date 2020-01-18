@@ -23,15 +23,16 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 验证用户名唯一性
+     *
      * @param username
      * @return
      * @throws Exception
      */
     @Override
     public boolean getbabyUserByname(String username) throws Exception {
-        Map<String,Object> map = new HashMap<>();
-        map.put("username",username);
-        if (userMapper.getbabyUserMap(map) != null){
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", username);
+        if (userMapper.getbabyUserMap(map) != null) {
             return false;
         }
         return true;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户注册
+     *
      * @param userAccount
      * @return
      * @throws Exception
@@ -46,14 +48,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean insertbabyUser(UserAccount userAccount) throws Exception {
         boolean flag = false;
-        if(userMapper.insertbabyUser(userAccount) != 1){
-             throw new Exception("注册失败");
+        if (userMapper.insertbabyUser(userAccount) != 1) {
+            throw new Exception("注册失败");
         } else {
             //封装账号信息,赠送10000元体验金报存在可用金额中
-            UserWallet userWallet = new UserWallet(userAccount.getId(),10000,0,0,0,0,0,0,0,new Date());
+            UserWallet userWallet = new UserWallet(userAccount.getId(), 10000, 0, 0, 0, 0, 0, 0, 0, new Date());
             //封装身份信息
-            UserInfo userInfo = new UserInfo(userAccount.getId(),"nobody.jpg","","","",0,0,0,0,new Date());
-            if(userMapper.insertBabyUserwallet(userWallet) == 1 && userMapper.insertBabyUserInfo(userInfo) == 1){   //插入一条新用户的账号信息
+            UserInfo userInfo = new UserInfo(userAccount.getId(), "nobody.jpg", "", "", "", 0, 0, 0, 0, new Date());
+            if (userMapper.insertBabyUserwallet(userWallet) == 1 && userMapper.insertBabyUserInfo(userInfo) == 1) {   //插入一条新用户的账号信息
                 flag = true;
             }
         }
@@ -62,31 +64,32 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 新增用户登录记录
+     *
      * @param username
      * @return
      */
     @Override
-    public UserAccount loginUser(String username,String password, HttpServletRequest request) throws Exception {
+    public UserAccount loginUser(String username, String password, HttpServletRequest request) throws Exception {
         UserAccount userAccount = null;
-        if(username != null){
-            Map<String,Object> map = new HashMap<>();
-            map.put("username",username);
+        if (username != null) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("username", username);
             try {
                 //根据用户名获取用户信息
                 userAccount = userMapper.getbabyUserMap(map);
                 //封装登录记录信息
-                LoginLog log =  new LoginLog();
+                LoginLog log = new LoginLog();
                 log.setIp(IPUtil.getIp(request));
                 log.setLoginTime(new Date());
                 log.setUsername(userAccount.getUsername());
                 log.setAccountType(userAccount.getAccountType());
                 log.setCreateTime(new Date());
-                if(userAccount.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))){
+                if (userAccount.getPassword().equals(DigestUtils.md5DigestAsHex(password.getBytes()))) {
                     //登录成功，记录结果为1
                     log.setLoginResult(1);
                     //修改用户信息的最后登录时间
                     userAccount.setLastLoginTime(new Date());
-                    if(userMapper.updatebabyUser(userAccount) != 1){
+                    if (userMapper.updatebabyUser(userAccount) != 1) {
                         userAccount = null;
                     }
                 } else {
@@ -94,9 +97,9 @@ public class UserServiceImpl implements UserService {
                     userAccount = null;  //把userAccount对象赋为空方便controller判断
                     log.setLoginResult(0);
                 }
-               if(userMapper.insertbabyUserlog(log) != 1){
-                   userAccount = null;
-               }
+                if (userMapper.insertbabyUserlog(log) != 1) {
+                    userAccount = null;
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -107,13 +110,14 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 账户钱包获取
+     *
      * @param account_id
      * @return
      */
     @Override
     public UserWallet selectBabyUserwallet(String account_id) throws Exception {
         UserWallet userWallet = null;
-        if(account_id != null){
+        if (account_id != null) {
             try {
                 userWallet = userMapper.selectBabyUserwallet(account_id);
             } catch (Exception e) {
@@ -125,6 +129,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户基本信息获取
+     *
      * @param account_id
      * @return
      * @throws Exception
@@ -132,35 +137,45 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfo selectBabyUserInfo(String account_id) throws Exception {
         UserInfo userInfo = null;
-        if(account_id != null){
+        if (account_id != null) {
             userInfo = userMapper.selectBabyUserInfo(account_id);
         }
         return userInfo;
     }
 
-<<<<<<< HEAD
     /**
      * 用户信息修改
+     *
      * @param userInfo
      * @return
      */
     @Override
     public boolean updateBabyUserInfo(UserInfo userInfo) throws Exception {
         boolean flag = false;
-        if(userMapper.updateBabyUserInfo(userInfo) == 1){
-            flag = true;
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", userInfo.getAccountId());
+        UserAccount userAccount = userMapper.getbabyUserMap(result);
+        if (userAccount.getFillUserinfo() == 0) {
+            UserWallet userWallet = new UserWallet(userInfo.getAccountId(), null, null, null, null, null, 100, 10000, null, null);
+            userAccount.setFillUserinfo(1);
+            if (userMapper.updateBabyUserwallt(userWallet) == 1 && userMapper.updatebabyUser(userAccount) == 1) {
+                flag = true;
+            }
+        } else {
+            if (userMapper.updateBabyUserInfo(userInfo) == 1) {
+                flag = true;
+            }
         }
         return flag;
-=======
+    }
+
     @Override
     public Integer getavailableAmount(String id, String userId) {
         Integer availableAmount = null;
-        if(id!=null&&userId!=null){
-            availableAmount =  userMapper.getavailableAmount(id,userId);
-        }
-            return availableAmount;
->>>>>>> origin/master
+//        if(id!=null&&userId!=null){
+//            availableAmount =  userMapper.getavailableAmount(id,userId);
+//        }
+        return availableAmount;
     }
-
 
 }

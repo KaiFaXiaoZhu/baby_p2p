@@ -31,11 +31,12 @@ public class RepaymentServiceImpl implements RepaymentService {
 
     @Override
     public boolean updateRepayment(String id, String userId) {
-        if (userMapper.getavailableAmount(id,userId)>0){
-            if(repaymentMapper.updateRepayment(id,userId)>0){
-                return true;
-            }
-        }
+//        if (userMapper.getavailableAmount(id,userId)>0){
+//            if(repaymentMapper.updateRepayment(id,userId)>0){
+//                return true;
+//            }
+//        }
             return false;
     }
+
 }

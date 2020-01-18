@@ -108,12 +108,37 @@
         UPDATE t_user_info SET avatar=#{avatar},realname=#{realname},id_card_number=#{idCardNumber},phone_number=#{phoneNumber},income_level_id=#{incomeLevelId},
         marriage_id=#{marriageId},edu_background_id=#{eduBackgroundId},house_condition_id=#{houseConditionId} WHERE account_id=#{accountId}
     </update>
+    <!--用户账号钱包信息修改-->
+    <update id="updateBabyUserwallt">
+        UPDATE t_user_wallet
+        <trim prefix="SET" suffixOverrides="," suffix="WHERE account_id = #{accountId}">
+            <if test="availableAmount != null">
+                available_amount = #{availableAmount},
+            </if>
+            <if test="freezeAmount != null">
+                freeze_amount = #{freezeAmount},
+            </if>
+            <if test="interestPending != null">
+                interest_pending = #{interestPending},
+            </if>
+            <if test="principalPending != null">
+                principal_pending = #{principalPending},
+            </if>
+            <if test="repaidAmount != null">
+                repaid_amount = #{repaidAmount},
+            </if>
+            <if test="creditScore != null">
+                credit_score = #{creditScore},
+            </if>
+            <if test="creditLine != null">
+                credit_line = #{creditLine},
+            </if>
+            <if test="residualCreditLine != null">
+                residual_credit_line = #{residualCreditLine},
+            </if>
+        </trim>
+    </update>
 
-    <!-- 查询钱包内是否有足够的还款金额 -->
-    <select id="getavailableAmount" parameterType="String" resultType="Integer">
-        SELECT available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})/100)
-        FROM t_user_wallet WHERE account_id = #{userId}
-    </select>
 
 
 </mapper>
