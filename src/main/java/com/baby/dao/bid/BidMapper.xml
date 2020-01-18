@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baby.dao.bid.BidMapper">
+    <!--根据borrowId查询借款信息-->
     <select id="getByBorrowId" resultType="com.baby.pojo.Bid" parameterType="com.baby.pojo.Bid">
         SELECT
         id as id,
@@ -20,6 +21,32 @@
         <trim prefix="where" prefixOverrides="and | or">
             <if test="borrowId!=null and borrowId!=''">
                 borrow_id=#{borrowId}
+            </if>
+        </trim>
+    </select>
+    <!--增加-->
+    <insert id="insertBid" parameterType="com.baby.pojo.Bid">
+        INSERT INTO t_bid(id, borrow_id, borrow_title, bid_amount, bid_interest, year_rate, borrow_state, bid_user_id, bid_username, bid_time)
+        VALUES(#{id},#{borrowId},#{borrowTitle},#{bidAmount},#{bidInterest},#{yearRate},#{borrowState},#{bidUserId},#{bidUsername},#{bidTime})
+    </insert>
+    <!--根据Id查询-->
+    <select id="getBidById" resultType="com.baby.pojo.Bid">
+        SELECT
+        id as id,
+        borrow_id as borrowId,
+        borrow_title as borrowTitle,
+        bid_amount as bidAmount,
+        bid_interest as bidInterest,
+        year_rate as yearRate,
+        borrow_state as borrowState,
+        bid_user_id as bidUserId,
+        bid_username as bidUsername,
+        bid_time as bidTime,
+        create_time as createTime
+        FROM t_bid
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="id!=null and id!=''">
+                id=#{id}
             </if>
         </trim>
     </select>

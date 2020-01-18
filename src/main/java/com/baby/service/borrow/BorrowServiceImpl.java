@@ -35,7 +35,8 @@ public class BorrowServiceImpl implements BorrowService{
     }
 
     @Override
-    public Borrow getBorrowId(Borrow borrow) {
-        return borrowMapper.getBorrowId(borrow);
+    public Borrow getBorrowId(String id) {
+        return borrowMapper.getBorrowId(id);
     }
+
 }

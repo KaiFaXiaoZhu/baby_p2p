@@ -60,9 +60,7 @@ public class BorrowController {
     public Object BorrowId(@PathVariable String borrowId){
         Map<String,Object> result = new HashMap<>();
         try{
-            Borrow borrow=new Borrow();
-            borrow.setId(borrowId);
-            Borrow borrow1=borrowService.getBorrowId(borrow);
+            Borrow borrow1=borrowService.getBorrowId(borrowId);
             result.put("data",borrow1);
             result.put("code",200);
         }catch (Exception e){

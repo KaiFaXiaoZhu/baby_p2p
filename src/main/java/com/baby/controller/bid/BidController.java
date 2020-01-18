@@ -1,8 +1,12 @@
 package com.baby.controller.bid;
 
+import com.baby.common.IdUtils;
 import com.baby.pojo.Bid;
 import com.baby.pojo.Borrow;
 import com.baby.service.bid.BidService;
+import com.baby.service.borrow.BorrowService;
+import com.fasterxml.jackson.databind.util.BeanUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +20,8 @@ import java.util.Map;
 public class BidController {
     @Resource
     private BidService bidService;
+    @Resource
+    private BorrowService borrowService;
 
     //根据borrowId查询借款信息
     @PostMapping(value = "/getByBorrowId/{borrowId}")
@@ -33,4 +39,19 @@ public class BidController {
         }
         return result;
     }
+
+    //投标
+    @PostMapping(value = "/add")
+    public Object addBid(Bid bid,String showBidAmount){
+        try{
+            Borrow borrow=borrowService.getBorrowId(bid.getBorrowId());
+            bid.setId(IdUtils.getUUID());
+            bid.setBorrowTitle(borrow.getTitle());
+
+        }catch (Exception e){
+
+        }
+        return null;
+    }
+
 }
