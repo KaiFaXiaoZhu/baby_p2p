@@ -138,7 +138,11 @@
             </if>
         </trim>
     </update>
-
+    <!-- 查询钱包内是否有足够的还款金额 -->
+    <select id="getavailableAmount" parameterType="String" resultType="Integer">
+        SELECT available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})/100)
+        FROM t_user_wallet WHERE account_id = #{userId}
+    </select>
 
 
 </mapper>

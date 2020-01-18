@@ -82,6 +82,15 @@ public interface UserMapper {
      * @return
      */
     public Integer updateBabyUserwallt(UserWallet userWallet);
+    /**
+     * 查询钱包内是否有足够的还款金额
+     * @param id
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    public Integer getavailableAmount(@Param("id") String id,@Param("userId") String userId);
+
 
 
 

@@ -172,9 +172,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer getavailableAmount(String id, String userId) {
         Integer availableAmount = null;
-//        if(id!=null&&userId!=null){
-//            availableAmount =  userMapper.getavailableAmount(id,userId);
-//        }
+        if(id!=null&&userId!=null){
+            availableAmount =  userMapper.getavailableAmount(id,userId);
+        }
         return availableAmount;
     }
 
