@@ -55,7 +55,7 @@
     </select>
 
     <!--根据Id查询借款信息-->
-    <select id="getBorrowId" resultType="com.baby.pojo.Borrow" parameterType="com.baby.pojo.Borrow">
+    <select id="getBorrowId" resultType="com.baby.pojo.Borrow">
               SELECT
               id as id,
               borrow_user_id as borrowUserId,
@@ -68,7 +68,7 @@
               borrow_amount as borrowAmount,
               year_rate as yearRate,
               repayment_month as repaymentMonth,
-              bid_num as bid_num,
+              bid_num as bidNum,
               total_interest as totalInterest,
               current_bid_amount as currentBidAmount,
               current_bid_interest as currentBidInterest,

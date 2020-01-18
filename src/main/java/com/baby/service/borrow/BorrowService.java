@@ -14,5 +14,5 @@ public interface BorrowService {
     //查询信息数量
     public Integer getCountBorrow();
     //根据Id查询借款信息
-    public Borrow getBorrowId(Borrow borrow);
+    public Borrow getBorrowId(String id);
 }
