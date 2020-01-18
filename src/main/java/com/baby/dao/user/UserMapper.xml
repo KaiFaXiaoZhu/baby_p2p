@@ -22,7 +22,7 @@
         <result property="creditScore" column="credit_score"/>
         <result property="creditLine" column="credit_line"/>
         <result property="residualCreditLine" column="residual_credit_line"/>
-        <result property="createTime" column="credit_line"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
     <!--UserInfo映射-->
     <resultMap id="UserInfoMap" type="com.baby.pojo.UserInfo">
@@ -83,6 +83,11 @@
             </if>
         </trim>
     </update>
+    <!--新增用户身份信息记录-->
+    <insert id="insertBabyUserInfo" parameterType="com.baby.pojo.UserInfo">
+        INSERT INTO t_user_info(account_id,avatar,realname,id_card_number,phone_number,income_level_id,marriage_id,edu_background_id,house_condition_id,create_time)
+        VALUES(#{accountId},#{avatar},#{realname},#{idCardNumber},#{phoneNumber},#{incomeLevelId},#{marriageId},#{eduBackgroundId},#{houseConditionId},#{createTime})
+    </insert>
     <!--新增账户钱包记录-->
     <insert id="insertBabyUserwallet" parameterType="com.baby.pojo.UserWallet">
         INSERT INTO t_user_wallet(account_id,available_amount,freeze_amount,interest_pending,principal_pending,repaid_amount,credit_score,credit_line,residual_credit_line,create_time)
@@ -98,6 +103,12 @@
         SELECT avatar,realname,id_card_number,phone_number,income_level_id,marriage_id,edu_background_id,house_condition_id,create_time
         FROM t_user_info f WHERE account_id = #{accountId}
     </select>
+    <!--用户信息修改-->
+    <update id="updateBabyUserInfo" parameterType="com.baby.pojo.UserInfo">
+        UPDATE t_user_info SET avatar=#{avatar},realname=#{realname},id_card_number=#{idCardNumber},phone_number=#{phoneNumber},income_level_id=#{incomeLevelId},
+        marriage_id=#{marriageId},edu_background_id=#{eduBackgroundId},house_condition_id=#{houseConditionId} WHERE account_id=#{accountId}
+    </update>
+
 
 
 </mapper>

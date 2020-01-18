@@ -1,18 +1,25 @@
 package com.baby.controller.user;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baby.common.IdUtils;
 import com.baby.common.StringUtil;
 import com.baby.pojo.UserAccount;
 import com.baby.pojo.UserInfo;
 import com.baby.pojo.UserWallet;
 import com.baby.service.user.UserService;
+import com.google.common.io.Files;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,7 +154,7 @@ public class UserController {
                 result.put("data",userInfo);
             } else {
                 result.put("code",500);
-                result.put("msg","信息获取失败");
+                result.put("msg","请完善个人资料！");
             }
         } catch (Exception e) {
             result.put("code",500);
@@ -156,4 +163,60 @@ public class UserController {
         }
         return result;
     }
+
+    /**
+     * 头像上传
+     * @param file
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("/userinfo/uploadAvatar")
+    @ResponseBody
+    public Map<String,Object> uploadAvatarsave(@RequestParam MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Map<String,Object> result = new HashMap<>();
+        try {
+            //获取文件名
+            String fileName  = file.getOriginalFilename();
+            // 获取项目的路径 + 拼接得到文件要保存的位置
+            String filePath = System.getProperties().getProperty("user.dir") + "\\src\\main\\resources\\static\\avatar\\" + fileName;
+            System.out.println(filePath);
+            // 创建一个文件的对象
+            File file1 = new File(filePath);
+            // 创建父文件夹
+            Files.createParentDirs(file1);
+            // 把上传的文件复制到文件对象中
+            file.transferTo(file1);
+            result.put("code",200);
+            result.put("data",fileName);
+        } catch (Exception e){
+            result.put("code",500);
+            result.put("msg","上传失败");
+        }
+        return result;
+    }
+
+    @PostMapping("/userinfo/update")
+    @ResponseBody
+    public Map<String,Object> modifUserBabyUserInfo(UserInfo userInfo,HttpServletRequest request){
+        Map<String,Object> result = new HashMap<>();
+        if(!StringUtil.isEmpty(userInfo)){
+            try {
+                userInfo.setAccountId(((UserAccount)request.getSession().getAttribute("user")).getId());
+                if (userService.updateBabyUserInfo(userInfo)){
+                    result.put("code",200);
+                } else {
+                    result.put("code",500);
+                    result.put("msg","修改失败!");
+                }
+            } catch (Exception e) {
+                result.put("code",500);
+                result.put("msg","修改失败!");
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 }

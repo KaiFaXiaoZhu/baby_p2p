@@ -10,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfo {
-    private Integer accountId;    //账户id
+    private String accountId;    //账户id
     private String avatar;         //肖像图片
     private String realname;       //真实姓名
     private String idCardNumber; //身份证号码

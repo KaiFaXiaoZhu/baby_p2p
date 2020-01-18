@@ -1,6 +1,7 @@
 package com.baby.service.user.impl;
 
 import com.baby.common.IPUtil;
+import com.baby.common.StringUtil;
 import com.baby.dao.user.UserMapper;
 import com.baby.pojo.LoginLog;
 import com.baby.pojo.UserAccount;
@@ -50,7 +51,9 @@ public class UserServiceImpl implements UserService {
         } else {
             //封装账号信息,赠送10000元体验金报存在可用金额中
             UserWallet userWallet = new UserWallet(userAccount.getId(),10000,0,0,0,0,0,0,0,new Date());
-            if(userMapper.insertBabyUserwallet(userWallet) == 1){   //插入一条新用户的账号信息
+            //封装身份信息
+            UserInfo userInfo = new UserInfo(userAccount.getId(),"nobody.jpg","","","",0,0,0,0,new Date());
+            if(userMapper.insertBabyUserwallet(userWallet) == 1 && userMapper.insertBabyUserInfo(userInfo) == 1){   //插入一条新用户的账号信息
                 flag = true;
             }
         }
@@ -133,6 +136,20 @@ public class UserServiceImpl implements UserService {
             userInfo = userMapper.selectBabyUserInfo(account_id);
         }
         return userInfo;
+    }
+
+    /**
+     * 用户信息修改
+     * @param userInfo
+     * @return
+     */
+    @Override
+    public boolean updateBabyUserInfo(UserInfo userInfo) throws Exception {
+        boolean flag = false;
+        if(userMapper.updateBabyUserInfo(userInfo) == 1){
+            flag = true;
+        }
+        return flag;
     }
 
 

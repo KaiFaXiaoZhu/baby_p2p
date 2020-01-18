@@ -21,6 +21,7 @@ public interface UserService {
      */
     public boolean insertbabyUser(UserAccount userAccount) throws Exception;
 
+
     /**
      * 新增用户登录记录
      * @param
@@ -41,6 +42,12 @@ public interface UserService {
      * @return
      */
     public UserInfo selectBabyUserInfo(String account_id) throws Exception;
+    /**
+     * 用户信息修改
+     * @param userInfo
+     * @return
+     */
+    public boolean updateBabyUserInfo(UserInfo userInfo) throws Exception;
 
 
 
