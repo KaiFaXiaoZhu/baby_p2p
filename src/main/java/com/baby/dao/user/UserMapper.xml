@@ -150,7 +150,7 @@
     </update>
     <!-- 查询钱包内是否有足够的还款金额 -->
     <select id="getavailableAmount" parameterType="String" resultType="Integer">
-        SELECT available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})/100)
+        SELECT available_amount-(SELECT total_amount FROM t_repayment WHERE id=#{id})
         FROM t_user_wallet WHERE account_id = #{userId}
     </select>
     <!--银行卡信息的获取-->
@@ -171,5 +171,17 @@
         VALUES(#{id},#{userId},#{realname},#{bankName},#{cardNumber},#{branchName},#{balance},#{createTime})
     </insert>
 
+    <!--增加还款人的信用额度-->
+    <update id="IncreaseCreditLine">
+        UPDATE t_user_wallet
+        SET residual_credit_line = residual_credit_line+(SELECT total_amount FROM t_repayment WHERE id=#{id}) WHERE account_id = #{userId}
+    </update>
+
+    <!--借款人收到还款金额-->
+    <update id="RevenueUpdate">
+        UPDATE t_user_wallet
+        SET available_amount = available_amount + (SELECT total_amount FROM t_repayment WHERE id=#{id}),interest_pending = interest_pending-(SELECT interest FROM t_repayment WHERE id=#{id}),principal_pending = principal_pending - (SELECT principal FROM t_repayment WHERE id=#{id})
+        WHERE account_id = #{userId}
+    </update>
 
 </mapper>

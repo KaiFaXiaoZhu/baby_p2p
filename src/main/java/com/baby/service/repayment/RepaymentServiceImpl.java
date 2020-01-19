@@ -18,17 +18,33 @@ public class RepaymentServiceImpl implements RepaymentService {
     @Resource
     private UserMapper userMapper;
 
+    /**
+     * 显示我的还款列表
+     * @param borrowUserId
+     * @return
+     */
     @Override
     public List<Repayment> getRepaymentList(String borrowUserId) {
         return repaymentMapper.getRepaymentList(borrowUserId);
     }
 
-    //根据borrowId查询还款信息
+    /**
+     * 根据borrowId查询还款信息
+     * @param borrowId
+     * @return
+     */
     @Override
     public List<Repayment> getByBorrowId(String borrowId) {
         return repaymentMapper.getByBorrowId(borrowId);
     }
 
+
+    /**
+     * 在我的还款里点击立即还款按钮
+     * @param id
+     * @param userId
+     * @return
+     */
     @Override
     public boolean updateRepayment(String id, String userId) {
         if (userMapper.getavailableAmount(id,userId)>0){
@@ -39,6 +55,11 @@ public class RepaymentServiceImpl implements RepaymentService {
             return false;
     }
 
+    /**
+     * 执行还款操作，更新还款表内数据
+     * @param id
+     * @return
+     */
     @Override
     public boolean updateRepayment(String id) {
         return false;

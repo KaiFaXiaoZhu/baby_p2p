@@ -104,4 +104,20 @@ public interface UserMapper {
     public Integer insertBabyBankCard(BankCard bankCard) throws Exception;
 
 
+    /**
+     *增加还款人的信用额度
+     * @param id
+     * @param userId
+     * @return
+     */
+    public int IncreaseCreditLine(@Param("id") String id,@Param("userId") String userId);
+
+    /**
+     * 借款人收到还款金额
+     * @param id
+     * @param userId
+     * @return
+     */
+    public int RevenueUpdate(@Param("id") String id,@Param("userId") String userId);
+
 }

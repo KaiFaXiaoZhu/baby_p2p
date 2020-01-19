@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
             throw new Exception("注册失败");
         } else {
             //封装账号信息,赠送10000元体验金报存在可用金额中
-            UserWallet userWallet = new UserWallet(userAccount.getId(), 10000, 0, 0, 0, 0, 0, 0, 0, new Date());
+            UserWallet userWallet = new UserWallet(userAccount.getId(), 1000000, 0, 0, 0, 0, 0, 0, 0, new Date());
             //封装身份信息
             UserInfo userInfo = new UserInfo(userAccount.getId(), "nobody.jpg", "", "", "", 0, 0, 0, 0, new Date());
             if (userMapper.insertBabyUserwallet(userWallet) == 1 && userMapper.insertBabyUserInfo(userInfo) == 1) {   //插入一条新用户的账号信息
@@ -219,5 +219,36 @@ public class UserServiceImpl implements UserService {
         }
         return flag;
     }
+
+    /**
+     * 增加还款人的信用额度
+     * @param id
+     * @param userId
+     * @return
+     */
+    @Override
+    public int IncreaseCreditLine(String id, String userId) {
+        Integer IncreaseCreditLine = null;
+        if(id!=null&&userId!=null){
+            IncreaseCreditLine =  userMapper.IncreaseCreditLine(id,userId);
+        }
+        return IncreaseCreditLine;
+    }
+
+    /**
+     * 借款人收到还款金额
+     * @param id
+     * @param userId
+     * @return
+     */
+    @Override
+    public int RevenueUpdate(String id, String userId) {
+        Integer RevenueUpdate = null;
+        if(id!=null&&userId!=null){
+            RevenueUpdate =  userMapper.RevenueUpdate(id,userId);
+        }
+        return RevenueUpdate;
+    }
+
 
 }

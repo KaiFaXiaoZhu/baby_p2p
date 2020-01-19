@@ -75,7 +75,20 @@ public interface UserService {
      */
     public boolean insertBabyBankCard(BankCard bankCard) throws Exception;
 
+    /**
+     *增加还款人的信用额度
+     * @param id
+     * @param userId
+     * @return
+     */
+    public int IncreaseCreditLine(String id,String userId);
 
-
+    /**
+     * 借款人收到还款金额
+     * @param id
+     * @param userId
+     * @return
+     */
+    public int RevenueUpdate(String id,String userId);
 
 }

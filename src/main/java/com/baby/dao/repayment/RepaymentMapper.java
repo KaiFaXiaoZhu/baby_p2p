@@ -15,6 +15,6 @@ public interface RepaymentMapper {
     //根据borrowId查询还款信息
     public List<Repayment> getByBorrowId(@Param("borrowId") String borrowId);
 
-    //在我的还款里点击立即还款按钮
+    //还款方法（需修改）
     public int updateRepayment(@Param("id") String id, @Param("userId") String userId);
 }
