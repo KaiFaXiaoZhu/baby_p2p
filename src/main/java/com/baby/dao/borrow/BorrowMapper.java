@@ -19,4 +19,8 @@ public interface BorrowMapper {
     public Integer getCountBorrow();
     //根据Id查询借款信息
     public Borrow getBorrowId(@Param("id")String id);
+    //新增Borrow
+    public Integer insertBorrow(Borrow borrow);
+    //修改Borrow
+    public Integer updateBorrow(Borrow borrow);
 }

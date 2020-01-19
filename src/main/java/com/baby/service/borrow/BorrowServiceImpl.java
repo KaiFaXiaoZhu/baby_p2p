@@ -39,4 +39,14 @@ public class BorrowServiceImpl implements BorrowService{
         return borrowMapper.getBorrowId(id);
     }
 
+    @Override
+    public Integer addBorrow(Borrow borrow) {
+        return borrowMapper.insertBorrow(borrow);
+    }
+
+    @Override
+    public Integer modifyBorrow(Borrow borrow) {
+        return borrowMapper.updateBorrow(borrow);
+    }
+
 }

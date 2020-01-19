@@ -51,7 +51,7 @@ public class AverageCapitalPlusInterestUtils {
         for (int i = 1; i < totalmonth + 1; i++) {
             BigDecimal multiply = new BigDecimal(invest).multiply(new BigDecimal(monthRate));
             BigDecimal sub  = new BigDecimal(Math.pow(1 + monthRate, totalmonth)).subtract(new BigDecimal(Math.pow(1 + monthRate, i-1)));
-            monthInterest = multiply.multiply(sub).divide(new BigDecimal(Math.pow(1 + monthRate, totalmonth) - 1), 6, BigDecimal.ROUND_DOWN);
+            monthInterest = multiply.multiply(sub).divide(new BigDecimal(Math.pow(1 + monthRate, totalmonth) - 1), 6, BigDecimal.ROUND_UP);
             monthInterest = monthInterest.setScale(2, BigDecimal.ROUND_DOWN);
             map.put(i, monthInterest);
         }

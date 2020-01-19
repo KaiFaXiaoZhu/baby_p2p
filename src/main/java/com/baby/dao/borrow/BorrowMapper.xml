@@ -84,4 +84,37 @@
                 </if>
               </trim>
     </select>
+    
+    <insert id="insertBorrow" parameterType="com.baby.pojo.Borrow">
+        INSERT INTO t_borrow(id, borrow_user_id, borrow_username, title, description, repayment_type, borrow_type, borrow_state, borrow_amount,year_rate,
+         repayment_month, bid_num, total_interest, current_bid_amount, current_bid_interest, bid_deadline, bid_days, apply_time, publish_time, create_time)
+         VALUES(#{id},#{borrowUserId},#{borrowUsername},#{title},#{description},#{repaymentType},#{borrowType},#{borrowState},#{borrowAmount},#{yearRate},
+         #{repaymentMonth},#{bidNum},#{totalInterest},#{currentBidAmount},#{currentBidInterest},#{bidDeadline},#{bidDays},#{applyTime},#{publishTime},#{createTime})
+    </insert>
+
+    <update id="updateBorrow" parameterType="com.baby.pojo.Borrow">
+        UPDATE t_borrow
+        <trim prefix="SET" suffixOverrides="," suffix=" WHERE id = #{id}">
+            <if test="borrowUserId != null and borrowUserId != ''">borrow_user_id = #{borrowUserId},</if>
+            <if test="borrowUsername != null and borrowUsername != ''">borrow_username = #{borrowUsername},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="repaymentType != null and repaymentType != ''">repayment_type = #{repaymentType},</if>
+            <if test="borrowType != null and borrowType != ''">borrow_type = #{borrowType},</if>
+            <if test="borrowState != null and borrowState != ''">borrow_state = #{borrowState},</if>
+            <if test="borrowAmount != null and borrowAmount != ''">borrow_amount = #{borrowAmount},</if>
+            <if test="yearRate != null and yearRate != ''">year_rate = #{yearRate},</if>
+            <if test="repaymentMonth != null and repaymentMonth != ''">repayment_month = #{repaymentMonth},</if>
+            <if test="bidNum != null and bidNum != ''">bid_num = #{bidNum},</if>
+            <if test="totalInterest != null and totalInterest != ''">total_interest = #{totalInterest},</if>
+            <if test="currentBidAmount != null and currentBidAmount != ''">current_bid_amount = #{currentBidAmount},</if>
+            <if test="currentBidInterest != null and currentBidInterest != ''">current_bid_interest = #{currentBidInterest},</if>
+            <if test="bidDeadline != null and bidDeadline != ''">bid_deadline = #{bidDeadline},</if>
+            <if test="bidDays != null and bidDays != ''">bid_days = #{bidDays},</if>
+            <if test="applyTime != null and applyTime != ''">apply_time = #{applyTime},</if>
+            <if test="publishTime != null and publishTime != ''">publish_time = #{publishTime},</if>
+            <if test="createTime != null and createTime != ''">create_time = #{createTime},</if>
+        </trim>
+    </update>
+
 </mapper>
