@@ -5,10 +5,7 @@ import com.baby.common.StringUtil;
 import com.baby.common.orderUtil;
 import com.baby.dao.system.SystemMapper;
 import com.baby.dao.user.UserMapper;
-import com.baby.pojo.BankCard;
-import com.baby.pojo.Recharge;
-import com.baby.pojo.SystemDictionaryItem;
-import com.baby.pojo.UserAccount;
+import com.baby.pojo.*;
 import com.baby.service.system.SystemService;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -129,5 +126,71 @@ public class SystemServiceImpl implements SystemService {
             e.printStackTrace();
         }
         return num;
+    }
+
+    /**
+     * 登录记录获取
+     * @param endDate
+     * @param loginResult
+     * @param username
+     * @param current
+     * @param size
+     * @return
+     */
+    @Override
+    public List<LoginLog> selectLoginLog(String beginDate,String endDate, Integer loginResult, String username, Integer current, Integer size) {
+       Map<String,Object> map = new HashMap<>();  //条件集合
+       List<LoginLog> loginLogs = null;  //数据集合
+       try {
+           if(!StringUtil.isEmpty(beginDate)){
+               map.put("beginDate",beginDate);
+           }
+           if(!StringUtil.isEmpty(endDate)){
+               map.put("endDate",endDate);
+           }
+           if(!StringUtil.isEmpty(loginResult)){
+               map.put("loginResult",loginResult);
+           }
+           if(!StringUtil.isEmpty(username)){
+               map.put("username",username);
+           }
+           map.put("current",current);
+           map.put("size",size);
+           loginLogs = systemMapper.selectLoginLog(map);
+       } catch (Exception e){
+           e.printStackTrace();
+       }
+        return loginLogs;
+    }
+
+    /**
+     * 登录记录数量获取
+     * @param endDate
+     * @param loginResult
+     * @param username
+     * @return
+     */
+    @Override
+    public Integer selectLoginLogCount(String beginDate,String endDate, Integer loginResult, String username) {
+        Map<String,Object> map = new HashMap<>();  //条件集合
+        Integer count = null;  //数据集合
+        try {
+            if(!StringUtil.isEmpty(beginDate)){
+                map.put("beginDate",beginDate);
+            }
+            if(!StringUtil.isEmpty(endDate)){
+                map.put("endDate",endDate);
+            }
+            if(!StringUtil.isEmpty(loginResult)){
+                map.put("loginResult",loginResult);
+            }
+            if(!StringUtil.isEmpty(username)){
+                map.put("username",username);
+            }
+            count = systemMapper.selectLoginLogCount(map);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return count;
     }
 }

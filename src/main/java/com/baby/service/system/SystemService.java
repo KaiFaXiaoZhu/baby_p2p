@@ -1,9 +1,6 @@
 package com.baby.service.system;
 
-import com.baby.pojo.BankCard;
-import com.baby.pojo.Recharge;
-import com.baby.pojo.SystemDictionaryItem;
-import com.baby.pojo.UserAccount;
+import com.baby.pojo.*;
 
 import java.util.Date;
 import java.util.List;
@@ -32,4 +29,16 @@ public interface SystemService {
      * @return
      */
     public Integer selectRechargeCount(String beginDate,String endDate,Integer state,String userId);
+    /**
+     * 登录记录获取
+     * @return
+     * @throws Exception
+     */
+    public List<LoginLog> selectLoginLog(String beginDate,String endDate,Integer loginResult,String username,Integer current,Integer size);
+
+    /**
+     * 充值记录数目获取
+     * @return
+     */
+    public Integer selectLoginLogCount(String beginDate,String endDate,Integer loginResult,String username);
 }

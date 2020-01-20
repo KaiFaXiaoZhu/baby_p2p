@@ -21,6 +21,16 @@
         <result property="state" column="state"/>
         <result property="remark" column="remark"/>
     </resultMap>
+    <!--LoginLog映射-->
+    <resultMap id="LoginLogMap" type="com.baby.pojo.LoginLog">
+        <id property="id" column="id"/>
+        <result property="ip" column="ip"/>
+        <result property="loginTime" column="login_time"/>
+        <result property="username" column="username"/>
+        <result property="accountType" column="account_type"/>
+        <result property="loginResult" column="login_result"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
     <!--数据字典获取-->
     <select id="selectDictionaryItem" resultMap="DictionaryItemMap">
         SELECT id,parent_id,value,order_no,create_time FROM t_system_dictionary_item
@@ -46,7 +56,7 @@
         </trim>
         LIMIT #{current},#{size}
     </select>
-    <!--充值记录数目获取-->
+    <!--充值记录数量获取-->
     <select id="selectRechargeCount" parameterType="java.util.Map" resultType="Integer">
         SELECT COUNT(1) FROM t_recharge
         <trim prefix="WHERE " suffixOverrides="AND">
@@ -61,6 +71,37 @@
             </if>
             <if test="userId != null">
                 user_id = #{userId} AND
+            </if>
+        </trim>
+    </select>
+    <!--登录记录获取-->
+    <select id="selectLoginLog" resultMap="LoginLogMap" parameterType="java.util.Map">
+        SELECT ip,login_time,username,account_type,login_result,create_time FROM t_login_log
+        <trim prefix="WHERE" suffixOverrides="AND">
+            <if test="beginDate != null and endDate != null">
+                login_time BETWEEN #{beginDate} AND #{endDate} AND
+            </if>
+            <if test="loginResult != null">
+                login_result = #{loginResult} AND
+            </if>
+            <if test="username != null">
+                username = #{username} AND
+            </if>
+        </trim>
+        LIMIT #{current},#{size}
+    </select>
+    <!--登录记录数量获取-->
+    <select id="selectLoginLogCount"  parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_login_log
+        <trim prefix="WHERE" suffixOverrides="AND">
+            <if test="beginDate != null and endDate != null">
+                login_time BETWEEN #{beginDate} AND #{endDate} AND
+            </if>
+            <if test="loginResult != null">
+                login_result = #{loginResult} AND
+            </if>
+            <if test="username != null">
+                username = #{username} AND
             </if>
         </trim>
     </select>

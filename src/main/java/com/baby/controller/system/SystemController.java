@@ -2,6 +2,7 @@ package com.baby.controller.system;
 
 import com.baby.common.BorrowPage;
 import com.baby.common.StringUtil;
+import com.baby.pojo.LoginLog;
 import com.baby.pojo.Recharge;
 import com.baby.pojo.SystemDictionaryItem;
 import com.baby.pojo.UserAccount;
@@ -105,6 +106,39 @@ public class SystemController {
             currentPage = (borrowPage.getCurrentPage()-1)*borrowPage.getPageSize();
             //查询分页后的集合
             List<Recharge> listData = systemService.selectRecharge(beginDate,endDate,state,userId,currentPage,borrowPage.getPageSize());
+            borrowPage.setTotalPage((num +borrowPage.getPageSize() - 1) / borrowPage.getPageSize());
+            borrowPage.setListData(listData);
+            result.put("data",borrowPage);
+            result.put("code",200);
+        }
+        return result;
+    }
+
+    /**
+     * 加载'登录记录'数据
+     * @return
+     */
+    @PostMapping("/loginlog/query")
+    @ResponseBody
+    public Map<String,Object> queryloginlog(@RequestParam(required = false)String beginDate,
+                                            @RequestParam(required = false)String endDate,
+                                            @RequestParam(required = false)Integer loginResult,
+                                            @RequestParam(required = false)String username,
+                                            @RequestParam(required = false)Integer currentPage){
+        Map<String,Object> result = new HashMap<>();
+        //方便于动态sql的判断
+        if(!StringUtil.isEmpty(loginResult)){
+            loginResult = loginResult == -1 ? null:loginResult;
+        }
+        //记录数量
+        Integer num = systemService.selectLoginLogCount(beginDate,endDate,loginResult,username);
+        if(!StringUtil.isEmpty(num)){
+            BorrowPage<LoginLog> borrowPage = new BorrowPage<>();
+            borrowPage.setPageSize(10);
+            borrowPage.setCurrentPage(StringUtil.isEmpty(currentPage)?1:currentPage);
+            //计算后的当前页码
+            currentPage = (borrowPage.getCurrentPage()-1)*borrowPage.getPageSize();
+            List<LoginLog> listData = systemService.selectLoginLog(beginDate,endDate,loginResult,username,currentPage,borrowPage.getPageSize());
             borrowPage.setTotalPage((num +borrowPage.getPageSize() - 1) / borrowPage.getPageSize());
             borrowPage.setListData(listData);
             result.put("data",borrowPage);

@@ -1,6 +1,7 @@
 package com.baby.dao.system;
 
 import com.baby.pojo.BankCard;
+import com.baby.pojo.LoginLog;
 import com.baby.pojo.Recharge;
 import com.baby.pojo.SystemDictionaryItem;
 import org.apache.ibatis.annotations.Param;
@@ -36,5 +37,19 @@ public interface SystemMapper {
      * @return
      */
     public Integer selectRechargeCount(Map<String,Object> result) throws Exception;
+
+    /**
+     * 登录记录获取
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    public List<LoginLog> selectLoginLog(Map<String,Object> result) throws Exception;
+
+    /**
+     * 充值记录数目获取
+     * @return
+     */
+    public Integer selectLoginLogCount(Map<String,Object> result) throws Exception;
 
 }
