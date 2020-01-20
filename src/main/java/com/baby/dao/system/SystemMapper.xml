@@ -34,11 +34,8 @@
     <select id="selectRecharge" resultMap="RechargeMap" parameterType="java.util.Map">
         SELECT id,user_id,username,bank_card_id,trade_no,amount,recharge_time,state,remark FROM t_recharge
         <trim prefix="WHERE " suffixOverrides="AND">
-            <if test="beginDate != null">
-                state = #{beginDate} AND
-            </if>
-            <if test="userId != null">
-                user_id = #{userId} AND
+            <if test="beginDate != null and endDate != null">
+                recharge_time BETWEEN #{beginDate} AND #{endDate} AND
             </if>
             <if test="state != null">
                 state = #{state} AND
@@ -50,9 +47,15 @@
         LIMIT #{current},#{size}
     </select>
     <!--充值记录数目获取-->
-    <select id="selectRechargeCount" parameterType="java.lang.String" resultType="Integer">
+    <select id="selectRechargeCount" parameterType="java.util.Map" resultType="Integer">
         SELECT COUNT(1) FROM t_recharge
         <trim prefix="WHERE " suffixOverrides="AND">
+            <if test="beginDate != null">
+                recharge_time BETWEEN #{beginDate} AND
+            </if>
+            <if test="endDate != null">
+                #{endDate} AND
+            </if>
             <if test="state != null">
                 state = #{state} AND
             </if>

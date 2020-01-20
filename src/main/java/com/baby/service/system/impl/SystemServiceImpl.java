@@ -75,7 +75,7 @@ public class SystemServiceImpl implements SystemService {
      * @return
      */
     @Override
-    public List<Recharge> selectRecharge(Date beginDate,Date endDate,Integer state,String userId,Integer current,Integer size) {
+    public List<Recharge> selectRecharge(String beginDate,String endDate,Integer state,String userId,Integer current,Integer size) {
         List<Recharge> rechargeList = null;
         Map<String,Object> map = new HashMap<>();
         try {
@@ -108,7 +108,7 @@ public class SystemServiceImpl implements SystemService {
      * @return
      */
     @Override
-    public Integer selectRechargeCount(Date beginDate,Date endDate,Integer state,String userId) {
+    public Integer selectRechargeCount(String beginDate,String endDate,Integer state,String userId) {
         Integer num = null;
         Map<String,Object> map = new HashMap<>();
         try {

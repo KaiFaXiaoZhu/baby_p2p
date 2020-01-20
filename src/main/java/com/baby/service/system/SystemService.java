@@ -26,10 +26,10 @@ public interface SystemService {
      * 充值记录获取
      * @return
      */
-    public List<Recharge> selectRecharge(Date beginDate, Date endDate,Integer state, String userId, Integer current, Integer size);
+    public List<Recharge> selectRecharge(String beginDate, String endDate,Integer state, String userId, Integer current, Integer size);
     /**
      * 充值记录数目获取
      * @return
      */
-    public Integer selectRechargeCount(Date beginDate,Date endDate,Integer state,String userId);
+    public Integer selectRechargeCount(String beginDate,String endDate,Integer state,String userId);
 }
