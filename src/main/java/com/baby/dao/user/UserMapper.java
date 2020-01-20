@@ -120,4 +120,11 @@ public interface UserMapper {
      */
     public int RevenueUpdate(@Param("id") String id,@Param("userId") String userId);
 
+    /**
+     * 余额提现
+     * @param withdraw
+     * @return
+     */
+    public Integer insertBabyWithdraw(Withdraw withdraw) throws Exception;
+
 }

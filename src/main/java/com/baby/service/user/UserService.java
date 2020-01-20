@@ -1,9 +1,6 @@
 package com.baby.service.user;
 
-import com.baby.pojo.BankCard;
-import com.baby.pojo.UserAccount;
-import com.baby.pojo.UserInfo;
-import com.baby.pojo.UserWallet;
+import com.baby.pojo.*;
 import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,14 +35,14 @@ public interface UserService {
      * @param account_id
      * @return
      */
-    public UserWallet selectBabyUserwallet(String account_id) throws Exception;
+    public UserWallet selectBabyUserwallet(String account_id);
 
     /**
      * 用户基本信息获取
      * @param account_id
      * @return
      */
-    public UserInfo selectBabyUserInfo(String account_id) throws Exception;
+    public UserInfo selectBabyUserInfo(String account_id);
     /**
      * 用户信息修改
      * @param userInfo
@@ -90,5 +87,11 @@ public interface UserService {
      * @return
      */
     public int RevenueUpdate(String id,String userId);
+    /**
+     * 余额提现
+     * @param withdraw
+     * @return
+     */
+    public boolean insertBabyWithdraw(Withdraw withdraw,UserWallet userWallet);
 
 }

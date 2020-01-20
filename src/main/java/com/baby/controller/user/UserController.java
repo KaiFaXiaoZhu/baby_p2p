@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baby.common.IdUtils;
 import com.baby.common.StringUtil;
-import com.baby.pojo.BankCard;
-import com.baby.pojo.UserAccount;
-import com.baby.pojo.UserInfo;
-import com.baby.pojo.UserWallet;
+import com.baby.pojo.*;
 import com.baby.service.user.UserService;
 import com.google.common.io.Files;
 import org.springframework.stereotype.Controller;
@@ -271,4 +268,30 @@ public class UserController {
         return result;
     }
 
+    /**
+     * 余额提现
+     * @return
+     */
+    @PostMapping("/withdraw/add")
+    @ResponseBody
+    public Map<String,Object> addwithdraw(Withdraw withdraw,HttpServletRequest request){
+        Map<String,Object> result = new HashMap<>();
+        String user_id = ((UserAccount)request.getSession().getAttribute("user")).getId();
+        //获取用户信息,得到开户人姓名
+        UserInfo userInfo = userService.selectBabyUserInfo(user_id);
+        //提现记录信息封装
+        withdraw.setId(IdUtils.getUUID());
+        withdraw.setRealname(userInfo.getRealname());
+        withdraw.setUserId(user_id);
+        withdraw.setCreateTime(new Date());
+        //获取账户钱包
+        UserWallet userWallet = userService.selectBabyUserwallet(user_id);
+        if(userService.insertBabyWithdraw(withdraw,userWallet)){
+            result.put("code",200);
+        } else {
+            result.put("code",500);
+            result.put("msg","系统异常");
+        }
+        return result;
+    }
 }

@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public UserWallet selectBabyUserwallet(String account_id) throws Exception {
+    public UserWallet selectBabyUserwallet(String account_id){
         UserWallet userWallet = null;
         if (account_id != null) {
             try {
@@ -133,10 +133,14 @@ public class UserServiceImpl implements UserService {
      * @throws Exception
      */
     @Override
-    public UserInfo selectBabyUserInfo(String account_id) throws Exception {
+    public UserInfo selectBabyUserInfo(String account_id){
         UserInfo userInfo = null;
         if (account_id != null) {
-            userInfo = userMapper.selectBabyUserInfo(account_id);
+            try {
+                userInfo = userMapper.selectBabyUserInfo(account_id);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return userInfo;
     }
@@ -248,6 +252,29 @@ public class UserServiceImpl implements UserService {
             RevenueUpdate =  userMapper.RevenueUpdate(id,userId);
         }
         return RevenueUpdate;
+    }
+
+    /**
+     * 余额提现
+     * @param withdraw
+     * @return
+     */
+    @Override
+    public boolean insertBabyWithdraw(Withdraw withdraw,UserWallet userWallet) {
+        boolean flag = false;
+        if(!StringUtil.isEmpty(withdraw)){
+            //账户信息封装
+            //对账户余额进行修改（可用余额-（提现余额+手续费））
+            userWallet.setAvailableAmount(userWallet.getAvailableAmount()-(withdraw.getAmount()+withdraw.getFee()));
+            try {
+                if(userMapper.insertBabyWithdraw(withdraw) == 1 && userMapper.updateBabyUserwallt(userWallet) == 1){
+                    flag = true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return flag;
     }
 
 
