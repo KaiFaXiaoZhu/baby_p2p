@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -99,16 +98,12 @@ public class UserController {
         UserAccount userAccount = null;
         try {
             userAccount = userService.loginUser(username,password,request);
-        } catch (Exception e) {
-            result.put("code",500);
-            e.printStackTrace();
-        }
-        if(userAccount != null){
             result.put("code",200);
             result.put("data",userAccount);
             session.setAttribute("user",userAccount);
-        } else {
+        } catch (Exception e) {
             result.put("code",500);
+            e.printStackTrace();
         }
         return result;
     }

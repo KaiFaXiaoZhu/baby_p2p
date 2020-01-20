@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.baby.dao.accountFlow">
+<mapper namespace="com.baby.dao.accountFlow.AccountFlowMapper">
 
         <insert id="insterRepaymentFlow" parameterType="com.baby.pojo.AccountFlow">
             INSERT INTO t_account_flow(account_id,amount,flow_type,available_amount,freeze_amount,remark,create_time)

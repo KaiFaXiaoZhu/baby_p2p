@@ -9,9 +9,56 @@
         <result property="orderNo" column="order_no"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
+    <!--Recharge映射-->
+    <resultMap id="RechargeMap" type="com.baby.pojo.Recharge">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="bankCardId" column="bank_card_id"/>
+        <result property="tradeNo" column="trade_no"/>
+        <result property="amount" column="amount"/>
+        <result property="rechargeTime" column="recharge_time"/>
+        <result property="state" column="state"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
     <!--数据字典获取-->
     <select id="selectDictionaryItem" resultMap="DictionaryItemMap">
         SELECT id,parent_id,value,order_no,create_time FROM t_system_dictionary_item
     </select>
-
+    <!--账户充值-->
+    <insert id="insertRecharge" parameterType="com.baby.pojo.Recharge">
+        INSERT INTO t_recharge(id,user_id,username,bank_card_id,trade_no,amount,recharge_time,state,remark,create_time)
+        VALUES(#{id},#{userId},#{username},#{bankCardId},#{tradeNo},#{amount},#{rechargeTime},#{state},#{remark},#{createTime})
+    </insert>
+    <!--充值记录获取-->
+    <select id="selectRecharge" resultMap="RechargeMap" parameterType="java.util.Map">
+        SELECT id,user_id,username,bank_card_id,trade_no,amount,recharge_time,state,remark FROM t_recharge
+        <trim prefix="WHERE " suffixOverrides="AND">
+            <if test="beginDate != null">
+                state = #{beginDate} AND
+            </if>
+            <if test="userId != null">
+                user_id = #{userId} AND
+            </if>
+            <if test="state != null">
+                state = #{state} AND
+            </if>
+            <if test="userId != null">
+                user_id = #{userId} AND
+            </if>
+        </trim>
+        LIMIT #{current},#{size}
+    </select>
+    <!--充值记录数目获取-->
+    <select id="selectRechargeCount" parameterType="java.lang.String" resultType="Integer">
+        SELECT COUNT(1) FROM t_recharge
+        <trim prefix="WHERE " suffixOverrides="AND">
+            <if test="state != null">
+                state = #{state} AND
+            </if>
+            <if test="userId != null">
+                user_id = #{userId} AND
+            </if>
+        </trim>
+    </select>
 </mapper>
