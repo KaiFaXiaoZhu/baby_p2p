@@ -50,4 +50,45 @@
             </if>
         </trim>
     </select>
+
+    <!--修改-->
+    <update id="updateBid" parameterType="com.baby.pojo.Bid">
+        UPDATE t_bid
+        <trim prefix="SET" suffixOverrides="," suffix=" WHERE id = #{id}">
+            <if test="borrowId != null and borrowId != ''">borrow_id = #{borrowId},</if>
+            <if test="borrowTitle != null and borrowTitle != ''">borrow_title = #{borrowTitle},</if>
+            <if test="bidAmount != null and bidAmount != ''">bid_amount = #{bidAmount},</if>
+            <if test="bidInterest != null and bidInterest != ''">bid_interest = #{bidInterest},</if>
+            <if test="yearRate != null and yearRate != ''">year_rate = #{yearRate},</if>
+            <if test="borrowState != null and borrowState != ''">borrow_state = #{borrowState},</if>
+            <if test="bidUserId != null and bidUserId != ''">bid_user_id = #{bidUserId},</if>
+            <if test="bidUsername != null and bidUsername != ''">bid_username = #{bidUsername},</if>
+            <if test="bidTime != null ">bid_time = #{bidTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+    </update>
+
+    <select id="getBidByBidUserId" resultType="com.baby.pojo.Bid">
+        SELECT
+        id as id,
+        borrow_id as borrowId,
+        borrow_title as borrowTitle,
+        bid_amount as bidAmount,
+        bid_interest as bidInterest,
+        year_rate as yearRate,
+        borrow_state as borrowState,
+        bid_user_id as bidUserId,
+        bid_username as bidUsername,
+        bid_time as bidTime,
+        create_time as createTime
+        FROM t_bid
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="borrowId!=null and borrowId!=''">
+                and borrow_id=#{borrowId}
+            </if>
+            <if test="bidUserId!=null and bidUserId!=''">
+                and bid_user_id=#{bidUserId}
+            </if>
+        </trim>
+    </select>
 </mapper>

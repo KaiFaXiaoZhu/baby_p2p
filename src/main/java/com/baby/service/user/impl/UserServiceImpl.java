@@ -336,5 +336,10 @@ public class UserServiceImpl implements UserService {
         return num;
     }
 
+    @Override
+    public Integer updateBabyUserwallt(UserWallet userWallet) throws Exception {
+        return userMapper.updateBabyUserwallt(userWallet);
+    }
+
 
 }

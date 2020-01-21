@@ -13,4 +13,8 @@ public interface BidMapper {
     public Integer insertBid(Bid bid);
     //根据Id查询
     public Bid getBidById(@Param("id")String id);
+    //修改Bid
+    public Integer updateBid(Bid bid);
+    //查询bid表用户id
+    public Bid getBidByBidUserId(@Param("bidUserId") String bidUserId,@Param("borrowId")String borrowId);
 }

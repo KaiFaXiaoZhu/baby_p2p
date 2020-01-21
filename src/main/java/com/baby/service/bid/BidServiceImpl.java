@@ -25,4 +25,14 @@ public class BidServiceImpl implements BidService {
     public Bid getBidById(String id) {
         return bidMapper.getBidById(id);
     }
+
+    @Override
+    public Integer modifyBid(Bid bid) {
+        return bidMapper.updateBid(bid);
+    }
+
+    @Override
+    public Bid getBidByBidUserId(String bidUserId,String borrowId) {
+        return bidMapper.getBidByBidUserId(bidUserId,borrowId);
+    }
 }

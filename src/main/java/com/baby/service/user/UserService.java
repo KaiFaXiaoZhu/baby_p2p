@@ -115,4 +115,11 @@ public interface UserService {
      */
     public Integer selectBabyaccountFlowCount(String beginDate,String endDate,String userId);
 
+    /**
+     * 用户账号钱包信息修改
+     * @param userWallet
+     * @return
+     */
+    public Integer updateBabyUserwallt(UserWallet userWallet) throws Exception;
+
 }
