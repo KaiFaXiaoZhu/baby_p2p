@@ -47,6 +47,15 @@
         <result property="branchName" column="branch_name"/>
         <result property="balance" column="balance"/>
     </resultMap>
+    <!--AccountFlow映射-->
+    <resultMap id="AccountFlowMap" type="com.baby.pojo.AccountFlow">
+        <id property="accountId" column="account_id"/>
+        <result property="flowType" column="flow_type"/>
+        <result property="availableAmount" column="available_amount"/>
+        <result property="freezeAmount" column="freeze_amount"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
     <!--用户信息获取-->
     <select id="getbabyUserMap" parameterType="java.util.Map" resultMap="UserAccountMap">
         SELECT id,username,password,account_status,account_type,fill_userinfo,last_login_time,create_time
@@ -189,5 +198,30 @@
         INSERT INTO t_withdraw(id,user_id,amount,fee,bank_name,realname,card_number,branch_name,create_time)
         VALUES(#{id},#{userId},#{amount},#{fee},#{bankName},#{realname},#{cardNumber},#{branchName},#{createTime})
     </insert>
+    <!--账户流水数‘据’获取-->
+    <select id="selectBabyaccountFlow" parameterType="java.util.Map" resultMap="AccountFlowMap">
+        SELECT account_id,amount,flow_type,available_amount,freeze_amount,remark,create_time FROM t_account_flow
+        <trim prefix="WHERE" suffixOverrides="AND">
+             <if test="userId != null and userId != ''">
+                 account_id = #{userId} AND
+             </if>
+            <if test="beginDate != null and endDate != null">
+                create_time BETWEEN #{beginDate} AND #{endDate} AND
+            </if>
+        </trim>
+        LIMIT #{current},#{size}
+    </select>
+    <!--账户流水数‘量’获取-->
+    <select id="selectBabyaccountFlowCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_account_flow
+        <trim prefix="WHERE" suffixOverrides="AND">
+            <if test="userId != null and userId != ''">
+                account_id = #{userId} AND
+            </if>
+            <if test="beginDate != null and endDate != null">
+                create_time BETWEEN #{beginDate} AND #{endDate} AND
+            </if>
+        </trim>
+    </select>
 
 </mapper>

@@ -4,6 +4,7 @@ import com.baby.pojo.*;
 import org.apache.ibatis.annotations.Param;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -93,5 +94,25 @@ public interface UserService {
      * @return
      */
     public boolean insertBabyWithdraw(Withdraw withdraw,UserWallet userWallet);
+
+    /**
+     * 账户流水数’据‘获取
+     * @param beginDate
+     * @param endDate
+     * @param userId
+     * @param current
+     * @param size
+     * @return
+     */
+    public List<AccountFlow> selectBabyaccountFlow(String beginDate,String endDate,String userId,Integer current,Integer size);
+
+    /**
+     * 账户流水数’量‘获取
+     * @param beginDate
+     * @param endDate
+     * @param userId
+     * @return
+     */
+    public Integer selectBabyaccountFlowCount(String beginDate,String endDate,String userId);
 
 }

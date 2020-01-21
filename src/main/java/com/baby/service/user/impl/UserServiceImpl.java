@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service("userService")
@@ -275,6 +276,64 @@ public class UserServiceImpl implements UserService {
             }
         }
         return flag;
+    }
+    /**
+     * 账户流水数’据‘获取
+     * @param beginDate
+     * @param endDate
+     * @param userId
+     * @param current
+     * @param size
+     * @return
+     */
+    @Override
+    public List<AccountFlow> selectBabyaccountFlow(String beginDate, String endDate, String userId, Integer current, Integer size) {
+        Map<String,Object> map = new HashMap<>(); //条件集合
+        List<AccountFlow> accountFlows = null;
+        if(!StringUtil.isEmpty(beginDate)){
+            map.put("beginDate",beginDate);
+        }
+        if(!StringUtil.isEmpty(endDate)){
+            map.put("endDate",endDate);
+        }
+        if(!StringUtil.isEmpty(userId)){
+            map.put("userId",userId);
+        }
+        map.put("current",current);
+        map.put("size",size);
+        try {
+            accountFlows = userMapper.selectBabyaccountFlow(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return accountFlows;
+    }
+    /**
+     * 账户流水数’量‘获取
+     * @param beginDate
+     * @param endDate
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer selectBabyaccountFlowCount(String beginDate, String endDate, String userId) {
+        Map<String,Object> map = new HashMap<>(); //条件集合
+        Integer num = null;
+        if(!StringUtil.isEmpty(beginDate)){
+            map.put("beginDate",beginDate);
+        }
+        if(!StringUtil.isEmpty(endDate)){
+            map.put("endDate",endDate);
+        }
+        if(!StringUtil.isEmpty(userId)){
+            map.put("userId",userId);
+        }
+        try {
+            num = userMapper.selectBabyaccountFlowCount(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return num;
     }
 
 

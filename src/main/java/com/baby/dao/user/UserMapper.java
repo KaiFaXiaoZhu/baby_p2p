@@ -4,6 +4,7 @@ import com.baby.pojo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -126,5 +127,21 @@ public interface UserMapper {
      * @return
      */
     public Integer insertBabyWithdraw(Withdraw withdraw) throws Exception;
+
+    /**
+     * 账户流水数’据‘获取
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    public List<AccountFlow> selectBabyaccountFlow(Map<String,Object> result) throws Exception;
+
+    /**
+     * 账户流水数’量‘获取
+     * @param result
+     * @return
+     * @throws Exception
+     */
+    public Integer selectBabyaccountFlowCount(Map<String,Object> result) throws Exception;
 
 }

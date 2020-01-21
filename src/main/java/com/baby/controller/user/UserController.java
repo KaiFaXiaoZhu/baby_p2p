@@ -2,6 +2,7 @@ package com.baby.controller.user;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baby.common.BorrowPage;
 import com.baby.common.IdUtils;
 import com.baby.common.StringUtil;
 import com.baby.pojo.*;
@@ -15,10 +16,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.PathParam;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/user")
@@ -294,4 +297,32 @@ public class UserController {
         }
         return result;
     }
+
+    /**
+     * 加载’账户流水‘
+     * @return
+     */
+    @PostMapping("/accountflow/query")
+    @ResponseBody
+    public Map<String,Object> queryaccountflow(@RequestParam(required = false) String beginDate,
+                                               @RequestParam(required = false) String endDate,
+                                               @RequestParam(required = false) Integer currentPage,
+                                               String userId){
+        Map<String,Object> result = new HashMap<>();
+        Integer num = userService.selectBabyaccountFlowCount(beginDate,endDate,userId);
+        if(!StringUtil.isEmpty(num)){
+            BorrowPage<AccountFlow> borrowPage = new BorrowPage<>();
+            borrowPage.setPageSize(10);
+            borrowPage.setCurrentPage(StringUtil.isEmpty(currentPage)?1:currentPage);
+            //计算当前页
+            currentPage = (borrowPage.getCurrentPage()-1) * borrowPage.getPageSize();
+            List<AccountFlow> listData = userService.selectBabyaccountFlow(beginDate,endDate,userId,currentPage,borrowPage.getPageSize());
+            borrowPage.setTotalPage((num +borrowPage.getPageSize() - 1) / borrowPage.getPageSize());
+            borrowPage.setListData(listData);
+            result.put("data",borrowPage);
+            result.put("code",200);
+        }
+        return result;
+    }
+
 }
