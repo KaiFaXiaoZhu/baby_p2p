@@ -21,7 +21,7 @@ public class XianXiHouBeng {
     public static double getXianXiHouBeng(double invest, double yearRate, int totalmonth) {
         BigDecimal monthIncome = new BigDecimal(invest)
                 .multiply(new BigDecimal(yearRate))
-                .divide(new BigDecimal(totalmonth),2,BigDecimal.ROUND_UP)
+                .divide(new BigDecimal(totalmonth),2,BigDecimal.ROUND_DOWN)
                 .multiply(new BigDecimal(totalmonth));
         return monthIncome.doubleValue();
     }

@@ -109,11 +109,11 @@
             <if test="totalInterest != null and totalInterest != ''">total_interest = #{totalInterest},</if>
             <if test="currentBidAmount != null and currentBidAmount != ''">current_bid_amount = #{currentBidAmount},</if>
             <if test="currentBidInterest != null and currentBidInterest != ''">current_bid_interest = #{currentBidInterest},</if>
-            <if test="bidDeadline != null and bidDeadline != ''">bid_deadline = #{bidDeadline},</if>
+            <if test="bidDeadline != null">bid_deadline = #{bidDeadline},</if>
             <if test="bidDays != null and bidDays != ''">bid_days = #{bidDays},</if>
-            <if test="applyTime != null and applyTime != ''">apply_time = #{applyTime},</if>
-            <if test="publishTime != null and publishTime != ''">publish_time = #{publishTime},</if>
-            <if test="createTime != null and createTime != ''">create_time = #{createTime},</if>
+            <if test="applyTime != null">apply_time = #{applyTime},</if>
+            <if test="publishTime != null">publish_time = #{publishTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
     </update>
 
