@@ -99,16 +99,18 @@ public class BidController {
             if(flag==1) { //增加或修改成功就对borrow表进行更新
 
                 //用户钱包扣除投标金额
-//                UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
-//                userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)));
-//                int money=userService.updateBabyUserwallt(userWallet);
+                UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
+                userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)));
+                int money=userService.updateBabyUserwallt(userWallet);
 
 
                 List<Bid> bidList = bidService.getByBorrowId(bid);
                 //borrow信息封装
+                borrow.setBorrowState(borrow.getBorrowAmount()==bidList.stream().mapToInt(Bid::getBidAmount).sum()?30:20);
                 borrow.setBidNum(bidList.size());
                 borrow.setCurrentBidAmount(bidList.stream().mapToInt(Bid::getBidAmount).sum());
                 borrow.setCurrentBidInterest(bidList.stream().mapToInt(Bid::getBidInterest).sum());
+
                 //borrow.setTotalInterest(totalInterest);
                 if (borrowService.modifyBorrow(borrow) == 1) {
                     result.put("data", bidList);
