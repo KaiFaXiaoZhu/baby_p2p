@@ -9,4 +9,7 @@ public class IndexController {
     @RequestMapping("/index")
     public String index(){ return "index"; }
 
+    @RequestMapping("/admin/login")
+    public String main(){ return "admin/login"; }
+
 }
