@@ -59,7 +59,7 @@ public class BidController {
     public Object addBid(HttpServletRequest request, Bid bid, String showBidAmount){
         Map<String,Object> result = new HashMap<>();
         int bidInterest=0;
-        int totalInterest=0;
+        //int totalInterest=0;
         int flag=0;
         try{
             UserAccount user =(UserAccount) request.getSession().getAttribute("user");//获取登录用户的信息
@@ -70,12 +70,12 @@ public class BidController {
                 //等额本息投标计算总利息
                 bidInterest = XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getInterestCount(Integer.parseInt(showBidAmount), yearRate, borrow.getRepaymentMonth()) , 100);
                 //总回报金额
-                totalInterest= XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getInterestCount(borrow.getBorrowAmount()/100, yearRate, borrow.getRepaymentMonth()), 100);
+                //totalInterest= XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getInterestCount(borrow.getBorrowAmount()/100, yearRate, borrow.getRepaymentMonth()), 100);
 
             }else{//2.先息后本
                 bidInterest = XianXiHouBeng.cheng(XianXiHouBeng.getXianXiHouBeng(Integer.parseInt(showBidAmount), yearRate, borrow.getRepaymentMonth()),100);
                 //总回报金额
-                totalInterest= XianXiHouBeng.cheng(XianXiHouBeng.getXianXiHouBeng(borrow.getBorrowAmount()/100, yearRate, borrow.getRepaymentMonth()), 100);
+//                totalInterest= XianXiHouBeng.cheng(XianXiHouBeng.getXianXiHouBeng(borrow.getBorrowAmount()/100, yearRate, borrow.getRepaymentMonth()), 100);
             }
             //Bid信息封装
             bid.setBorrowTitle(borrow.getTitle());
@@ -99,9 +99,9 @@ public class BidController {
             if(flag==1) { //增加或修改成功就对borrow表进行更新
 
                 //用户钱包扣除投标金额
-                UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
-                userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)));
-                int money=userService.updateBabyUserwallt(userWallet);
+                //UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
+                //userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)));
+                //int money=userService.updateBabyUserwallt(userWallet);
 
 
                 List<Bid> bidList = bidService.getByBorrowId(bid);
@@ -110,8 +110,7 @@ public class BidController {
                 borrow.setBidNum(bidList.size());
                 borrow.setCurrentBidAmount(bidList.stream().mapToInt(Bid::getBidAmount).sum());
                 borrow.setCurrentBidInterest(bidList.stream().mapToInt(Bid::getBidInterest).sum());
-
-                //borrow.setTotalInterest(totalInterest);
+                borrow.setTotalInterest(bidList.stream().mapToInt(Bid::getBidAmount).sum());
                 if (borrowService.modifyBorrow(borrow) == 1) {
                     result.put("data", bidList);
                     result.put("code", 200);
