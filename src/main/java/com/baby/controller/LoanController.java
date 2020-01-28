@@ -1,8 +1,13 @@
 package com.baby.controller;
 
+import com.baby.pojo.Borrow;
+import com.baby.service.accountFlow.AccountFlowService;
+import com.baby.service.borrow.BorrowService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.annotation.Resource;
 
 
 /**
@@ -12,8 +17,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/finance/loan")
 public class LoanController {
 
+
+    @Resource
+    private BorrowService borrowService;
+    @Resource
+    private AccountFlowService accountFlowService;
+
     @PostMapping(value = "/audit")
-    public Object audit(){
+    public Object audit(Borrow borrow){
+        if(borrow.getBorrowState()==31){
+
+        }else{
+
+        }
         return null;
     }
 

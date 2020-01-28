@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baby.common.AverageCapitalPlusInterestUtils;
 import com.baby.common.IdUtils;
 import com.baby.common.XianXiHouBeng;
-import com.baby.pojo.Bid;
-import com.baby.pojo.Borrow;
-import com.baby.pojo.UserAccount;
-import com.baby.pojo.UserWallet;
+import com.baby.pojo.*;
+import com.baby.service.accountFlow.AccountFlowService;
 import com.baby.service.bid.BidService;
 import com.baby.service.borrow.BorrowService;
 import com.baby.service.user.UserService;
@@ -35,6 +33,8 @@ public class BidController {
     private BorrowService borrowService;
     @Resource
     private UserService userService;
+    @Resource
+    private AccountFlowService accountFlowService;
 
     //根据borrowId查询借款信息
     @PostMapping(value = "/getByBorrowId/{borrowId}")
@@ -98,10 +98,22 @@ public class BidController {
             }
             if(flag==1) { //增加或修改成功就对borrow表进行更新
 
-                //用户钱包扣除投标金额
-                //UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
-                //userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)));
-                //int money=userService.updateBabyUserwallt(userWallet);
+//                //用户钱包扣除投标金额
+//                UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
+//                userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)*100));
+//                userWallet.setFreezeAmount(XianXiHouBeng.jia(userWallet.getFreezeAmount(),Integer.parseInt(showBidAmount)*100));
+//                int money=userService.updateBabyUserwallt(userWallet);
+//
+//                //添加账户流水
+//                AccountFlow accountFlow=new AccountFlow();
+//                accountFlow.setAccountId(user.getId());
+//                accountFlow.setAmount(XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100));
+//                accountFlow.setFlowType(20);
+//                accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
+//                accountFlow.setAvailableAmount(userWallet.getFreezeAmount());
+//                accountFlow.setRemark("投标【测试 借款标题】, 冻结账户可用余额："+XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100)+"元");
+//                accountFlow.setCreateTime(new Date());
+//                int num=accountFlowService.insterRepaymentFlow(accountFlow);
 
 
                 List<Bid> bidList = bidService.getByBorrowId(bid);
@@ -110,7 +122,7 @@ public class BidController {
                 borrow.setBidNum(bidList.size());
                 borrow.setCurrentBidAmount(bidList.stream().mapToInt(Bid::getBidAmount).sum());
                 borrow.setCurrentBidInterest(bidList.stream().mapToInt(Bid::getBidInterest).sum());
-                borrow.setTotalInterest(bidList.stream().mapToInt(Bid::getBidAmount).sum());
+                borrow.setTotalInterest(bidList.stream().mapToInt(Bid::getBidInterest).sum());
                 if (borrowService.modifyBorrow(borrow) == 1) {
                     result.put("data", bidList);
                     result.put("code", 200);
