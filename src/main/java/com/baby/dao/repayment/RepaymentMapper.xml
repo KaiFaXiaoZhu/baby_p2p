@@ -46,7 +46,41 @@
           </trim>
       </select>
 
-      <update id="updateRepayment" parameterType="String">
-            UPDATE t_user_wallet SET available_amount=available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})) WHERE account_id=#{userId}
-      </update>
+        <select id="RunningWaterTitle" resultType="com.baby.pojo.Repayment">
+            SELECT borrow_title as borrowTitle,
+            total_amount as totalAmount,
+            state as state
+            FROM t_repayment WHERE id = #{id}
+        </select>
+
+        <select id="BorrowerInformation" resultType="com.baby.pojo.RepaymentDetail">
+            SELECT bid_user_id as bidUserId,
+            total_amount as totalAmount,
+            borrow_title as borrowTitle,
+            principal,
+            interest,
+            period FROM t_repayment_detail WHERE repayment_id = #{id}
+        </select>
+
+        <select id="AllRepayments" resultType="com.baby.pojo.Repayment">
+            SELECT
+          id,
+          borrow_id as borrowId,
+          borrow_user_id as borrowUserId,
+          borrow_title as borrowTitle,
+          deadline as deadline,
+          repayment_time as repaymentTime,
+          total_amount as totalAmount,
+          principal as principal,
+          interest as interest,
+          period as period,
+          state as state,
+          borrow_type as borrowType,
+          repayment_type as repaymentType,
+          create_time as createTime FROM t_repayment
+        </select>
+
+        <update id="RepaymentStatus">
+            UPDATE t_repayment SET state = #{state} WHERE id = #{id}
+        </update>
 </mapper>

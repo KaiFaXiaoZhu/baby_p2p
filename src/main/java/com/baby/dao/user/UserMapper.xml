@@ -224,4 +224,22 @@
         </trim>
     </select>
 
+
+    <!--还款方钱包金额减少-->
+    <update id="updateRepayment" parameterType="String">
+            UPDATE t_user_wallet SET available_amount=available_amount-((SELECT total_amount FROM t_repayment WHERE id=#{id})) WHERE account_id=#{userId}
+    </update>
+
+    <!--借款方钱包金额的增加，并修改待收本金和金额-->
+    <update id="updateRepaymentAdd" parameterType="com.baby.pojo.RepaymentDetail">
+        UPDATE t_user_wallet SET available_amount=available_amount+#{totalAmount},interest_pending = interest_pending-#{interest},principal_pending=principal_pending-#{principal} WHERE account_id=#{bidUserId}
+    </update>
+
+    <!--扣除逾期方的信用得分和授信额度与剩余授信额度-->
+    <update id="DeductCreditScore">
+        UPDATE t_user_wallet SET creditScore=creditScore-#{creditScore},
+        credit_line=credit_line-#{creditLine},
+        residual_credit_line=residual_credit_line-#{residualCreditLine} WHERE account_id=#{accountId}
+    </update>
+
 </mapper>

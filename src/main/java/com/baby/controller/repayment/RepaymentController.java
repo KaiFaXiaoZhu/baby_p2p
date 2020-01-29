@@ -45,6 +45,7 @@ public class RepaymentController {
                 borrowPage.setListData(listData);
                 result.put("data",borrowPage);
                 result.put("code","200");
+                System.out.println(listData.get(0).getState());
             }else{
                 result.put("code","500");
             }
@@ -76,6 +77,7 @@ public class RepaymentController {
     @RequestMapping("repay")
     @ResponseBody
     public Object Repayment(@RequestParam(value = "id") String id,@RequestParam(value = "userId") String userId){
+        System.out.println(id+"+++++++++"+userId);
         Map<String,Object> result = new HashMap<>();
         try {
             if (repaymentService.updateRepayment(id,userId)){

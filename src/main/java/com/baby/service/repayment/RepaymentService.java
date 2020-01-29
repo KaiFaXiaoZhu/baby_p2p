@@ -15,7 +15,9 @@ public interface RepaymentService {
     //在我的还款里点击立即还款按钮
     public boolean updateRepayment(String id,String userId);
 
-    //执行还款操作，更新还款表内数据
-    public boolean updateRepayment(String id);
+    //查询所有还款信息
+    public List<Repayment> AllRepayments();
 
+    //更新还款状态
+    public int RepaymentStatus(int status,String id);
 }

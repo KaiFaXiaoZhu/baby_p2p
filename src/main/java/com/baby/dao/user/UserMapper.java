@@ -144,4 +144,21 @@ public interface UserMapper {
      */
     public Integer selectBabyaccountFlowCount(Map<String,Object> result) throws Exception;
 
+    /**
+     * 还款方钱包金额减少
+     * @param id
+     * @param userId
+     * @return
+     */
+    public int updateRepayment(@Param("id") String id, @Param("userId") String userId);
+
+    /**
+     * 借款方钱包金额的增加，并修改待收本金和金额
+     */
+    public int updateRepaymentAdd(RepaymentDetail repaymentDetail);
+
+    /**
+     * 扣除逾期方的信用得分和授信额度与剩余授信额度
+     */
+    public int DeductCreditScore(@Param("creditScore") int creditScore,@Param("creditLine")Integer creditLine,@Param("residualCreditLine")Integer residualCreditLine,@Param("accountId")String accountId);
 }

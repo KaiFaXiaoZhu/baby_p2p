@@ -1,6 +1,7 @@
 package com.baby.dao.repayment;
 
 import com.baby.pojo.Repayment;
+import com.baby.pojo.RepaymentDetail;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,6 +16,15 @@ public interface RepaymentMapper {
     //根据borrowId查询还款信息
     public List<Repayment> getByBorrowId(@Param("borrowId") String borrowId);
 
-    //还款方法（需修改）
-    public int updateRepayment(@Param("id") String id, @Param("userId") String userId);
+    //获取流水信息
+    public Repayment RunningWaterTitle(@Param("id")String id);
+
+    //查询所有投标人信息
+    public List<RepaymentDetail> BorrowerInformation(@Param("id")String id);
+
+    //查询所有还款信息
+    public List<Repayment> AllRepayments();
+
+    //更新还款状态
+    public int RepaymentStatus(@Param("state")int status,@Param("id")String id);
 }

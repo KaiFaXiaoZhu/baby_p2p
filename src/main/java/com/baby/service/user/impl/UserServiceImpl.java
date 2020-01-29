@@ -336,5 +336,10 @@ public class UserServiceImpl implements UserService {
         return num;
     }
 
+    @Override
+    public int DeductCreditScore(int creditScore, Integer creditLine, Integer residualCreditLine, String accountId) {
+        return userMapper.DeductCreditScore(creditScore,creditLine,residualCreditLine,accountId);
+    }
+
 
 }

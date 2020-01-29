@@ -5,6 +5,7 @@ import com.baby.pojo.AccountFlow;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 
 @Service("AccountFlowService")
 public class AccountFlowServiceImpl implements AccountFlowService {
@@ -13,7 +14,9 @@ public class AccountFlowServiceImpl implements AccountFlowService {
     private AccountFlowMapper accountFlowMapper;
 
     /**
-     * 生成还款流水账单
+     *生成流水账单
+     * @param accountFlow
+     * @return
      */
     @Override
     public int insterRepaymentFlow(AccountFlow accountFlow) {

@@ -14,8 +14,8 @@ public class RepaymentDetail {
     private String bidId;                 //标的id
     private String borrowId;             //借款id
     private String repaymentId;         //还款id
-    private String borrow_userId;      //借款人id
-    private String bid_userId;         //投标人id
+    private String borrowUserId;      //借款人id
+    private String bidUserId;         //投标人id
     private String borrowTitle;        //借款标题
     private Integer totalAmount;       //本期还款总金额(利息+本金)(单位：分)
     private Integer principal;          //本期还款本金(单位；分)
