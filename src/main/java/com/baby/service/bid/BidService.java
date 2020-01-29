@@ -13,4 +13,8 @@ public interface BidService {
     public Integer addBid(Bid bid);
     //根据Id查询
     public Bid getBidById(String id);
+    //修改Bid
+    public Integer modifyBid(Bid bid);
+    //查询bid表用户id
+    public Bid getBidByBidUserId(String bidUserId,String borrowId);
 }

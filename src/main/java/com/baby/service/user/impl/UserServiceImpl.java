@@ -337,8 +337,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int DeductCreditScore(int creditScore, Integer creditLine, Integer residualCreditLine, String accountId) {
-        return userMapper.DeductCreditScore(creditScore,creditLine,residualCreditLine,accountId);
+    public Integer updateBabyUserwallt(UserWallet userWallet) throws Exception {
+        return userMapper.updateBabyUserwallt(userWallet);
     }
 
 

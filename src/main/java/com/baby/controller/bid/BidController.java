@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.baby.common.AverageCapitalPlusInterestUtils;
 import com.baby.common.IdUtils;
 import com.baby.common.XianXiHouBeng;
-import com.baby.pojo.Bid;
-import com.baby.pojo.Borrow;
-import com.baby.pojo.UserAccount;
+import com.baby.pojo.*;
+import com.baby.service.accountFlow.AccountFlowService;
 import com.baby.service.bid.BidService;
 import com.baby.service.borrow.BorrowService;
+import com.baby.service.user.UserService;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -30,6 +31,10 @@ public class BidController {
     private BidService bidService;
     @Resource
     private BorrowService borrowService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private AccountFlowService accountFlowService;
 
     //根据borrowId查询借款信息
     @PostMapping(value = "/getByBorrowId/{borrowId}")
@@ -50,38 +55,83 @@ public class BidController {
 
     //投标
     @PostMapping(value = "/add")
-    //@ResponseBody
-    public Object addBid(HttpSession session,Bid bid, String showBidAmount){
-        double num=0;
-        Integer bidInterest=null;
+    @ResponseBody
+    public Object addBid(HttpServletRequest request, Bid bid, String showBidAmount){
+        Map<String,Object> result = new HashMap<>();
+        int bidInterest=0;
+        //int totalInterest=0;
+        int flag=0;
         try{
-            UserAccount user =(UserAccount) session.getAttribute("user");
+            UserAccount user =(UserAccount) request.getSession().getAttribute("user");//获取登录用户的信息
             Borrow borrow=borrowService.getBorrowId(bid.getBorrowId());//查询borrow表
-            double yearRate = borrow.getYearRate() * 0.01;//年利率
+            Bid bid1=bidService.getBidByBidUserId(user.getId(),bid.getBorrowId());
+            double yearRate =  borrow.getYearRate() * 0.01;//年利率
             if (borrow.getRepaymentType()==1) { //1.等额本息
-                //等额本息投标计算利息
-                num = AverageCapitalPlusInterestUtils.getInterestCount(Double.parseDouble(showBidAmount), yearRate, borrow.getRepaymentMonth()) * 100;
-                bidInterest = (int) num;
+                //等额本息投标计算总利息
+                bidInterest = XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getInterestCount(Integer.parseInt(showBidAmount), yearRate, borrow.getRepaymentMonth()) , 100);
+                //总回报金额
+                //totalInterest= XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getInterestCount(borrow.getBorrowAmount()/100, yearRate, borrow.getRepaymentMonth()), 100);
+
             }else{//2.先息后本
-                num = XianXiHouBeng.getXianXiHouBeng(Double.parseDouble(showBidAmount), yearRate, borrow.getRepaymentMonth())* 100;
-                bidInterest = (int) num;
+                bidInterest = XianXiHouBeng.cheng(XianXiHouBeng.getXianXiHouBeng(Integer.parseInt(showBidAmount), yearRate, borrow.getRepaymentMonth()),100);
+                //总回报金额
+//                totalInterest= XianXiHouBeng.cheng(XianXiHouBeng.getXianXiHouBeng(borrow.getBorrowAmount()/100, yearRate, borrow.getRepaymentMonth()), 100);
             }
-            //信息封装
-            bid.setId(IdUtils.getUUID());
+            //Bid信息封装
             bid.setBorrowTitle(borrow.getTitle());
-            bid.setBidAmount(Integer.parseInt(showBidAmount));
-            bid.setBidInterest(bidInterest);
             bid.setYearRate(borrow.getYearRate());
             bid.setBorrowState(borrow.getBorrowState());
             bid.setBidUserId(user.getId());
             bid.setBidUsername(user.getUsername());
+            bid.setBidTime(new Date());
             bid.setCreateTime(new Date());
+            if(null!=bid1) { //有此用户投标信息就进行修改，否则就执行增加
+                bid.setId(bid1.getId());
+                bid.setBidInterest(XianXiHouBeng.jia(bidInterest,bid1.getBidInterest()));
+                bid.setBidAmount(Integer.parseInt(showBidAmount)* 100+bid1.getBidAmount());
+                flag=bidService.modifyBid(bid);
+            }else{
+                bid.setId(IdUtils.getUUID());
+                bid.setBidInterest(bidInterest);
+                bid.setBidAmount(XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100));
+                flag=bidService.addBid(bid);
+            }
+            if(flag==1) { //增加或修改成功就对borrow表进行更新
+
+//                //用户钱包扣除投标金额
+//                UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
+//                userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)*100));
+//                userWallet.setFreezeAmount(XianXiHouBeng.jia(userWallet.getFreezeAmount(),Integer.parseInt(showBidAmount)*100));
+//                int money=userService.updateBabyUserwallt(userWallet);
+//
+//                //添加账户流水
+//                AccountFlow accountFlow=new AccountFlow();
+//                accountFlow.setAccountId(user.getId());
+//                accountFlow.setAmount(XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100));
+//                accountFlow.setFlowType(20);
+//                accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
+//                accountFlow.setAvailableAmount(userWallet.getFreezeAmount());
+//                accountFlow.setRemark("投标【测试 借款标题】, 冻结账户可用余额："+XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100)+"元");
+//                accountFlow.setCreateTime(new Date());
+//                int num=accountFlowService.insterRepaymentFlow(accountFlow);
 
 
+                List<Bid> bidList = bidService.getByBorrowId(bid);
+                //borrow信息封装
+                borrow.setBorrowState(borrow.getBorrowAmount()==bidList.stream().mapToInt(Bid::getBidAmount).sum()?30:20);
+                borrow.setBidNum(bidList.size());
+                borrow.setCurrentBidAmount(bidList.stream().mapToInt(Bid::getBidAmount).sum());
+                borrow.setCurrentBidInterest(bidList.stream().mapToInt(Bid::getBidInterest).sum());
+                borrow.setTotalInterest(bidList.stream().mapToInt(Bid::getBidInterest).sum());
+                if (borrowService.modifyBorrow(borrow) == 1) {
+                    result.put("data", bidList);
+                    result.put("code", 200);
+                }
+            }
         }catch (Exception e){
-            e.printStackTrace();
+            result.put("msg",e.getMessage());
         }
-        return null;
+        return result;
     }
 
 }

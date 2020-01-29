@@ -21,9 +21,26 @@ public class XianXiHouBeng {
     public static double getXianXiHouBeng(double invest, double yearRate, int totalmonth) {
         BigDecimal monthIncome = new BigDecimal(invest)
                 .multiply(new BigDecimal(yearRate))
-                .divide(new BigDecimal(totalmonth),2,BigDecimal.ROUND_UP)
+                .divide(new BigDecimal(totalmonth),2,BigDecimal.ROUND_DOWN)
                 .multiply(new BigDecimal(totalmonth));
         return monthIncome.doubleValue();
+    }
+
+    public static Integer jia(double money,double moneyNum) {
+        BigDecimal monthIncome = new BigDecimal(money).add(new BigDecimal(moneyNum));
+        return monthIncome.intValue();
+    }
+    public static Integer jian(double money,double moneyNum) {
+        BigDecimal monthIncome = new BigDecimal(money).subtract(new BigDecimal(moneyNum));
+        return monthIncome.intValue();
+    }
+    public static Integer cheng(double money,double moneyNum) {
+        BigDecimal monthIncome = new BigDecimal(money).multiply(new BigDecimal(moneyNum));
+        return monthIncome.intValue();
+    }
+    public static Integer chu(double money,double moneyNum) {
+        BigDecimal monthIncome = new BigDecimal(money).divide(new BigDecimal(moneyNum));
+        return monthIncome.intValue();
     }
 
 }
