@@ -122,4 +122,10 @@ public interface UserService {
      */
     public Integer updateBabyUserwallt(UserWallet userWallet) throws Exception;
 
+
+    /**
+     * 扣除逾期方的信用得分和授信额度与剩余授信额度
+     */
+    public int DeductCreditScore(int creditScore,Integer creditLine,Integer residualCreditLine,String accountId);
+
 }

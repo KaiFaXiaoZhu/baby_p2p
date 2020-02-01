@@ -1,4 +1,4 @@
-package com.baby.controller;
+package com.baby.controller.loan;
 
 import com.baby.pojo.Borrow;
 import com.baby.service.accountFlow.AccountFlowService;

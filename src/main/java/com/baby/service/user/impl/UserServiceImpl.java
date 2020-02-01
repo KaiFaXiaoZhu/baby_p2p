@@ -341,5 +341,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateBabyUserwallt(userWallet);
     }
 
+    /**
+     * 扣除逾期方的信用得分和授信额度与剩余授信额度
+     */
+    @Override
+    public int DeductCreditScore(int creditScore, Integer creditLine, Integer residualCreditLine, String accountId) {
+        return userMapper.DeductCreditScore(creditScore,creditLine,residualCreditLine,accountId);
+    }
+
 
 }
