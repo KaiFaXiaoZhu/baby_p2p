@@ -25,9 +25,9 @@ public class LoanController {
 
     @PostMapping(value = "/audit")
     public Object audit(Borrow borrow){
-        if(borrow.getBorrowState()==31){
+        if(borrow.getBorrowState()==31){// '放款审核拒绝',
 
-        }else{
+        }else{// '放款审核通过',
 
         }
         return null;

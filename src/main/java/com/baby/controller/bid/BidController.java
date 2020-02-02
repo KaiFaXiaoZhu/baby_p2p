@@ -111,7 +111,7 @@ public class BidController {
 //                accountFlow.setFlowType(20);
 //                accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
 //                accountFlow.setAvailableAmount(userWallet.getFreezeAmount());
-//                accountFlow.setRemark("投标【测试 借款标题】, 冻结账户可用余额："+XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100)+"元");
+//                accountFlow.setRemark("投标【"+borrow.getTitle()+"】, 冻结账户可用余额："+XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100)+"元");
 //                accountFlow.setCreateTime(new Date());
 //                int num=accountFlowService.insterRepaymentFlow(accountFlow);
 
