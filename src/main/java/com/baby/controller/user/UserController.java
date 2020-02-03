@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.server.PathParam;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -98,9 +97,15 @@ public class UserController {
         UserAccount userAccount = null;
         try {
             userAccount = userService.loginUser(username,password,request);
-            result.put("code",200);
-            result.put("data",userAccount);
-            session.setAttribute("user",userAccount);
+            if(!StringUtil.isEmpty(userAccount)){
+                result.put("code",200);
+                result.put("data",userAccount);
+                if(userAccount.getAccountType() == 1){
+                    session.setAttribute("user",userAccount);
+                } else if(userAccount.getAccountType() == 2){
+                    session.setAttribute("admin",userAccount);
+                }
+            }
         } catch (Exception e) {
             result.put("code",500);
             e.printStackTrace();

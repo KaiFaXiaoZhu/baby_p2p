@@ -1,9 +1,6 @@
 package com.baby.dao.system;
 
-import com.baby.pojo.BankCard;
-import com.baby.pojo.LoginLog;
-import com.baby.pojo.Recharge;
-import com.baby.pojo.SystemDictionaryItem;
+import com.baby.pojo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,7 +12,7 @@ public interface SystemMapper {
      * 数据字典获取
      * @return
      */
-    public List<SystemDictionaryItem> selectDictionaryItem() throws Exception;
+    public List<SystemDictionaryItem> selectDictionaryItem(Map<String,Object> result) throws Exception;
 
     /**
      * 账户充值
@@ -51,5 +48,29 @@ public interface SystemMapper {
      * @return
      */
     public Integer selectLoginLogCount(Map<String,Object> result) throws Exception;
+
+    /**
+     * 数据字典分组获取
+     */
+    public List<SystemDictionary> selectDictionary() throws Exception;
+
+    /**
+     *数据字典数量获取
+     */
+    public Integer selectDictionaryItemcount(Map<String,Object> result) throws Exception;
+
+    /**
+     * 新增数据字典
+     * @param systemDictionaryItem
+     * @return
+     */
+    public Integer insertDictionaryItem(SystemDictionaryItem systemDictionaryItem) throws Exception;
+
+    /**
+     * 修改数据字典
+     * @param systemDictionaryItem
+     * @return
+     */
+    public Integer updatedictionaryItem(SystemDictionaryItem systemDictionaryItem) throws Exception;
 
 }

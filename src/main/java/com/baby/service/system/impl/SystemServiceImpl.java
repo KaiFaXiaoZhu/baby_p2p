@@ -27,8 +27,14 @@ public class SystemServiceImpl implements SystemService {
      * @return
      */
     @Override
-    public List<SystemDictionaryItem> selectDictionaryItem() throws Exception {
-        return systemMapper.selectDictionaryItem();
+    public List<SystemDictionaryItem> selectDictionaryItem(Map<String,Object> result){
+        List<SystemDictionaryItem> systemDictionaryItems = null;
+        try {
+            systemDictionaryItems = systemMapper.selectDictionaryItem(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return systemDictionaryItems;
     }
     /**
      * 账户充值
@@ -192,5 +198,69 @@ public class SystemServiceImpl implements SystemService {
             e.printStackTrace();
         }
         return count;
+    }
+
+    /**
+     * 数据字典分组获取
+     */
+    @Override
+    public List<SystemDictionary> selectDictionary() {
+        List<SystemDictionary> dictionaries = null;
+        try {
+            dictionaries = systemMapper.selectDictionary();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dictionaries;
+    }
+
+    /**
+     *数据字典数量获取
+     */
+    @Override
+    public Integer selectDictionaryItemcount(Map<String, Object> result) {
+        Integer count = null;
+        try {
+            count = systemMapper.selectDictionaryItemcount(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * 新增数据字典
+     * @param systemDictionaryItem
+     * @return
+     */
+    @Override
+    public boolean insertDictionaryItem(SystemDictionaryItem systemDictionaryItem) {
+        boolean flag = false;
+        try {
+            if(systemMapper.insertDictionaryItem(systemDictionaryItem) == 1){
+                flag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /**
+     * 修改数据字典
+     * @param systemDictionaryItem
+     * @return
+     */
+    @Override
+    public boolean updatedictionaryItem(SystemDictionaryItem systemDictionaryItem) {
+        boolean flag = false;
+        try {
+            if(systemMapper.updatedictionaryItem(systemDictionaryItem) == 1){
+                flag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 }

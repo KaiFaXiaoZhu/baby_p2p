@@ -11,7 +11,7 @@ public interface SystemService {
      * 数据字典获取
      * @return
      */
-    public List<SystemDictionaryItem> selectDictionaryItem() throws Exception;
+    public List<SystemDictionaryItem> selectDictionaryItem(Map<String,Object> result);
     /**
      * 账户充值
      * @param recharge
@@ -41,4 +41,28 @@ public interface SystemService {
      * @return
      */
     public Integer selectLoginLogCount(String beginDate,String endDate,Integer loginResult,String username);
+
+    /**
+     * 数据字典分组获取
+     */
+    public List<SystemDictionary> selectDictionary();
+
+    /**
+     *数据字典数量获取
+     */
+    public Integer selectDictionaryItemcount(Map<String,Object> result);
+
+    /**
+     * 新增数据字典
+     * @param systemDictionaryItem
+     * @return
+     */
+    public boolean insertDictionaryItem(SystemDictionaryItem systemDictionaryItem);
+
+    /**
+     * 修改数据字典
+     * @param systemDictionaryItem
+     * @return
+     */
+    public boolean updatedictionaryItem(SystemDictionaryItem systemDictionaryItem);
 }

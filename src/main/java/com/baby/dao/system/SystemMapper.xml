@@ -31,9 +31,25 @@
         <result property="loginResult" column="login_result"/>
         <result property="createTime" column="create_time"/>
     </resultMap>
+    <!--SystemDictionary映射-->
+    <resultMap id="DictionaryMap" type="com.baby.pojo.SystemDictionary">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
     <!--数据字典获取-->
-    <select id="selectDictionaryItem" resultMap="DictionaryItemMap">
+    <select id="selectDictionaryItem" resultMap="DictionaryItemMap" parameterType="java.util.Map">
         SELECT id,parent_id,value,order_no,create_time FROM t_system_dictionary_item
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="keyword != null">
+                AND `value` LIKE "%"#{keyword}"%"
+            </if>
+        </trim>
+        LIMIT #{current},#{size}
     </select>
     <!--账户充值-->
     <insert id="insertRecharge" parameterType="com.baby.pojo.Recharge">
@@ -105,4 +121,29 @@
             </if>
         </trim>
     </select>
+    <!--数据字典分组获取-->
+    <select id="selectDictionary" resultMap="DictionaryMap">
+          SELECT id,`code`,name,create_time FROM t_system_dictionary
+    </select>
+    <!--数据字典数量获取-->
+    <select id="selectDictionaryItemcount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_system_dictionary_item
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="parentId != null">
+               AND parent_id = #{parentId}
+            </if>
+            <if test="keyword != null">
+               AND `value` LIKE "%"#{keyword}"%"
+            </if>
+        </trim>
+    </select>
+    <!--新增数据字典-->
+    <insert id="insertDictionaryItem" parameterType="com.baby.pojo.SystemDictionaryItem">
+        INSERT INTO t_system_dictionary_item(parent_id,`value`,order_no,create_time) VALUES(#{parentId},#{value},#{orderNo},#{createTime})
+    </insert>
+    <!--修改数据字典-->
+    <update id="updatedictionaryItem" parameterType="com.baby.pojo.SystemDictionaryItem">
+        UPDATE t_system_dictionary_item SET `value`=#{value},order_no=#{orderNo},create_time =#{createTime}
+        WHERE id = #{id}
+    </update>
 </mapper>
