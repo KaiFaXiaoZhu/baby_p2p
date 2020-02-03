@@ -200,14 +200,15 @@ public class SystemServiceImpl implements SystemService {
         return count;
     }
 
+
     /**
      * 数据字典分组获取
      */
     @Override
-    public List<SystemDictionary> selectDictionary() {
+    public List<SystemDictionary> selectDictionary(Map<String, Object> result) {
         List<SystemDictionary> dictionaries = null;
         try {
-            dictionaries = systemMapper.selectDictionary();
+            dictionaries = systemMapper.selectDictionary(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -256,6 +257,58 @@ public class SystemServiceImpl implements SystemService {
         boolean flag = false;
         try {
             if(systemMapper.updatedictionaryItem(systemDictionaryItem) == 1){
+                flag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /**
+     * 数据字典项数量获取
+     * @param result
+     * @return
+     */
+    @Override
+    public Integer selectdictionarycount(Map<String, Object> result) {
+        Integer count = null;
+        try {
+            count = systemMapper.selectdictionarycount(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    /**
+     * 添加数据字典项
+     * @param systemDictionary
+     * @return
+     */
+    @Override
+    public boolean insertdictionary(SystemDictionary systemDictionary) {
+        boolean flag = false;
+        try {
+            if(systemMapper.insertdictionary(systemDictionary) == 1){
+                flag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /**
+     * 修改数据字典项
+     * @param systemDictionary
+     * @return
+     */
+    @Override
+    public boolean updatedictionary(SystemDictionary systemDictionary) {
+        boolean flag = false;
+        try {
+            if(systemMapper.updatedictionary(systemDictionary) == 1){
                 flag = true;
             }
         } catch (Exception e) {

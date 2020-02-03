@@ -52,7 +52,7 @@ public interface SystemMapper {
     /**
      * 数据字典分组获取
      */
-    public List<SystemDictionary> selectDictionary() throws Exception;
+    public List<SystemDictionary> selectDictionary(Map<String,Object> result) throws Exception;
 
     /**
      *数据字典数量获取
@@ -72,5 +72,28 @@ public interface SystemMapper {
      * @return
      */
     public Integer updatedictionaryItem(SystemDictionaryItem systemDictionaryItem) throws Exception;
+
+    /**
+     * 获取数据字典项数量
+     * @return
+     * @throws Exception
+     */
+    public Integer selectdictionarycount(Map<String,Object> result) throws Exception;
+
+    /**
+     * 添加数据字典项
+     * @param systemDictionary
+     * @return
+     */
+    public Integer insertdictionary(SystemDictionary systemDictionary) throws Exception;
+
+    /**
+     * 修改数据字典项
+     * @param systemDictionary
+     * @return
+     * @throws Exception
+     */
+    public Integer updatedictionary(SystemDictionary systemDictionary) throws Exception;
+
 
 }

@@ -121,10 +121,6 @@
             </if>
         </trim>
     </select>
-    <!--数据字典分组获取-->
-    <select id="selectDictionary" resultMap="DictionaryMap">
-          SELECT id,`code`,name,create_time FROM t_system_dictionary
-    </select>
     <!--数据字典数量获取-->
     <select id="selectDictionaryItemcount" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM t_system_dictionary_item
@@ -145,5 +141,30 @@
     <update id="updatedictionaryItem" parameterType="com.baby.pojo.SystemDictionaryItem">
         UPDATE t_system_dictionary_item SET `value`=#{value},order_no=#{orderNo},create_time =#{createTime}
         WHERE id = #{id}
+    </update>
+    <!--数据字典项数量-->
+    <select id="selectdictionarycount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_system_dictionary
+        <if test="name != null">
+          WHERE `name` LIKE  "%"#{name}"%"
+        </if>
+    </select>
+    <!--数据字典项获取-->
+    <select id="selectDictionary" parameterType="java.util.Map" resultMap="DictionaryMap">
+        SELECT id,`code`,`name`,create_time FROM t_system_dictionary
+        <if test="name != null">
+            WHERE `name` LIKE  "%"#{name}"%"
+        </if>
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+    <!--添加数据字典项-->
+    <insert id="insertdictionary" parameterType="com.baby.pojo.SystemDictionary">
+        INSERT INTO t_system_dictionary(`code`,`name`,create_time) VALUES (#{code},#{name},#{createTime})
+    </insert>
+    <!--修改数据字典项-->
+    <update id="updatedictionary" parameterType="com.baby.pojo.SystemDictionary">
+        UPDATE t_system_dictionary SET `name` = #{name},create_time=#{createTime} WHERE id = #{id}
     </update>
 </mapper>

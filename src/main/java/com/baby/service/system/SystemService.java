@@ -45,7 +45,7 @@ public interface SystemService {
     /**
      * 数据字典分组获取
      */
-    public List<SystemDictionary> selectDictionary();
+    public List<SystemDictionary> selectDictionary(Map<String,Object> result);
 
     /**
      *数据字典数量获取
@@ -65,4 +65,26 @@ public interface SystemService {
      * @return
      */
     public boolean updatedictionaryItem(SystemDictionaryItem systemDictionaryItem);
+
+    /**
+     * 获取数据字典项数量
+     * @return
+     * @throws Exception
+     */
+    public Integer selectdictionarycount(Map<String,Object> result);
+
+    /**
+     * 添加数据字典项
+     * @param systemDictionary
+     * @return
+     */
+    public boolean insertdictionary(SystemDictionary systemDictionary);
+
+    /**
+     * 修改数据字典项
+     * @param systemDictionary
+     * @return
+     * @throws Exception
+     */
+    public boolean updatedictionary(SystemDictionary systemDictionary);
 }

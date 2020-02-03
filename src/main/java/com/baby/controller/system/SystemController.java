@@ -152,7 +152,7 @@ public class SystemController {
     @ResponseBody
     public Map<String,Object> getAlldictionary(){
         Map<String,Object> result = new HashMap<>();
-        List<SystemDictionary> systemDictionaries = systemService.selectDictionary();
+        List<SystemDictionary> systemDictionaries = systemService.selectDictionary(null);
         if(!StringUtil.isEmpty(systemDictionaries)){
             result.put("code",200);
             result.put("data",systemDictionaries);
@@ -245,6 +245,79 @@ public class SystemController {
         } else {
             result.put("code",500);
             result.put("msg","修改失败");
+        }
+        return result;
+    }
+
+    @PostMapping("/dictionary/query")
+    @ResponseBody
+    public Map<String,Object> querydictionary(@RequestParam(required = false) String keyword,
+                                              @RequestParam(required = false) Integer currentPage){
+        Map<String,Object> result = new HashMap<>(); //数据传输map
+        Map<String,Object> map = new HashMap<>();   //查询条件map
+        map.put("name",keyword);
+        //数量获取
+        Integer count = systemService.selectdictionarycount(map);
+        if(!StringUtil.isEmpty(count)){
+            BorrowPage<SystemDictionary> borrowPage = new BorrowPage<>();
+            borrowPage.setPageSize(5);
+            borrowPage.setCurrentPage(StringUtil.isEmpty(currentPage)?1:currentPage);
+            //计算后的当前页码
+            currentPage = (borrowPage.getCurrentPage()-1)*borrowPage.getPageSize();
+            map.put("current",currentPage);
+            map.put("size",borrowPage.getPageSize());
+            List<SystemDictionary> listData = systemService.selectDictionary(map);
+            borrowPage.setTotalPage((count +borrowPage.getPageSize() - 1) / borrowPage.getPageSize());
+            borrowPage.setListData(listData);
+            result.put("data",borrowPage);
+            result.put("code",200);
+        }
+
+        return result;
+    }
+
+    /**
+     * 添加数据字典项
+     * @param name
+     * @param code
+     * @return
+     */
+    @PostMapping("/dictionary/add")
+    @ResponseBody
+    public Map<String,Object> adddictionary(String name,String code){
+        Map<String,Object> result = new HashMap<>();
+        SystemDictionary systemDictionary = new SystemDictionary();
+        systemDictionary.setName(name);
+        systemDictionary.setCode(code);
+        systemDictionary.setCreateTime(new Date());
+        if(systemService.insertdictionary(systemDictionary)){
+            result.put("code",200);
+        } else {
+            result.put("code",500);
+            result.put("msg","添加失败！");
+        }
+        return result;
+    }
+
+    /**
+     * 修改数据字典项
+     * @param id
+     * @param name
+     * @return
+     */
+    @PostMapping("/dictionary/update")
+    @ResponseBody
+    public Map<String,Object> updatedictionary(Integer id,String name){
+        Map<String,Object> result = new HashMap<>();
+        SystemDictionary systemDictionary = new SystemDictionary();
+        systemDictionary.setId(id);
+        systemDictionary.setName(name);
+        systemDictionary.setCreateTime(new Date());
+        if(systemService.updatedictionary(systemDictionary)){
+            result.put("code","200");
+        } else {
+            result.put("code","500");
+            result.put("msg","修改失败！");
         }
         return result;
     }
