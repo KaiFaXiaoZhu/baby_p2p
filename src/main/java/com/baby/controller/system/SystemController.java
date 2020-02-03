@@ -322,6 +322,27 @@ public class SystemController {
         return result;
     }
 
+    /**
+     * 充值记录审核
+     * @param id
+     * @param state
+     * @return
+     */
+    @PostMapping("/recharge/audit")
+    @ResponseBody
+    public Map<String,Object> auditrecharge(String id,Integer state){
+        Map<String,Object> result = new HashMap<>();
+        Recharge recharge = new Recharge();
+        recharge.setState(state);
+        recharge.setId(id);
+        if(systemService.updaterecharge(recharge)){
+            result.put("code","200");
+        } else {
+            result.put("code","500");
+            result.put("msg","审核失败");
+        }
+        return result;
+    }
 
 
 

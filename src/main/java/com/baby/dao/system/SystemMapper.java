@@ -95,5 +95,12 @@ public interface SystemMapper {
      */
     public Integer updatedictionary(SystemDictionary systemDictionary) throws Exception;
 
+    /**
+     * 充值记录审核
+     * @return
+     * @throws Exception
+     */
+    public Integer updaterecharge(Recharge recharge) throws Exception;
+
 
 }

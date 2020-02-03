@@ -316,4 +316,22 @@ public class SystemServiceImpl implements SystemService {
         }
         return flag;
     }
+
+    /**
+     * 充值记录审核
+     * @param recharge
+     * @return
+     */
+    @Override
+    public boolean updaterecharge(Recharge recharge) {
+        boolean flag = false;
+        try {
+            if(systemMapper.updaterecharge(recharge) == 1){
+                flag = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
 }

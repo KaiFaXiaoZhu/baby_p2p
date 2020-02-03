@@ -87,4 +87,11 @@ public interface SystemService {
      * @throws Exception
      */
     public boolean updatedictionary(SystemDictionary systemDictionary);
+
+    /**
+     * 充值记录审核
+     * @param recharge
+     * @return
+     */
+    public boolean updaterecharge(Recharge recharge);
 }

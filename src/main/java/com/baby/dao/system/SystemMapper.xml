@@ -167,4 +167,7 @@
     <update id="updatedictionary" parameterType="com.baby.pojo.SystemDictionary">
         UPDATE t_system_dictionary SET `name` = #{name},create_time=#{createTime} WHERE id = #{id}
     </update>
+    <update id="updaterecharge" parameterType="java.util.Map">
+        UPDATE t_recharge SET state = #{state} WHERE id = #{id}
+    </update>
 </mapper>
