@@ -145,4 +145,9 @@
         </trim>
     </update>
 
+    <insert id="AddLoan" parameterType="com.baby.pojo.Borrow">
+        INSERT INTO t_borrow(id,borrow_user_id,borrow_username,title,description,repayment_type,borrow_type,borrow_state,borrow_amount,year_rate,repayment_month,bid_num,total_interest,current_bid_amount,current_bid_interest,bid_deadline,bid_days,apply_time,publish_time,create_time)
+        VALUES(#{id},#{borrowUserId},#{borrowUsername},#{title},#{description},#{repaymentType},#{borrowType},#{borrowState},#{borrowAmount},#{yearRate},#{repaymentMonth},#{bidNum},#{totalInterest},#{currentBidAmount},#{currentBidInterest},#{bidDeadline},#{bidDays},#{applyTime},#{publishTime},#{createTime})
+    </insert>
+
 </mapper>

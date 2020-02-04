@@ -21,4 +21,6 @@ public interface BorrowService {
     public Integer modifyBorrow(Borrow borrow);
     //查询所有借款信息
     public List<Borrow> getBorrowList();
+    //申请借款
+    public Integer AddLoan(Borrow borrow);
 }

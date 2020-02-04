@@ -14,10 +14,12 @@ import springfox.documentation.spring.web.json.Json;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/finance/borrow")
@@ -65,6 +67,32 @@ public class BorrowController {
             result.put("code",200);
         }catch (Exception e){
             result.put("msg",e.getMessage());
+        }
+        return result;
+    }
+
+    //借款申请
+    @PostMapping(value = "/add")
+    @ResponseBody
+    public Object addLoan(HttpServletRequest request,Borrow borrow){
+        Map<String,Object> result = new HashMap<>();
+        try {
+            String uuid =  UUID.randomUUID().toString().replaceAll("-", "");
+            borrow.setId(uuid);
+            LocalDateTime ldt = LocalDateTime.now().minus(borrow.getBidDays() * -1, ChronoUnit.DAYS);
+            Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+            borrow.setBorrowStates("10");
+            borrow.setBidDeadline(date);
+            borrow.setApplyTime(new Date());
+            borrow.setCreateTime(new Date());
+            borrow.setCurrentBidAmount(borrow.getBorrowAmount());
+            borrow.setCurrentBidInterest((int)(borrow.getBorrowAmount()*(Double.valueOf(borrow.getYearRate())/100)));
+            borrow.setTotalInterest((int)(borrow.getBorrowAmount()*Double.valueOf(borrow.getYearRate())/100));
+            if (borrowService.addBorrow(borrow)!=null){
+                result.put("code",200);
+            }
+        } catch (Exception e) {
+                result.put("msg",e.getMessage());
         }
         return result;
     }
