@@ -48,7 +48,7 @@
             <if test="keyword != null">
                 AND `value` LIKE "%"#{keyword}"%"
             </if>
-            <if test="current ！= null and size != null">
+            <if test="current != null and size != null">
                 LIMIT #{current},#{size}
             </if>
         </trim>
