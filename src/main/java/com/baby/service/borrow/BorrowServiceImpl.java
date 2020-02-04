@@ -3,14 +3,21 @@ package com.baby.service.borrow;
 
 import com.baby.common.Page;
 import com.baby.common.StringUtil;
+import com.baby.common.XianXiHouBeng;
+import com.baby.dao.accountFlow.AccountFlowMapper;
 import com.baby.dao.borrow.BorrowMapper;
+import com.baby.dao.user.UserMapper;
+import com.baby.pojo.AccountFlow;
+import com.baby.pojo.Bid;
 import com.baby.pojo.Borrow;
+import com.baby.pojo.UserWallet;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +26,6 @@ public class BorrowServiceImpl implements BorrowService{
 
     @Resource
     private BorrowMapper borrowMapper;
-
 
     //查询借款信息
     @Override
@@ -49,14 +55,5 @@ public class BorrowServiceImpl implements BorrowService{
         return borrowMapper.updateBorrow(borrow);
     }
 
-    @Override
-    public List<Borrow> getBorrowList() {
-        return borrowMapper.getBorrowList();
-    }
-
-    @Override
-    public Integer AddLoan(Borrow borrow) {
-        return borrowMapper.AddLoan(borrow);
-    }
 
 }
