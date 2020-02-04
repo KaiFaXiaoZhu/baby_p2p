@@ -23,8 +23,8 @@ public class BorrowServiceImpl implements BorrowService{
 
     //查询借款信息
     @Override
-    public List<Borrow> getBorrowList(Map<String,Object> map) {
-        List<Borrow> borrowList=borrowMapper.getBorrowList(map);
+    public List<Borrow> getBorrowListLimit(Map<String,Object> map) {
+        List<Borrow> borrowList=borrowMapper.getBorrowListLimit(map);
         return borrowList;
     }
 
@@ -47,6 +47,11 @@ public class BorrowServiceImpl implements BorrowService{
     @Override
     public Integer modifyBorrow(Borrow borrow) {
         return borrowMapper.updateBorrow(borrow);
+    }
+
+    @Override
+    public List<Borrow> getBorrowList() {
+        return borrowMapper.getBorrowList();
     }
 
 }

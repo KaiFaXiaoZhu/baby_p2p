@@ -12,6 +12,7 @@ import com.baby.service.user.UserService;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -98,22 +99,22 @@ public class BidController {
             }
             if(flag==1) { //增加或修改成功就对borrow表进行更新
 
-//                //用户钱包扣除投标金额
-//                UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
-//                userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)*100));
-//                userWallet.setFreezeAmount(XianXiHouBeng.jia(userWallet.getFreezeAmount(),Integer.parseInt(showBidAmount)*100));
-//                int money=userService.updateBabyUserwallt(userWallet);
-//
-//                //添加账户流水
-//                AccountFlow accountFlow=new AccountFlow();
-//                accountFlow.setAccountId(user.getId());
-//                accountFlow.setAmount(XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100));
-//                accountFlow.setFlowType(20);
-//                accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
-//                accountFlow.setFreezeAmount(userWallet.getFreezeAmount());
-//                accountFlow.setRemark("投标【"+borrow.getTitle()+"】, 冻结账户可用余额："+XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100)+"元");
-//                accountFlow.setCreateTime(new Date());
-//                int num=accountFlowService.insterRepaymentFlow(accountFlow);
+                //用户钱包扣除投标金额
+                UserWallet userWallet=userService.selectBabyUserwallet(user.getId());
+                userWallet.setAvailableAmount(XianXiHouBeng.jian(userWallet.getAvailableAmount(),Integer.parseInt(showBidAmount)*100));
+                userWallet.setFreezeAmount(XianXiHouBeng.jia(userWallet.getFreezeAmount(),Integer.parseInt(showBidAmount)*100));
+                int money=userService.updateBabyUserwallt(userWallet);
+
+                //添加账户流水
+                AccountFlow accountFlow=new AccountFlow();
+                accountFlow.setAccountId(user.getId());
+                accountFlow.setAmount(XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100));
+                accountFlow.setFlowType(20);
+                accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
+                accountFlow.setFreezeAmount(userWallet.getFreezeAmount());
+                accountFlow.setRemark("投标【"+borrow.getTitle()+"】, 冻结账户可用余额："+XianXiHouBeng.cheng(Integer.parseInt(showBidAmount),100)+"元");
+                accountFlow.setCreateTime(new Date());
+                int num=accountFlowService.insterRepaymentFlow(accountFlow);
 
 
                 List<Bid> bidList = bidService.getByBorrowId(bid);
@@ -132,6 +133,21 @@ public class BidController {
             result.put("msg",e.getMessage());
         }
         return result;
+    }
+    /***
+     * 30秒执行一次  流标
+     */
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void flushBorrowStatus() {
+        System.out.println("borrowStatus");
+        try {
+            List<Borrow> borrowList=borrowService.getBorrowList();
+            for (Borrow borrow:borrowList) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

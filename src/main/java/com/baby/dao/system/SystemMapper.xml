@@ -48,8 +48,10 @@
             <if test="keyword != null">
                 AND `value` LIKE "%"#{keyword}"%"
             </if>
+            <if test="current != null and size != null">
+                LIMIT #{current},#{size}
+            </if>
         </trim>
-        LIMIT #{current},#{size}
     </select>
     <!--账户充值-->
     <insert id="insertRecharge" parameterType="com.baby.pojo.Recharge">
