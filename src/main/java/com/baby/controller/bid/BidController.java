@@ -12,6 +12,7 @@ import com.baby.service.user.UserService;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,6 +133,21 @@ public class BidController {
             result.put("msg",e.getMessage());
         }
         return result;
+    }
+    /***
+     * 30秒执行一次  流标
+     */
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void flushBorrowStatus() {
+        System.out.println("borrowStatus");
+        try {
+            List<Borrow> borrowList=borrowService.getBorrowList();
+            for (Borrow borrow:borrowList) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
