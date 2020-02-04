@@ -10,7 +10,7 @@ import java.util.Map;
 public interface BorrowService {
 
     //查询借款信息
-    public List<Borrow> getBorrowList(Map<String,Object> map);
+    public List<Borrow> getBorrowListLimit(Map<String,Object> map);
     //查询信息数量
     public Integer getCountBorrow();
     //根据Id查询借款信息
@@ -19,5 +19,6 @@ public interface BorrowService {
     public Integer addBorrow(Borrow borrow);
     //修改Borrow
     public Integer modifyBorrow(Borrow borrow);
-
+    //查询所有借款信息
+    public List<Borrow> getBorrowList();
 }

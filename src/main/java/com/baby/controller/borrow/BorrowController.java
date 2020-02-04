@@ -40,7 +40,7 @@ public class BorrowController {
             map.put("borrowStates",borrowStates);
             map.put("From",(borrowPage.getCurrentPage()-1)*borrowPage.getPageSize());
             map.put("pageSize",borrowPage.getPageSize());
-            List<Borrow> listData = borrowService.getBorrowList(map);
+            List<Borrow> listData = borrowService.getBorrowListLimit(map);
             borrowPage.setTotalPage((num +borrowPage.getPageSize() - 1) / borrowPage.getPageSize());
             borrowPage.setListData(listData);
 

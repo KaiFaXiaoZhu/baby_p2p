@@ -140,6 +140,13 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.47</version>
         </dependency>
+        <!-- START === Quartz所需要的依赖  === START-->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>1.8.6</version>
+        </dependency>
+        <!-- END ===== Quartz所需要的依赖  ===== END-->
     </dependencies>
 
     <build>

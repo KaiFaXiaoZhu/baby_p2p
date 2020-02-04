@@ -6,9 +6,12 @@ import com.baby.service.accountFlow.AccountFlowService;
 import com.baby.service.bid.BidService;
 import com.baby.service.borrow.BorrowService;
 import com.baby.service.user.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -33,17 +36,21 @@ public class LoanController {
     @Resource
     private AccountFlowService accountFlowService;
 
-    @PostMapping(value = "/audit")
-    public Object audit(Borrow borrow){
+    @RequestMapping(value = "/audit")
+    @ResponseBody
+    public Object audit(Integer borrowState,String borrowId){
         Map<String,Object> result = new HashMap<>();
         Bid bid=new Bid();
         try{
-            if(borrow.getBorrowState()==31){// 放款审核拒绝
+            if(borrowState==31){// 放款审核拒绝
 
-                bid.setBorrowId(borrow.getId());
+                bid.setBorrowId(borrowId);
                 List<Bid> bidList=bidService.getByBorrowId(bid);//根据borrowId查询bid表信息
 
-                int borrowModify=borrowService.modifyBorrow(borrow);//修改borrow状态
+                //修改borrow状态
+                Borrow borrow=borrowService.getBorrowId(borrowId);
+                borrow.setBorrowState(borrowState);
+                int borrowModify=borrowService.modifyBorrow(borrow);
 
                 for (Bid bid1:bidList){
                     //退款
