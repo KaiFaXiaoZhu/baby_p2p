@@ -77,7 +77,6 @@ public class RepaymentController {
     @RequestMapping("repay")
     @ResponseBody
     public Object Repayment(@RequestParam(value = "id") String id,@RequestParam(value = "userId") String userId){
-        System.out.println(id+"+++++++++"+userId);
         Map<String,Object> result = new HashMap<>();
         try {
             if (repaymentService.updateRepayment(id,userId)){

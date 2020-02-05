@@ -1,23 +1,17 @@
 package com.baby.controller.borrow;
 
-import com.alibaba.fastjson.JSON;
 import com.baby.common.BorrowPage;
-import com.baby.common.Page;
-import com.baby.common.StringUtil;
 import com.baby.pojo.Borrow;
 import com.baby.service.borrow.BorrowService;
-import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/finance/borrow")
@@ -68,4 +62,31 @@ public class BorrowController {
         }
         return result;
     }
+
+    //借款申请
+    @PostMapping(value = "/add")
+    @ResponseBody
+    public Object addLoan(HttpServletRequest request,Borrow borrow){
+        Map<String,Object> result = new HashMap<>();
+        try {
+            String uuid =  UUID.randomUUID().toString().replaceAll("-", "");
+            borrow.setId(uuid);
+            LocalDateTime ldt = LocalDateTime.now().minus(borrow.getBidDays() * -1, ChronoUnit.DAYS);
+            Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
+            borrow.setBorrowState(10);
+            borrow.setBidDeadline(date);
+            borrow.setApplyTime(new Date());
+            borrow.setCreateTime(new Date());
+            borrow.setCurrentBidAmount(borrow.getBorrowAmount());
+            borrow.setCurrentBidInterest((int)(borrow.getBorrowAmount()*(Double.valueOf(borrow.getYearRate())/100)));
+            borrow.setTotalInterest((int)(borrow.getBorrowAmount()*Double.valueOf(borrow.getYearRate())/100));
+            if (borrowService.addBorrow(borrow)!=null){
+                result.put("code",200);
+            }
+        } catch (Exception e) {
+                result.put("msg",e.getMessage());
+        }
+        return result;
+    }
+
 }

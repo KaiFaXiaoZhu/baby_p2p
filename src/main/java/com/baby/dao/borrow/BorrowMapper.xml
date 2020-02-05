@@ -45,37 +45,16 @@
                         borrow_state IN (50)
                     </if>
                 </if>
+                <if test="borrowState!=null">
+                    borrow_state=#{borrowState}
+                </if>
             </trim>
-            order by create_time DESC
-            LIMIT  #{From},#{pageSize}
+            <if test="From!=null and pageSize!=null">
+                order by create_time DESC
+                LIMIT  #{From},#{pageSize}
+            </if>
         </select>
-
-    <!--查询所有信息-->
-    <select id="getBorrowList" resultType="com.baby.pojo.Borrow">
-        SELECT
-        id as id,
-        borrow_user_id as borrowUserId,
-        borrow_username as borrowUsername,
-        title as title,
-        description as description,
-        repayment_type as repaymentType,
-        borrow_type as borrowType,
-        borrow_state as borrowState,
-        borrow_amount as borrowAmount,
-        year_rate as yearRate,
-        repayment_month as repaymentMonth,
-        bid_num as bid_num,
-        total_interest as totalInterest,
-        current_bid_amount as currentBidAmount,
-        current_bid_interest as currentBidInterest,
-        bid_deadline as bidDeadline,
-        bid_days as bidDays,
-        apply_time as applyTime,
-        publish_time as publishTime,
-        create_time as createTime
-        FROM t_borrow
-        order by create_time DESC
-    </select>
+    
 
     <!--查询标的数量-->
     <select id="getCountBorrow" resultType="java.lang.Integer">
