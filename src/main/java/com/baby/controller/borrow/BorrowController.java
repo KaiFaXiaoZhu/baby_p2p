@@ -1,6 +1,7 @@
 package com.baby.controller.borrow;
 
 import com.baby.common.BorrowPage;
+import com.baby.pojo.Bid;
 import com.baby.pojo.Borrow;
 import com.baby.service.borrow.BorrowService;
 import org.springframework.stereotype.Controller;
@@ -89,4 +90,18 @@ public class BorrowController {
         return result;
     }
 
+    //借款审核
+    @PostMapping(value = "/audit")
+    @ResponseBody
+    public Object LoanReview(Bid bid) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            if (borrowService.updateLoan(bid)>0){
+                result.put("code",200);
+            }
+        } catch (Exception e) {
+            result.put("msg",e.getMessage());
+        }
+        return result;
+    }
 }

@@ -55,5 +55,15 @@ public class BorrowServiceImpl implements BorrowService{
         return borrowMapper.updateBorrow(borrow);
     }
 
+    @Override
+    public Integer AddLoan(Borrow borrow) {
+        return borrowMapper.AddLoan(borrow);
+    }
+
+    @Override
+    public Integer updateLoan(Bid bid) {
+        return borrowMapper.updateLoan(bid);
+    }
+
 
 }

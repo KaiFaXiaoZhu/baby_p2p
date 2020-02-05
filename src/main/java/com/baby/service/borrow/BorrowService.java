@@ -20,4 +20,8 @@ public interface BorrowService {
     public Integer addBorrow(Borrow borrow);
     //修改Borrow
     public Integer modifyBorrow(Borrow borrow);
+    //申请借款
+    public Integer AddLoan(Borrow borrow);
+    //更新审核借款状态
+    public Integer updateLoan(Bid bid);
 }
