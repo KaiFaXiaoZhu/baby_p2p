@@ -208,7 +208,7 @@ public class BidController {
                 accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
                 accountFlow.setFreezeAmount(userWallet.getFreezeAmount());
 
-                accountFlow.setRemark("退款【"+borrow.getTitle()+"】, 成功，退款金额："+XianXiHouBeng.chu(bid.getBidAmount(),100)+"元");
+                accountFlow.setRemark("退款【"+borrow.getTitle()+"】, 成功，解除投标冻结金额："+XianXiHouBeng.chu(bid.getBidAmount(),100)+"元");
                 accountFlow.setCreateTime(new Date());
                 num=accountFlowService.insterRepaymentFlow(accountFlow);
             }
