@@ -46,12 +46,13 @@
                 AND parent_id = #{parentId}
             </if>
             <if test="keyword != null">
-                AND `value` LIKE "%"#{keyword}"%"
-            </if>
-            <if test="current != null and size != null">
-                LIMIT #{current},#{size}
+                <bind name="bindkeyword" value="'%'+keyword+'%'"/>
+                AND `value` LIKE #{bindkeyword}
             </if>
         </trim>
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
     </select>
     <!--账户充值-->
     <insert id="insertRecharge" parameterType="com.baby.pojo.Recharge">
@@ -131,7 +132,8 @@
                AND parent_id = #{parentId}
             </if>
             <if test="keyword != null">
-               AND `value` LIKE "%"#{keyword}"%"
+                <bind name="bindkeyword" value="'%'+keyword+'%'"/>
+               AND `value` LIKE #{bindkeyword}
             </if>
         </trim>
     </select>
@@ -148,14 +150,16 @@
     <select id="selectdictionarycount" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT COUNT(1) FROM t_system_dictionary
         <if test="name != null">
-          WHERE `name` LIKE  "%"#{name}"%"
+            <bind name="bindname" value="'%'+name+'%'"/>
+          WHERE `name` LIKE  "%"#{bindname}"%"
         </if>
     </select>
     <!--数据字典项获取-->
     <select id="selectDictionary" parameterType="java.util.Map" resultMap="DictionaryMap">
         SELECT id,`code`,`name`,create_time FROM t_system_dictionary
         <if test="name != null">
-            WHERE `name` LIKE  "%"#{name}"%"
+        <bind name="bindname" value="'%'+name+'%'"/>
+            WHERE `name` LIKE  #{bindname}
         </if>
         <if test="current != null and size != null">
             LIMIT #{current},#{size}
@@ -169,6 +173,7 @@
     <update id="updatedictionary" parameterType="com.baby.pojo.SystemDictionary">
         UPDATE t_system_dictionary SET `name` = #{name},create_time=#{createTime} WHERE id = #{id}
     </update>
+    <!--充值记录审核-->
     <update id="updaterecharge" parameterType="java.util.Map">
         UPDATE t_recharge SET state = #{state} WHERE id = #{id}
     </update>
