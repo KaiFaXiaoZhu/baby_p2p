@@ -81,7 +81,7 @@ public class BorrowController {
             borrow.setId(uuid);
             LocalDateTime ldt = LocalDateTime.now().minus(borrow.getBidDays() * -1, ChronoUnit.DAYS);
             Date date = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
-            borrow.setBorrowStates("10");
+            borrow.setBorrowState(10);
             borrow.setBidDeadline(date);
             borrow.setApplyTime(new Date());
             borrow.setCreateTime(new Date());
