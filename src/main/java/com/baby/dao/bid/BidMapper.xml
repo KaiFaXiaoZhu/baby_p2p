@@ -55,14 +55,14 @@
     <update id="updateBid" parameterType="com.baby.pojo.Bid">
         UPDATE t_bid
         <trim prefix="SET" suffixOverrides="," suffix=" WHERE id = #{id}">
-            <if test="borrowId != null and borrowId != ''">borrow_id = #{borrowId},</if>
-            <if test="borrowTitle != null and borrowTitle != ''">borrow_title = #{borrowTitle},</if>
-            <if test="bidAmount != null and bidAmount != ''">bid_amount = #{bidAmount},</if>
-            <if test="bidInterest != null and bidInterest != ''">bid_interest = #{bidInterest},</if>
-            <if test="yearRate != null and yearRate != ''">year_rate = #{yearRate},</if>
-            <if test="borrowState != null and borrowState != ''">borrow_state = #{borrowState},</if>
-            <if test="bidUserId != null and bidUserId != ''">bid_user_id = #{bidUserId},</if>
-            <if test="bidUsername != null and bidUsername != ''">bid_username = #{bidUsername},</if>
+            <if test="borrowId != null ">borrow_id = #{borrowId},</if>
+            <if test="borrowTitle != null">borrow_title = #{borrowTitle},</if>
+            <if test="bidAmount != null '">bid_amount = #{bidAmount},</if>
+            <if test="bidInterest != null ">bid_interest = #{bidInterest},</if>
+            <if test="yearRate != null ">year_rate = #{yearRate},</if>
+            <if test="borrowState != null ">borrow_state = #{borrowState},</if>
+            <if test="bidUserId != null ">bid_user_id = #{bidUserId},</if>
+            <if test="bidUsername != null ">bid_username = #{bidUsername},</if>
             <if test="bidTime != null ">bid_time = #{bidTime},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>

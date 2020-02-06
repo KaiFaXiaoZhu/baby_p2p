@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class LoanController {
                 //修改borrow状态
                 Borrow borrow=borrowService.getBorrowId(borrowId);
                 borrow.setBorrowState(borrowState);
-                int borrowModify=borrowService.modifyBorrow(borrow);
+//                int borrowModify=borrowService.modifyBorrow(borrow);
 
                 //退款
                 bidController.TuiK(bidList,borrow);
@@ -79,20 +80,13 @@ public class LoanController {
         try{
             //借款总金额增加至借款人钱包余额
             userWallet=userService.selectBabyUserwallet(borrow.getBorrowUserId());
-            userWallet.setAvailableAmount(XianXiHouBeng.jia(userWallet.getAvailableAmount(),borrow.getBorrowAmount()));
+            userWallet.setAvailableAmount(XianXiHouBeng.jia(userWallet.getAvailableAmount().toString(),borrow.getBorrowAmount().toString()));
             num=userService.updateBabyUserwallt(userWallet);
 
             //借款成功添加账户流水
-            accountFlow=new AccountFlow();
-            accountFlow.setAccountId(borrow.getBorrowUserId());
-            accountFlow.setAmount(borrow.getBorrowAmount());
-            accountFlow.setFlowType(10);
-            accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
-            accountFlow.setFreezeAmount(userWallet.getFreezeAmount());
-            accountFlow.setRemark("借款【"+borrow.getTitle()+"】成功，收到借款金额"+borrow.getBorrowAmount()+"元");
-            accountFlow.setCreateTime(new Date());
+            accountFlow=new AccountFlow(null,borrow.getBorrowUserId(),borrow.getBorrowAmount(),10,userWallet.getAvailableAmount(),userWallet.getFreezeAmount(),
+                    "借款【"+borrow.getTitle()+"】成功，收到借款金额"+borrow.getBorrowAmount()+"元",new Date());
             num=accountFlowService.insterRepaymentFlow(accountFlow);
-
             for (Bid bid:bidList){
                 //修改borrowState
                 bid.setBorrowState(borrow.getBorrowState());
@@ -100,19 +94,13 @@ public class LoanController {
 
                 //扣除投标冻结金额
                 userWallet=userService.selectBabyUserwallet(bid.getBidUserId());//用户钱包
-                userWallet.setAvailableAmount(XianXiHouBeng.jia(bid.getBidAmount(),userWallet.getAvailableAmount()));
-                userWallet.setFreezeAmount(XianXiHouBeng.jian(bid.getBidAmount(),userWallet.getFreezeAmount()));
+                userWallet.setAvailableAmount(XianXiHouBeng.jia(bid.getBidAmount().toString(),userWallet.getAvailableAmount().toString()));
+                userWallet.setFreezeAmount(XianXiHouBeng.jian(bid.getBidAmount().toString(),userWallet.getFreezeAmount().toString()));
                 num=userService.updateBabyUserwallt(userWallet);
 
                 //添加账户流水
-                accountFlow=new AccountFlow();
-                accountFlow.setAccountId((bid.getBidUserId()));
-                accountFlow.setAmount(bid.getBidAmount());
-                accountFlow.setFlowType(borrow.getBorrowState());
-                accountFlow.setAvailableAmount(userWallet.getAvailableAmount());
-                accountFlow.setFreezeAmount(userWallet.getFreezeAmount());
-                accountFlow.setRemark("投标【"+borrow.getTitle()+"】成功，扣除投标冻结金额："+XianXiHouBeng.chu(bid.getBidAmount(),100)+"元");
-                accountFlow.setCreateTime(new Date());
+                accountFlow=new AccountFlow(null,bid.getBidUserId(),bid.getBidAmount(),22,userWallet.getAvailableAmount(),userWallet.getFreezeAmount(),
+                        "投标【"+borrow.getTitle()+"】成功，扣除投标冻结金额："+XianXiHouBeng.chu(bid.getBidAmount().toString(),"100")+"元",new Date());
                 num=accountFlowService.insterRepaymentFlow(accountFlow);
             }
         }catch (Exception e){
