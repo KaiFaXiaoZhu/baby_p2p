@@ -83,4 +83,10 @@
         <update id="RepaymentStatus">
             UPDATE t_repayment SET state = #{state} WHERE id = #{id}
         </update>
+
+
+    <insert id="insertRepayment" parameterType="com.baby.pojo.Repayment">
+        insert into t_repayment(id, borrow_id, borrow_user_id, borrow_title, deadline, repayment_time, total_amount, principal, interest, period, state, borrow_type, repayment_type,create_time)
+        values (#{id},#{borrowId},#{borrowUserId},#{borrowTitle},#{deadline},#{repaymentTime},#{totalAmount},#{principal},#{interest},#{period},#{state},#{borrowType},#{repaymentType},#{createTime})
+    </insert>
 </mapper>

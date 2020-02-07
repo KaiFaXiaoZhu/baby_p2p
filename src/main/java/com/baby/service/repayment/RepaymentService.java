@@ -20,4 +20,7 @@ public interface RepaymentService {
 
     //更新还款状态
     public int RepaymentStatus(int status,String id);
+
+    //添加还款信息
+    public Integer addRepayment(Repayment repayment);
 }

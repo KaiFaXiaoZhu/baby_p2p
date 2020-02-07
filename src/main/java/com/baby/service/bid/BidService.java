@@ -1,6 +1,7 @@
 package com.baby.service.bid;
 
 import com.baby.pojo.Bid;
+import com.baby.pojo.Borrow;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,4 +18,7 @@ public interface BidService {
     public Integer modifyBid(Bid bid);
     //查询bid表用户id
     public Bid getBidByBidUserId(String bidUserId,String borrowId);
+
+    //退款
+    public void TuiK(List<Bid> bidList, Borrow borrow);
 }

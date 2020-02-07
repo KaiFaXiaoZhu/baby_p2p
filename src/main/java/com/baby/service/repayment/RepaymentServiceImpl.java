@@ -114,4 +114,9 @@ public class RepaymentServiceImpl implements RepaymentService {
         return repaymentMapper.RepaymentStatus(state,id);
     }
 
+    @Override
+    public Integer addRepayment(Repayment repayment) {
+        return repaymentMapper.insertRepayment(repayment);
+    }
+
 }

@@ -27,4 +27,7 @@ public interface RepaymentMapper {
 
     //更新还款状态
     public int RepaymentStatus(@Param("state")int status,@Param("id")String id);
+
+    //添加还款信息
+    public Integer insertRepayment(Repayment repayment);
 }

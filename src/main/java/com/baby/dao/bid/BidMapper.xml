@@ -57,14 +57,13 @@
         <trim prefix="SET" suffixOverrides="," suffix=" WHERE id = #{id}">
             <if test="borrowId != null ">borrow_id = #{borrowId},</if>
             <if test="borrowTitle != null">borrow_title = #{borrowTitle},</if>
-            <if test="bidAmount != null '">bid_amount = #{bidAmount},</if>
+            <if test="bidAmount != null ">bid_amount = #{bidAmount},</if>
             <if test="bidInterest != null ">bid_interest = #{bidInterest},</if>
             <if test="yearRate != null ">year_rate = #{yearRate},</if>
             <if test="borrowState != null ">borrow_state = #{borrowState},</if>
             <if test="bidUserId != null ">bid_user_id = #{bidUserId},</if>
             <if test="bidUsername != null ">bid_username = #{bidUsername},</if>
             <if test="bidTime != null ">bid_time = #{bidTime},</if>
-            <if test="createTime != null">create_time = #{createTime},</if>
         </trim>
     </update>
 

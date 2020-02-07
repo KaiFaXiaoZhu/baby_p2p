@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baby.dao.repaymentDetail.RepaymentDetailMapper">
+    <insert id="insertRepaymentDetail" parameterType="com.baby.pojo.RepaymentDetail">
+        INSERT INTO t_repayment_detail(id, bid_id, borrow_id, repayment_id, borrow_user_id, bid_user_id, borrow_title, total_amount, principal, interest, period, deadline, repayment_time, repayment_type, create_time)
+        VALUES(#{id},#{bidId},#{borrowId},#{repaymentId},#{borrowUserId},#{bidUserId},#{borrowTitle},#{totalAmount},#{principal},#{interest},#{period},#{deadline},#{repaymentTime},#{repaymentType},#{createTime})
+    </insert>
+</mapper>

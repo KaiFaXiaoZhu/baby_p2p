@@ -1,11 +1,16 @@
 package com.baby.controller.loan;
 
+import com.alibaba.fastjson.JSON;
+import com.baby.common.AverageCapitalPlusInterestUtils;
+import com.baby.common.IdUtils;
 import com.baby.common.XianXiHouBeng;
 import com.baby.controller.bid.BidController;
 import com.baby.pojo.*;
 import com.baby.service.accountFlow.AccountFlowService;
 import com.baby.service.bid.BidService;
 import com.baby.service.borrow.BorrowService;
+import com.baby.service.repayment.RepaymentService;
+import com.baby.service.repaymentDetail.RepaymentDetailService;
 import com.baby.service.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -33,8 +35,10 @@ public class LoanController {
     private UserService userService;
     @Resource
     private AccountFlowService accountFlowService;
-
-    private BidController bidController=new BidController();
+    @Resource
+    private RepaymentService repaymentService;
+    @Resource
+    private RepaymentDetailService repaymentDetailService;
 
     @RequestMapping(value = "/audit")
     @ResponseBody
@@ -45,26 +49,67 @@ public class LoanController {
             if(borrowState==31){// 放款审核拒绝
 
                 bid.setBorrowId(borrowId);
-                List<Bid> bidList=bidService.getByBorrowId(bid);//根据borrowId查询bid表信息
 
                 //修改borrow状态
                 Borrow borrow=borrowService.getBorrowId(borrowId);
                 borrow.setBorrowState(borrowState);
-//                int borrowModify=borrowService.modifyBorrow(borrow);
+                int borrowModify=borrowService.modifyBorrow(borrow);
 
                 //退款
-                bidController.TuiK(bidList,borrow);
+                bidService.TuiK(bidService.getByBorrowId(bid),borrow);
 
                 result.put("code", 200);
             }else{// 放款审核通过
+
+                bid.setBorrowId(borrowId);
+                List<Bid> bidList=bidService.getByBorrowId(bid);
+
                 //修改borrow状态
                 Borrow borrow=borrowService.getBorrowId(borrowId);
                 borrow.setBorrowState(40);
                 int borrowModify=borrowService.modifyBorrow(borrow);
 
+                //审核放款
                 bid.setBorrowId(borrowId);
-                JieK(bidService.getByBorrowId(bid),borrow);
+                JieK(bidList,borrow);
 
+                borrow.setBorrowAmount(XianXiHouBeng.chu(borrow.getBorrowAmount().toString(),"100"));
+                for (int i=1;i<=borrow.getRepaymentMonth();i++){
+                    Calendar curr = Calendar.getInstance();
+                    curr.set(Calendar.MONTH,curr.get(Calendar.MONTH)+borrow.getRepaymentMonth());
+
+                    Repayment repayment=new Repayment(IdUtils.getUUID(),borrow.getId(),borrow.getBorrowUserId(),borrow.getTitle(),borrow.getBidDeadline(),curr.getTime(),
+                            XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterest(borrow.getBorrowAmount(), borrow.getYearRate()*0.01, borrow.getRepaymentMonth())+"","100"),
+                            XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getPerMonthPrincipal(borrow.getBorrowAmount(), borrow.getYearRate()*0.01, borrow.getRepaymentMonth()).get(i).doubleValue()+"","100"),
+                            XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getPerMonthInterest(borrow.getBorrowAmount(), borrow.getYearRate()*0.01, borrow.getRepaymentMonth()).get(i).doubleValue()+"","100"),
+                            i,2,borrow.getBorrowType(),1,new Date());
+                    int repaymentAdd=repaymentService.addRepayment(repayment);
+                }
+
+                List<Repayment> repaymentList=repaymentService.getByBorrowId(borrowId);
+                for (Repayment repayment:repaymentList){
+                    for (Bid bid1:bidList){
+                        RepaymentDetail repaymentDetail=new RepaymentDetail();
+                        repaymentDetail.setId(IdUtils.getUUID());
+                        repaymentDetail.setBidId(bid1.getId());
+                        repaymentDetail.setBorrowId(bid1.getBorrowId());
+                        repaymentDetail.setRepaymentId(repayment.getId());
+                        repaymentDetail.setBorrowUserId(borrow.getBorrowUserId());
+                        repaymentDetail.setBidUserId(bid1.getBidUserId());
+                        repaymentDetail.setBorrowTitle(borrow.getTitle());
+                        repaymentDetail.setTotalAmount( XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterest(bid1.getBidAmount()/100, bid1.getYearRate()*0.01, borrow.getRepaymentMonth())+"","100"));
+                        repaymentDetail.setPrincipal(XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getPerMonthPrincipal(bid1.getBidAmount()/100, bid1.getYearRate()*0.01, borrow.getRepaymentMonth()).get(repayment.getPeriod()).doubleValue()+"","100"));
+                        repaymentDetail.setInterest( XianXiHouBeng.cheng(AverageCapitalPlusInterestUtils.getPerMonthInterest(bid1.getBidAmount()/100, bid1.getYearRate()*0.01, borrow.getRepaymentMonth()).get(repayment.getPeriod()).doubleValue()+"","100"));
+                        repaymentDetail.setPeriod(repayment.getPeriod());
+                        repaymentDetail.setDeadline(repayment.getDeadline());
+                        repaymentDetail.setRepaymentTime(repayment.getRepaymentTime());
+                        repaymentDetail.setRepaymentType(1);
+                        repaymentDetail.setCreateTime(new Date());
+                        int RepaymentDetailAdd=repaymentDetailService.addRepaymentDetail(repaymentDetail);
+                    }
+                }
+
+                result.put("code", 200);
             }
         }catch (Exception e){
             result.put("msg", e.getMessage());
@@ -85,7 +130,7 @@ public class LoanController {
 
             //借款成功添加账户流水
             accountFlow=new AccountFlow(null,borrow.getBorrowUserId(),borrow.getBorrowAmount(),10,userWallet.getAvailableAmount(),userWallet.getFreezeAmount(),
-                    "借款【"+borrow.getTitle()+"】成功，收到借款金额"+borrow.getBorrowAmount()+"元",new Date());
+                    "借款【"+borrow.getTitle()+"】成功，收到借款金额"+XianXiHouBeng.chu(borrow.getBorrowAmount().toString(),"100")+"元",new Date());
             num=accountFlowService.insterRepaymentFlow(accountFlow);
             for (Bid bid:bidList){
                 //修改borrowState
@@ -94,8 +139,8 @@ public class LoanController {
 
                 //扣除投标冻结金额
                 userWallet=userService.selectBabyUserwallet(bid.getBidUserId());//用户钱包
-                userWallet.setAvailableAmount(XianXiHouBeng.jia(bid.getBidAmount().toString(),userWallet.getAvailableAmount().toString()));
-                userWallet.setFreezeAmount(XianXiHouBeng.jian(bid.getBidAmount().toString(),userWallet.getFreezeAmount().toString()));
+                //userWallet.setAvailableAmount(XianXiHouBeng.jia(bid.getBidAmount().toString(),userWallet.getAvailableAmount().toString()));
+                userWallet.setFreezeAmount(XianXiHouBeng.jian(userWallet.getFreezeAmount().toString(),bid.getBidAmount().toString()));
                 num=userService.updateBabyUserwallt(userWallet);
 
                 //添加账户流水
@@ -109,4 +154,14 @@ public class LoanController {
         }
     }
 
+//    public static void main(String[] args) {
+//
+//        double perMonthPrincipalInterest = AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterest(borrow.getBorrowAmount(), borrow.getYearRate()*0.01, borrow.getRepaymentMonth());
+//        System.out.println("等额本息---每月还款本息：" + perMonthPrincipalInterest);
+//        Map<Integer, BigDecimal> mapInterest = AverageCapitalPlusInterestUtils.getPerMonthInterest(borrow.getBorrowAmount(), borrow.getYearRate()*0.01, borrow.getRepaymentMonth());
+//        System.out.println("等额本息---每月还款利息：" + mapInterest);
+//        Map<Integer, BigDecimal> mapPrincipal = AverageCapitalPlusInterestUtils.getPerMonthPrincipal(5000, 10*0.01,12);
+//        System.out.println("等额本息---每月还款本金：" + mapPrincipal);
+//        System.out.println(mapPrincipal.get(1).doubleValue());
+//    }
 }

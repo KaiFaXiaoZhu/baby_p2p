@@ -147,7 +147,7 @@ public class BidController {
                     //退款
                     Bid bid=new Bid();
                     bid.setBorrowId(borrow.getId());
-                    TuiK(bidService.getByBorrowId(bid),borrow);
+                    bidService.TuiK(bidService.getByBorrowId(bid),borrow);
 
 
                     System.out.println(borrowModify!=0?"流标更新成功":"流标更新失败");
@@ -176,36 +176,6 @@ public class BidController {
             return true;
         else
             return false;
-    }
-
-    /**
-     * 退款
-     * @param bidList
-     * @param borrow
-     */
-    public void TuiK(List<Bid> bidList, Borrow borrow){
-        Integer num=0;
-        try{
-            for (Bid bid:bidList){
-                //修改bid中borrowState
-                bid.setBorrowState(borrow.getBorrowState());
-                num=bidService.modifyBid(bid);
-
-                //退款
-                UserWallet userWallet=userService.selectBabyUserwallet(bid.getBidUserId());//用户钱包
-                userWallet.setAvailableAmount(XianXiHouBeng.jia(bid.getBidAmount().toString(),userWallet.getAvailableAmount().toString()));
-                userWallet.setFreezeAmount(XianXiHouBeng.jian(bid.getBidAmount().toString(),userWallet.getFreezeAmount().toString()));
-                num=userService.updateBabyUserwallt(userWallet);
-
-                //添加账户流水
-                AccountFlow accountFlow=new AccountFlow(null,bid.getBidUserId(),bid.getBidAmount(),borrow.getBorrowState(),userWallet.getAvailableAmount(),userWallet.getFreezeAmount(),
-                        "退款【"+borrow.getTitle()+"】, 成功，解除投标冻结金额："+XianXiHouBeng.chu(bid.getBidAmount().toString(),"100")+"元",new Date());
-                num=accountFlowService.insterRepaymentFlow(accountFlow);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println("TuiK系统异常");
-        }
     }
 
 }
