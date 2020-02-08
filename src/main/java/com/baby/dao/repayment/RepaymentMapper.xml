@@ -25,6 +25,7 @@
 
       <select id="getByBorrowId" resultType="com.baby.pojo.Repayment">
             SELECT
+          id as id,
           borrow_id as borrowId,
           borrow_user_id as borrowUserId,
           borrow_title as borrowTitle,
