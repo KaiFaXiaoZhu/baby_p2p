@@ -21,7 +21,12 @@
           borrow_type as borrowType,
           repayment_type as repaymentType,
           create_time as createTime FROM t_repayment WHERE borrow_user_id = #{borrowUserId}
+          LIMIT #{current},#{size}
     </select>
+
+      <select id="repaymentCount" resultType="Integer">
+          select count(1) from t_repayment
+      </select>
 
       <select id="getByBorrowId" resultType="com.baby.pojo.Repayment">
             SELECT
@@ -54,12 +59,28 @@
         </select>
 
         <select id="BorrowerInformation" resultType="com.baby.pojo.RepaymentDetail">
-            SELECT bid_user_id as bidUserId,
-            total_amount as totalAmount,
+            SELECT
+            id,
+            bid_id as bidId,
+            borrow_id as borrowId,
+            repayment_id as repaymentId,
+            borrow_user_id as borrowUserId,
+            bid_user_id as bidUserId,
             borrow_title as borrowTitle,
+            total_amount as totalAmount,
             principal,
             interest,
-            period FROM t_repayment_detail WHERE repayment_id = #{id}
+            period,
+            deadline,
+            repayment_time as repaymentTime,
+            repayment_type as repaymentType,
+            create_time as createTime
+            FROM t_repayment_detail
+            <trim prefix="where" prefixOverrides="and | or">
+                <if test="id!=null and id!=''">
+                    repayment_id = #{id}
+                </if>
+            </trim>
         </select>
 
         <select id="AllRepayments" resultType="com.baby.pojo.Repayment">
@@ -82,5 +103,38 @@
 
         <update id="RepaymentStatus">
             UPDATE t_repayment SET state = #{state} WHERE id = #{id}
+        </update>
+
+        <select id="collectionDetails" resultType="com.baby.pojo.RepaymentDetail">
+            SELECT id,
+            bid_id as bidId,
+            borrow_id as borrowId,
+            repayment_id as repaymentId,
+            borrow_user_id as borrowUserId,
+            bid_user_id as bidUserId,
+            borrow_title as borrowTitle,
+            total_amount as totalAmount,
+            principal,
+            interest,
+            period,
+            deadline,
+            repayment_time as repaymentTime,
+            repayment_type as repaymentType,
+            create_time as createTime
+            FROM t_repayment_detail
+            <trim prefix="where" prefixOverrides="and | or">
+                <if test="bidUserId!=null and bidUserId!=''">
+                    bid_user_id=#{bidUserId}
+                </if>
+            </trim>
+            LIMIT #{current},#{size}
+        </select>
+
+        <select id="countDetails" resultType="Integer">
+            select count(1) from t_repayment_detail
+        </select>
+
+        <update id="updateperiod">
+            update period = period+1 from t_repayment_detail where repayment_id = #{id}
         </update>
 </mapper>

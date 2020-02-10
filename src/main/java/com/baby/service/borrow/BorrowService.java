@@ -24,4 +24,5 @@ public interface BorrowService {
     public Integer AddLoan(Borrow borrow);
     //更新审核借款状态
     public Integer updateLoan(Bid bid);
+
 }
