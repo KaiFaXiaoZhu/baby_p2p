@@ -33,8 +33,8 @@ public class RepaymentServiceImpl implements RepaymentService {
      * @return
      */
     @Override
-    public List<Repayment> getRepaymentList(String borrowUserId) {
-        return repaymentMapper.getRepaymentList(borrowUserId);
+    public List<Repayment> getRepaymentList(String borrowUserId,Integer current,Integer size) {
+        return repaymentMapper.getRepaymentList(borrowUserId,current,size);
     }
 
     /**
@@ -47,6 +47,14 @@ public class RepaymentServiceImpl implements RepaymentService {
         return repaymentMapper.getByBorrowId(borrowId);
     }
 
+    /**
+     * 计算数据的总数量
+     * @return
+     */
+    @Override
+    public Integer repaymentCount() {
+        return repaymentMapper.repaymentCount();
+    }
 
     /**
      * 在我的还款里点击立即还款按钮
@@ -74,12 +82,21 @@ public class RepaymentServiceImpl implements RepaymentService {
                     accountFlow.setFreezeAmount(userWallet.getFreezeAmount());
                     accountFlowMapper.insterRepaymentFlow(accountFlow); //创建还款款流水账单
                     list = repaymentMapper.BorrowerInformation(id); //获取投标人信息
+                    if(list.get(0).getPeriod()+1==repayment.getPeriod()){ //判断是否还清
+                        if (repayment.getState()==1){//判断是否逾期，逾期的话改为逾期已还
+                            repaymentMapper.RepaymentStatus(4,repayment.getId());
+                        }else{
+                            repaymentMapper.RepaymentStatus(3,repayment.getId());
+                        }
+                    }else {
+                        repaymentMapper.updateperiod(repayment.getId());
+                    }
                     if(repayment.getState()==1){    //判断是否逾期过，逾期过改为逾期已还
                         repaymentMapper.RepaymentStatus(4,id);
                     }else{
                         repaymentMapper.RepaymentStatus(3,id);
                     }
-                    for (int i = 0; i < list.size(); i++) {          //循环增加钱
+                    for (int i = 0; i < list.size(); i++) {          //循环为投资人增加还款金额
                         if (accountFlow != null || userWallet != null) {
                             accountFlow = new AccountFlow();
                             userWallet = new UserWallet();
@@ -98,25 +115,57 @@ public class RepaymentServiceImpl implements RepaymentService {
                     return true;
                 }
             }
-             }catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
-            return false;
+        return false;
     }
 
+    /**
+     * 查询所有还款信息
+     * @return
+     */
     @Override
     public List<Repayment> AllRepayments() {
         return repaymentMapper.AllRepayments();
     }
 
+    /**
+     * 更新还款状态
+     * @param state
+     * @param id
+     * @return
+     */
     @Override
     public int RepaymentStatus(int state,String id) {
         return repaymentMapper.RepaymentStatus(state,id);
     }
 
+    /**
+     * 添加还款信息
+     * @param repayment
+     * @return
+     */
     @Override
     public Integer addRepayment(Repayment repayment) {
         return repaymentMapper.insertRepayment(repayment);
+    }
+
+    /**
+     * 借款人id查询还款明细
+     * @param bidUserId
+     * @param current
+     * @param size
+     * @return
+     */
+    @Override
+    public List<RepaymentDetail> collectionDetails(String bidUserId, Integer current, Integer size) {
+        return repaymentMapper.collectionDetails(bidUserId,current,size);
+    }
+
+    @Override
+    public Integer countDetails() {
+        return repaymentMapper.countDetails();
     }
 
 }
